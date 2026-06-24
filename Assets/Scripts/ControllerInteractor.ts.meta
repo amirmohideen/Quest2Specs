@@ -1,0 +1,88 @@
+- !<AssetImportMetadata/819128f5-e90f-45aa-896a-66db0e8b62a0>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 3053e9d1-af7d-4a08-b6ac-40e102dbeaab
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 3053e9d1-af7d-4a08-b6ac-40e102dbeaab
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 1eafe29e-dcf7-4500-96ae-009e149c7195
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/1eafe29e-dcf7-4500-96ae-009e149c7195>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  ComponentUid: a09cfa53-5417-4a39-b8a4-1b5eb756c2c8
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    _drawDebug: false
+    _maxRaycastDistance: false
+    aimForwardLocal: false
+    driver: false
+    indirectDragThreshold: false
+    indirectTargetingVolumeMultiplier: false
+    rayOrigin: false
+    selectThreshold: false
+    sphereCastEnabled: false
+    spherecastDistanceThresholds: false
+    spherecastRadii: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - _drawDebug: false
+      sphereCastEnabled: false
+      spherecastRadii: !<float[]>
+        - 0.500000
+        - 2.000000
+        - 4.000000
+      spherecastDistanceThresholds: !<float[]>
+        - 0.000000
+        - 12.000000
+        - 30.000000
+      _maxRaycastDistance: !<float> 500.000000
+      indirectTargetingVolumeMultiplier: !<float> 1.000000
+      indirectDragThreshold: !<float> 10.000000
+      rayOrigin: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      driver: !<MappingBased.AssignableType> 00000000-0000-0000-0000-000000000000
+      aimForwardLocal: !<Vec3> {x: 0.000000, y: 0.000000, z: 1.000000}
+      selectThreshold: 0.500000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @ui {"widget":"group_start", "label":"Interactor"}'
+    - '// @input bool _drawDebug {"hint":"Should draw gizmos for visual debugging."}'
+    - '// @ui {"widget":"group_start", "label":"Spherecast Configuration"}'
+    - '// @input bool sphereCastEnabled {"hint":"Should use spherecast for targeting when raycast does not register a hit."}'
+    - '// @input number[] spherecastRadii = "{0.5, 2.0, 4.0}" {"hint":"Defines the radii (in cm) used for progressive spherecasting when raycast fails to hit a target. Used in sequence with spherecastDistanceThresholds to perform increasingly larger sphere casts until a target is found. Smaller radii provide more precise targeting while larger radii help target small or distant objects. Must have the same array length as spherecastDistanceThresholds.", "showIf":"sphereCastEnabled", "showIfValue":true}'
+    - '// @input number[] spherecastDistanceThresholds = "{0, 12, 30}" {"hint":"Defines distance offsets (in cm) from the ray origin for performing sphere casts. Each value creates a sphere cast starting point at [ray origin + (direction * offset)]. Used in sequence with spherecastRadii, with the system trying progressively larger sphere casts until a target is found. Helps improve targeting of small or distant objects. Must have the same array length as spherecastRadii.", "showIf":"sphereCastEnabled", "showIfValue":true}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_start", "label":"Targeting Configuration"}'
+    - '// @input float _maxRaycastDistance = 500 {"hint":"The maximum distance at which the interactor can target interactables."}'
+    - '// @input float indirectTargetingVolumeMultiplier = 1 {"hint":"A multiplier applied to spherecast radii when using indirect targeting. Larger values create wider targeting areas, making it easier to target objects at the expense of precision. Smaller values provide more precise targeting."}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_start", "label":"Indirect Drag Provider"}'
+    - '// @input float indirectDragThreshold = 10 {"hint":"Controls the minimum distance (in cm) the hand must move during indirect interaction to be considered a drag. When the distance between the interaction origin position and current position exceeds this threshold, dragging behavior is detected and tracked. Lower values make dragging more sensitive and easier to trigger, while higher values require more deliberate movement before dragging begins."}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @input SceneObject rayOrigin {"hint":"Transform on the hand that points where you aim (e.g. an empty at the index base)."}'
+    - '// @input AssignableType driver {"hint":"The ControllerHandDriver for this same hand. Its trigger value drives the pinch/select."}'
+    - '// @input vec3 aimForwardLocal = {0,0,1} {"hint":"Local aim axis of rayOrigin. If the ray points backwards, flip this to (0,0,-1)."}'
+    - '// @input float selectThreshold = 0.5 {"hint":"Trigger value (0..1) at which a pinch counts as a select."}'

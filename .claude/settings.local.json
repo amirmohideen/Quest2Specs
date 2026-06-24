@@ -3,7 +3,14 @@
     "allow": [
       "Bash(awk '/declare class quat /{f=1} f&&/^declare class /&&!/quat /{exit} f' Support/StudioLib.d.ts)",
       "Bash(awk '/declare class vec3 /{f=1} f&&/^declare class /&&!/vec3 /{exit} f' Support/StudioLib.d.ts)",
-      "Bash(awk '/declare class Transform /{f=1} f&&/^declare class /&&!/Transform /{exit} f' Support/StudioLib.d.ts)"
+      "Bash(awk '/declare class Transform /{f=1} f&&/^declare class /&&!/Transform /{exit} f' Support/StudioLib.d.ts)",
+      "Bash(awk '/enum FrustumCullMode/{f=1} f{print} f&&/}/{exit}' Support/StudioLib.d.ts)",
+      "Bash(awk '/declare class RenderMeshVisual /,/^}/' Support/StudioLib.d.ts)",
+      "Bash(awk '/declare class MaterialMeshVisual /,/^}/' Support/StudioLib.d.ts)",
+      "Bash(grep \"\\\\.ts$\")",
+      "Bash(awk '/enum InteractorInputType/,/}/' Core/Interactor/Interactor.ts)",
+      "Bash(awk '/enum InteractorTriggerType/,/}/' Core/Interactor/Interactor.ts)",
+      "Bash(awk '/enum TargetingMode/,/}/' Core/Interactor/Interactor.ts)"
     ]
   }
 }

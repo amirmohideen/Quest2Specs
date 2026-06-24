@@ -80,6 +80,8 @@ function component(target) {
  */
 const TAG = "[ControllerHandDriver]";
 const DEG2RAD = Math.PI / 180;
+// Shared across both hand drivers (same script module): live height tuned with B/Y in-headset.
+let sharedNudgeCm = 0;
 let ControllerHandDriver = (() => {
     let _classDecorators = [component];
     let _classDescriptor;
@@ -103,10 +105,13 @@ let ControllerHandDriver = (() => {
             this.fistJoints = this.fistJoints;
             this.fistCurlAxis = this.fistCurlAxis;
             this.fistMaxDegrees = this.fistMaxDegrees;
-            this.anchorDistanceCm = this.anchorDistanceCm;
+            this.anchorOffsetCm = this.anchorOffsetCm;
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.calibrateButton = this.calibrateButton;
+            this.nudgeButton = this.nudgeButton;
+            this.nudgeStepCm = this.nudgeStepCm;
+            this.nudgeAxisWorld = this.nudgeAxisWorld;
             // Pinch/fist rest poses
             this.indexRest = [];
             this.thumbRest = [];
@@ -118,6 +123,7 @@ let ControllerHandDriver = (() => {
             this.alignPos = vec3.zero();
             this.modelOffset = quat.quatIdentity();
             this.prevCalibButton = false;
+            this.prevNudgeButton = false;
             this.active = true;
             // Debug HUD state
             this._connected = false;
@@ -141,10 +147,13 @@ let ControllerHandDriver = (() => {
             this.fistJoints = this.fistJoints;
             this.fistCurlAxis = this.fistCurlAxis;
             this.fistMaxDegrees = this.fistMaxDegrees;
-            this.anchorDistanceCm = this.anchorDistanceCm;
+            this.anchorOffsetCm = this.anchorOffsetCm;
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.calibrateButton = this.calibrateButton;
+            this.nudgeButton = this.nudgeButton;
+            this.nudgeStepCm = this.nudgeStepCm;
+            this.nudgeAxisWorld = this.nudgeAxisWorld;
             // Pinch/fist rest poses
             this.indexRest = [];
             this.thumbRest = [];
@@ -156,6 +165,7 @@ let ControllerHandDriver = (() => {
             this.alignPos = vec3.zero();
             this.modelOffset = quat.quatIdentity();
             this.prevCalibButton = false;
+            this.prevNudgeButton = false;
             this.active = true;
             // Debug HUD state
             this._connected = false;
@@ -171,10 +181,33 @@ let ControllerHandDriver = (() => {
             this.fistRest = this.captureRest(this.fistJoints);
             print(`${TAG} ${this.handedness} joints  index:${this.indexJoints.length}  ` +
                 `thumb:${this.thumbJoints.length}  fist:${this.fistJoints.length}`);
+            this.forceAlwaysDrawn(this.handRoot);
             this.connect();
         }
         captureRest(joints) {
             return joints.map((j) => (j ? j.getTransform().getLocalRotation() : quat.quatIdentity()));
+        }
+        /**
+         * Force every mesh under the rig to never frustum-cull. SIK's hand material uses a dynamic
+         * UserDefinedAABB that HandVisual updated each frame; without HandVisual that box is stale, so
+         * the mesh blinks out as it nears the view edges. A huge AABB makes the cull test always pass.
+         */
+        forceAlwaysDrawn(obj) {
+            const big = 10000;
+            const visuals = obj.getComponents("RenderMeshVisual");
+            for (const v of visuals) {
+                for (const mat of v.materials) {
+                    for (let i = 0; i < mat.getPassCount(); i++) {
+                        const pass = mat.getPass(i);
+                        pass.frustumCullMode = FrustumCullMode.UserDefinedAABB;
+                        pass.frustumCullMin = new vec3(-big, -big, -big);
+                        pass.frustumCullMax = new vec3(big, big, big);
+                    }
+                }
+            }
+            const n = obj.getChildrenCount();
+            for (let i = 0; i < n; i++)
+                this.forceAlwaysDrawn(obj.getChild(i));
         }
         setActive(on) {
             this.active = on;
@@ -237,18 +270,26 @@ let ControllerHandDriver = (() => {
         applyPacket(p) {
             const questPos = new vec3(p.px, p.py, p.pz);
             const questRot = new quat(p.qw, p.qx, p.qy, p.qz);
-            // Rising-edge calibrate button
+            // Rising-edge calibrate button (A/X) -> re-anchor.
             const calibPressed = !!(p.buttons && p.buttons[this.calibrateButton] > 0.5);
             if (calibPressed && !this.prevCalibButton)
                 this.calibrated = false;
             this.prevCalibButton = calibPressed;
+            // Rising-edge nudge button (B on right raises, Y on left lowers) -> shared live height.
+            const nudgePressed = !!(p.buttons && p.buttons[this.nudgeButton] > 0.5);
+            if (nudgePressed && !this.prevNudgeButton) {
+                sharedNudgeCm += this.handedness === "right" ? this.nudgeStepCm : -this.nudgeStepCm;
+                print(`${TAG} height nudge -> ${sharedNudgeCm.toFixed(0)}cm`);
+            }
+            this.prevNudgeButton = nudgePressed;
             if (!this.calibrated) {
                 this.calibrate(questPos, questRot);
                 this.calibrated = true;
             }
-            // FOLLOW (world-locked)
+            // FOLLOW (world-locked) + live shared height nudge
             const scaled = questPos.uniformScale(100 * this.posScale);
-            this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos));
+            const nudge = this.nudgeAxisWorld.uniformScale(sharedNudgeCm);
+            this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos).add(nudge));
             this.handTransform.setWorldRotation(this.alignYaw.multiply(questRot).multiply(this.modelOffset));
             // PINCH (trigger) + FIST (grip)
             this._lastTrigger = Math.max(0, Math.min(1, p.trigger));
@@ -262,13 +303,19 @@ let ControllerHandDriver = (() => {
         calibrate(questPos, questRot) {
             const camPos = this.cameraTransform.getWorldPosition();
             const camRot = this.cameraTransform.getWorldRotation();
+            const camRight = camRot.multiplyVec3(new vec3(1, 0, 0));
+            const camUp = camRot.multiplyVec3(new vec3(0, 1, 0));
             const camFwd = camRot.multiplyVec3(new vec3(0, 0, -1)); // camera looks down local -Z
             // Yaw: align the controller's heading to the camera's heading (assumes you point it forward).
             const ctrlFwd = questRot.multiplyVec3(new vec3(0, 0, -1));
             const phi = this.headingOf(camFwd) - this.headingOf(ctrlFwd) + this.yawTrimDegrees * DEG2RAD;
             this.alignYaw = quat.angleAxis(phi, vec3.up());
-            // Translation: map the controller's current position to a spot in front of the camera.
-            const anchor = camPos.add(camFwd.uniformScale(this.anchorDistanceCm));
+            // Translation: map the controller's current position to your chosen spot relative to the head.
+            const o = this.anchorOffsetCm;
+            const anchor = camPos
+                .add(camRight.uniformScale(o.x))
+                .add(camUp.uniformScale(o.y))
+                .add(camFwd.uniformScale(o.z));
             const scaledRef = questPos.uniformScale(100 * this.posScale);
             this.alignPos = anchor.sub(this.alignYaw.multiplyVec3(scaledRef));
             // Orientation offset so the hand starts at its authored (current) world rest pose.

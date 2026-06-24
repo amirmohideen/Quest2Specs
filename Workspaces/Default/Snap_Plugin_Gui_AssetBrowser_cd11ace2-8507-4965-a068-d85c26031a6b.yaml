@@ -1,11 +1,12 @@
 CollapsedEntities:
   type: stringset
   value:
-    size: 568
+    size: 567
     values:
       - Internet Module.internetModule
       - Scripts/BridgeDebugHud.ts
       - Scripts/ControllerHandDriver.ts
+      - Scripts/ControllerInteractor.ts
       - Scripts/HandModeToggle.ts
       - SpectaclesInteractionKit.lspkg
       - SpectaclesInteractionKit.lspkg/Assets
@@ -429,7 +430,6 @@ CollapsedEntities:
       - SpectaclesInteractionKit.lspkg/VersionNumber.ts
       - SpectaclesInteractionKit.lspkg/package.native
       - SpectaclesInteractionKit.lspkg/tsconfig.json
-      - SpectaclesUIKit.lspkg
       - SpectaclesUIKit.lspkg/Audio
       - SpectaclesUIKit.lspkg/Audio/HoverAudioTrack.wav
       - SpectaclesUIKit.lspkg/Audio/SliderProgressionAudioTrack.wav
@@ -459,7 +459,6 @@ CollapsedEntities:
       - SpectaclesUIKit.lspkg/Meshes/DefaultSphere.mesh
       - SpectaclesUIKit.lspkg/Meshes/StretchableCircle.mesh
       - SpectaclesUIKit.lspkg/Meshes/Unit Plane.mesh
-      - SpectaclesUIKit.lspkg/Prefabs
       - SpectaclesUIKit.lspkg/Prefabs/DropShadow.prefab
       - SpectaclesUIKit.lspkg/Prefabs/ExampleInterface.prefab
       - SpectaclesUIKit.lspkg/Prefabs/FrameButton.prefab

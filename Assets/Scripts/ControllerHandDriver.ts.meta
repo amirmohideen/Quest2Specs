@@ -26,7 +26,7 @@
   ExportUid: 00000000-0000-0000-0000-000000000000
   PackagePolicy: CanBeUnpacked
   ScriptInputsHidden:
-    anchorDistanceCm: false
+    anchorOffsetCm: false
     calibrateButton: false
     camera: false
     fistCurlAxis: false
@@ -38,6 +38,9 @@
     indexJoints: false
     indexMaxDegrees: false
     internetModule: false
+    nudgeAxisWorld: false
+    nudgeButton: false
+    nudgeStepCm: false
     posScale: false
     thumbCurlAxis: false
     thumbJoints: false
@@ -70,10 +73,13 @@
         []
       fistCurlAxis: !<Vec3> {x: 1.000000, y: 0.000000, z: 0.000000}
       fistMaxDegrees: !<float> 80.000000
-      anchorDistanceCm: !<float> 40.000000
+      anchorOffsetCm: !<Vec3> {x: 0.000000, y: -25.000000, z: 35.000000}
       yawTrimDegrees: !<float> 0.000000
       posScale: !<float> 1.000000
       calibrateButton: !<float> 4.000000
+      nudgeButton: !<float> 5.000000
+      nudgeStepCm: !<float> 3.000000
+      nudgeAxisWorld: !<Vec3> {x: 0.000000, y: 1.000000, z: 0.000000}
   ScriptTypes:
     -
       {}
@@ -99,8 +105,11 @@
     - // @input float fistMaxDegrees = 80
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"group_start", "label":"World-lock tuning"}'
-    - '// @input float anchorDistanceCm = 40 {"hint":"How far in front of you (cm) the hand sits at the moment you calibrate."}'
+    - '// @input vec3 anchorOffsetCm = {0,-25,35} {"hint":"Where the hand sits at calibration, relative to your head in cm: x=right, y=up, z=forward. Lower y to drop it to where you hold the controllers (negative y = down)."}'
     - '// @input float yawTrimDegrees {"hint":"Manual heading trim (degrees) if left/right feels rotated after calibration."}'
     - '// @input float posScale = 1 {"hint":"Movement scale. 1 = physical 1:1. Raise to amplify reach."}'
-    - '// @input float calibrateButton = 4 {"hint":"Button index that calibrates (Quest: 4 = A/X). Point controller forward, hold still, press."}'
+    - '// @input float calibrateButton = 4 {"hint":"Button index that calibrates / re-anchors (Quest: 4 = A/X). Point controller forward, hold still, press."}'
+    - '// @input float nudgeButton = 5 {"hint":"Button index that nudges hand height live (Quest: 5 = B on right / Y on left). Right raises, left lowers. Affects both hands."}'
+    - '// @input float nudgeStepCm = 3 {"hint":"Centimetres moved per nudge press."}'
+    - "// @input vec3 nudgeAxisWorld = {0,1,0} {\"hint\":\"World direction a +nudge moves the hands (default up). Right controller's B = +, left's Y = -.\"}"
     - '// @ui {"widget":"group_end"}'

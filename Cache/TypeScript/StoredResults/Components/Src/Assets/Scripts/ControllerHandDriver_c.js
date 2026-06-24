@@ -33,10 +33,13 @@ function checkUndefined(property, showIfData) {
 // @input float fistMaxDegrees = 80
 // @ui {"widget":"group_end"}
 // @ui {"widget":"group_start", "label":"World-lock tuning"}
-// @input float anchorDistanceCm = 40 {"hint":"How far in front of you (cm) the hand sits at the moment you calibrate."}
+// @input vec3 anchorOffsetCm = {0,-25,35} {"hint":"Where the hand sits at calibration, relative to your head in cm: x=right, y=up, z=forward. Lower y to drop it to where you hold the controllers (negative y = down)."}
 // @input float yawTrimDegrees {"hint":"Manual heading trim (degrees) if left/right feels rotated after calibration."}
 // @input float posScale = 1 {"hint":"Movement scale. 1 = physical 1:1. Raise to amplify reach."}
-// @input float calibrateButton = 4 {"hint":"Button index that calibrates (Quest: 4 = A/X). Point controller forward, hold still, press."}
+// @input float calibrateButton = 4 {"hint":"Button index that calibrates / re-anchors (Quest: 4 = A/X). Point controller forward, hold still, press."}
+// @input float nudgeButton = 5 {"hint":"Button index that nudges hand height live (Quest: 5 = B on right / Y on left). Right raises, left lowers. Affects both hands."}
+// @input float nudgeStepCm = 3 {"hint":"Centimetres moved per nudge press."}
+// @input vec3 nudgeAxisWorld = {0,1,0} {"hint":"World direction a +nudge moves the hands (default up). Right controller's B = +, left's Y = -."}
 // @ui {"widget":"group_end"}
 if (!global.BaseScriptComponent) {
     function BaseScriptComponent() {}
@@ -63,10 +66,13 @@ awakeEvent.bind(() => {
     checkUndefined("thumbMaxDegrees", []);
     checkUndefined("fistCurlAxis", []);
     checkUndefined("fistMaxDegrees", []);
-    checkUndefined("anchorDistanceCm", []);
+    checkUndefined("anchorOffsetCm", []);
     checkUndefined("yawTrimDegrees", []);
     checkUndefined("posScale", []);
     checkUndefined("calibrateButton", []);
+    checkUndefined("nudgeButton", []);
+    checkUndefined("nudgeStepCm", []);
+    checkUndefined("nudgeAxisWorld", []);
     if (script.onAwake) {
        script.onAwake();
     }

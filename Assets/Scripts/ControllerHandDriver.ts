@@ -40,6 +40,9 @@ interface ControllerPacket {
 
 const DEG2RAD = Math.PI / 180
 
+// Shared across both hand drivers (same script module): live height tuned with B/Y in-headset.
+let sharedNudgeCm = 0
+
 @component
 export class ControllerHandDriver extends BaseScriptComponent {
   @input
@@ -98,8 +101,8 @@ export class ControllerHandDriver extends BaseScriptComponent {
 
   @ui.group_start("World-lock tuning")
   @input
-  @hint("How far in front of you (cm) the hand sits at the moment you calibrate.")
-  anchorDistanceCm: number = 40
+  @hint("Where the hand sits at calibration, relative to your head in cm: x=right, y=up, z=forward. Lower y to drop it to where you hold the controllers (negative y = down).")
+  anchorOffsetCm: vec3 = new vec3(0, -25, 35)
   @input
   @hint("Manual heading trim (degrees) if left/right feels rotated after calibration.")
   yawTrimDegrees: number = 0
@@ -107,8 +110,17 @@ export class ControllerHandDriver extends BaseScriptComponent {
   @hint("Movement scale. 1 = physical 1:1. Raise to amplify reach.")
   posScale: number = 1.0
   @input
-  @hint("Button index that calibrates (Quest: 4 = A/X). Point controller forward, hold still, press.")
+  @hint("Button index that calibrates / re-anchors (Quest: 4 = A/X). Point controller forward, hold still, press.")
   calibrateButton: number = 4
+  @input
+  @hint("Button index that nudges hand height live (Quest: 5 = B on right / Y on left). Right raises, left lowers. Affects both hands.")
+  nudgeButton: number = 5
+  @input
+  @hint("Centimetres moved per nudge press.")
+  nudgeStepCm: number = 3
+  @input
+  @hint("World direction a +nudge moves the hands (default up). Right controller's B = +, left's Y = -.")
+  nudgeAxisWorld: vec3 = new vec3(0, 1, 0)
   @ui.group_end
 
   private socket: WebSocket | undefined
@@ -127,6 +139,7 @@ export class ControllerHandDriver extends BaseScriptComponent {
   private alignPos: vec3 = vec3.zero()
   private modelOffset: quat = quat.quatIdentity()
   private prevCalibButton = false
+  private prevNudgeButton = false
 
   private active = true
 
@@ -149,11 +162,34 @@ export class ControllerHandDriver extends BaseScriptComponent {
         `thumb:${this.thumbJoints.length}  fist:${this.fistJoints.length}`
     )
 
+    this.forceAlwaysDrawn(this.handRoot)
     this.connect()
   }
 
   private captureRest(joints: SceneObject[]): quat[] {
     return joints.map((j) => (j ? j.getTransform().getLocalRotation() : quat.quatIdentity()))
+  }
+
+  /**
+   * Force every mesh under the rig to never frustum-cull. SIK's hand material uses a dynamic
+   * UserDefinedAABB that HandVisual updated each frame; without HandVisual that box is stale, so
+   * the mesh blinks out as it nears the view edges. A huge AABB makes the cull test always pass.
+   */
+  private forceAlwaysDrawn(obj: SceneObject): void {
+    const big = 10000
+    const visuals = obj.getComponents("RenderMeshVisual") as RenderMeshVisual[]
+    for (const v of visuals) {
+      for (const mat of v.materials) {
+        for (let i = 0; i < mat.getPassCount(); i++) {
+          const pass = mat.getPass(i)
+          pass.frustumCullMode = FrustumCullMode.UserDefinedAABB
+          pass.frustumCullMin = new vec3(-big, -big, -big)
+          pass.frustumCullMax = new vec3(big, big, big)
+        }
+      }
+    }
+    const n = obj.getChildrenCount()
+    for (let i = 0; i < n; i++) this.forceAlwaysDrawn(obj.getChild(i))
   }
 
   setActive(on: boolean): void {
@@ -220,19 +256,28 @@ export class ControllerHandDriver extends BaseScriptComponent {
     const questPos = new vec3(p.px, p.py, p.pz)
     const questRot = new quat(p.qw, p.qx, p.qy, p.qz)
 
-    // Rising-edge calibrate button
+    // Rising-edge calibrate button (A/X) -> re-anchor.
     const calibPressed = !!(p.buttons && p.buttons[this.calibrateButton] > 0.5)
     if (calibPressed && !this.prevCalibButton) this.calibrated = false
     this.prevCalibButton = calibPressed
+
+    // Rising-edge nudge button (B on right raises, Y on left lowers) -> shared live height.
+    const nudgePressed = !!(p.buttons && p.buttons[this.nudgeButton] > 0.5)
+    if (nudgePressed && !this.prevNudgeButton) {
+      sharedNudgeCm += this.handedness === "right" ? this.nudgeStepCm : -this.nudgeStepCm
+      print(`${TAG} height nudge -> ${sharedNudgeCm.toFixed(0)}cm`)
+    }
+    this.prevNudgeButton = nudgePressed
 
     if (!this.calibrated) {
       this.calibrate(questPos, questRot)
       this.calibrated = true
     }
 
-    // FOLLOW (world-locked)
+    // FOLLOW (world-locked) + live shared height nudge
     const scaled = questPos.uniformScale(100 * this.posScale)
-    this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos))
+    const nudge = this.nudgeAxisWorld.uniformScale(sharedNudgeCm)
+    this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos).add(nudge))
     this.handTransform.setWorldRotation(this.alignYaw.multiply(questRot).multiply(this.modelOffset))
 
     // PINCH (trigger) + FIST (grip)
@@ -248,6 +293,8 @@ export class ControllerHandDriver extends BaseScriptComponent {
   private calibrate(questPos: vec3, questRot: quat): void {
     const camPos = this.cameraTransform.getWorldPosition()
     const camRot = this.cameraTransform.getWorldRotation()
+    const camRight = camRot.multiplyVec3(new vec3(1, 0, 0))
+    const camUp = camRot.multiplyVec3(new vec3(0, 1, 0))
     const camFwd = camRot.multiplyVec3(new vec3(0, 0, -1)) // camera looks down local -Z
 
     // Yaw: align the controller's heading to the camera's heading (assumes you point it forward).
@@ -255,8 +302,12 @@ export class ControllerHandDriver extends BaseScriptComponent {
     const phi = this.headingOf(camFwd) - this.headingOf(ctrlFwd) + this.yawTrimDegrees * DEG2RAD
     this.alignYaw = quat.angleAxis(phi, vec3.up())
 
-    // Translation: map the controller's current position to a spot in front of the camera.
-    const anchor = camPos.add(camFwd.uniformScale(this.anchorDistanceCm))
+    // Translation: map the controller's current position to your chosen spot relative to the head.
+    const o = this.anchorOffsetCm
+    const anchor = camPos
+      .add(camRight.uniformScale(o.x))
+      .add(camUp.uniformScale(o.y))
+      .add(camFwd.uniformScale(o.z))
     const scaledRef = questPos.uniformScale(100 * this.posScale)
     this.alignPos = anchor.sub(this.alignYaw.multiplyVec3(scaledRef))
 
