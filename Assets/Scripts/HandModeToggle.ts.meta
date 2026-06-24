@@ -1,0 +1,52 @@
+- !<AssetImportMetadata/36f25c7e-7bc1-4e94-b2b1-de7767c68bf0>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 57d11a7c-3800-4e02-acf4-6d7b0882a3bb
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 57d11a7c-3800-4e02-acf4-6d7b0882a3bb
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 9cf532ad-f0d1-4d5f-b5f2-87a30a8196f2
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/9cf532ad-f0d1-4d5f-b5f2-87a30a8196f2>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  ComponentUid: bc5799e4-07e5-4cce-affe-d73baef02167
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    controllerDrivers: false
+    nativeHandObjects: false
+    startInControllerMode: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - nativeHandObjects: !<reference.SceneObject[]>
+        []
+      controllerDrivers: !<MappingBased.AssignableType[]>
+        []
+      startInControllerMode: false
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @input SceneObject[] nativeHandObjects = {} {"hint":"SIK hand visual root object(s) to disable when using the controller (e.g. left/right HandVisual roots)."}'
+    - '// @input AssignableType[] controllerDrivers = {} {"hint":"The ControllerHandDriver(s) to enable in controller mode (e.g. right + left)."}'
+    - '// @input bool startInControllerMode {"hint":"Start in controller mode? Usually false (native tracking by default)."}'

@@ -1,0 +1,12 @@
+{
+  "name": "quest-spectacles-relay",
+  "version": "1.0.0",
+  "description": "WebSocket relay forwarding Quest 3 controller data to a Spectacles Lens.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

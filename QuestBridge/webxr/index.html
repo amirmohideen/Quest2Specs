@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quest -> Spectacles Controller Bridge</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background:#111; color:#eee; margin:0; padding:24px; }
+    button { font-size:20px; padding:14px 22px; border-radius:10px; border:0; background:#3b82f6; color:#fff; }
+    #log { margin-top:16px; font-family: ui-monospace, monospace; font-size:13px; white-space:pre-wrap; color:#9ca3af; }
+    .row { margin:8px 0; }
+    input { font-size:16px; padding:8px; width:min(520px, 90vw); border-radius:8px; border:1px solid #444; background:#1b1b1b; color:#eee; }
+  </style>
+</head>
+<body>
+  <h2>Quest 3 → Spectacles bridge</h2>
+  <div class="row">
+    <label>Relay URL (wss, producer endpoint):</label><br/>
+    <input id="relay" />
+  </div>
+  <div class="row"><button id="enter">Enter VR & stream both controllers</button></div>
+  <div id="log">Open this page in the Quest Browser, then press "Enter VR".
+Note: once you're in VR the headset shows a teal screen (that's correct — this page only
+streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data is flowing.</div>
+
+  <script>
+    const logEl = document.getElementById("log");
+    const log = (m) => { logEl.textContent = m + "\n" + logEl.textContent.slice(0, 2000); };
+
+    // Page is served by the relay, so default the producer endpoint to this same origin.
+    const relayInput = document.getElementById("relay");
+    relayInput.value = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/quest";
+
+    let ws, xrSession, refSpace, gl, glCanvas;
+
+    function openSocket(url) {
+      ws = new WebSocket(url);
+      ws.onopen = () => log("WS connected: " + url);
+      ws.onclose = () => log("WS closed");
+      ws.onerror = () => log("WS error (is the relay running and reachable over wss?)");
+    }
+
+    document.getElementById("enter").onclick = async () => {
+      openSocket(relayInput.value.trim());
+
+      if (!navigator.xr) { log("WebXR not available in this browser."); return; }
+      const ok = await navigator.xr.isSessionSupported("immersive-vr");
+      if (!ok) { log("immersive-vr not supported."); return; }
+
+      // 1) WebGL context that is XR-compatible (REQUIRED for a valid session render loop).
+      glCanvas = document.createElement("canvas");
+      gl = glCanvas.getContext("webgl2", { xrCompatible: true })
+        || glCanvas.getContext("webgl", { xrCompatible: true });
+      if (!gl) { log("Could not create a WebGL context."); return; }
+
+      try {
+        xrSession = await navigator.xr.requestSession("immersive-vr", {
+          optionalFeatures: ["local-floor"]
+        });
+      } catch (e) { log("requestSession failed: " + e); return; }
+
+      // 2) Give the session a base layer, or it stays blank and never delivers frames.
+      await gl.makeXRCompatible();
+      xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, gl) });
+
+      // 3) Reference space (fall back to "local" if local-floor is unavailable).
+      try {
+        refSpace = await xrSession.requestReferenceSpace("local-floor");
+      } catch {
+        refSpace = await xrSession.requestReferenceSpace("local");
+        log("Using 'local' reference space (no floor).");
+      }
+
+      log("VR session started. Streaming left + right controllers.");
+      xrSession.requestAnimationFrame(onFrame);
+      xrSession.onend = () => log("VR session ended.");
+    };
+
+    // Unit-quaternion helpers (for head-relative orientation).
+    function qConj(q) { return { x: -q.x, y: -q.y, z: -q.z, w: q.w }; }
+    function qMul(a, b) {
+      return {
+        x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+        y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+        z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
+        w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z
+      };
+    }
+
+    function onFrame(t, frame) {
+      const session = frame.session;
+      session.requestAnimationFrame(onFrame); // keep the loop alive first
+
+      // Clear the base framebuffer so the headset shows teal (proof the loop is running).
+      const glLayer = session.renderState.baseLayer;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, glLayer.framebuffer);
+      gl.clearColor(0.0, 0.15, 0.2, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      // Headset orientation this frame. We send each controller's rotation RELATIVE to the
+      // head, so it maps straight onto the camera-parented hand no matter which way you face.
+      const viewer = frame.getViewerPose(refSpace);
+      const head = viewer ? viewer.transform.orientation : null;
+
+      let lt = 0, rt = 0, sent = 0;
+      for (const src of session.inputSources) {
+        if (!src.gripSpace || (src.handedness !== "left" && src.handedness !== "right")) continue;
+        const pose = frame.getPose(src.gripSpace, refSpace);
+        if (!pose) continue;
+
+        const p = pose.transform.position;
+        const q = pose.transform.orientation;
+        const rq = head ? qMul(qConj(head), q) : q; // controller orientation relative to head
+        const gp = src.gamepad;
+        // Quest mapping: buttons[0]=trigger, [1]=squeeze/grip, [3]=stick, [4]=A/X, [5]=B/Y
+        const buttons = gp ? gp.buttons.map(b => b.value) : [];
+        const trigger = gp?.buttons[0]?.value ?? 0;
+        const grip = gp?.buttons[1]?.value ?? 0;
+        if (src.handedness === "left") lt = trigger; else rt = trigger;
+
+        if (ws && ws.readyState === 1) {
+          ws.send(JSON.stringify({
+            hand: src.handedness,
+            px: p.x, py: p.y, pz: p.z,
+            qx: rq.x, qy: rq.y, qz: rq.z, qw: rq.w,
+            trigger, grip, buttons
+          }));
+          sent++;
+        }
+      }
+      if (Math.floor(t / 1000) !== onFrame._sec) {
+        onFrame._sec = Math.floor(t / 1000);
+        log(`streaming ${sent} controller(s)  L-trig ${lt.toFixed(2)}  R-trig ${rt.toFixed(2)}`);
+      }
+    }
+    onFrame._sec = -1;
+  </script>
+</body>
+</html>

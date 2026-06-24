@@ -1,0 +1,50 @@
+- !<AssetImportMetadata/cf6b1ccc-7b05-4ec0-84a9-dc76648d9eea>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 883bcc5d-024e-42a1-b6cd-fb539f22db69
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 883bcc5d-024e-42a1-b6cd-fb539f22db69
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 6346bbec-7b34-48eb-91b0-6879e5fbcfc2
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/6346bbec-7b34-48eb-91b0-6879e5fbcfc2>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  ComponentUid: ab60da7c-e0c6-41c0-8c86-42d9e37d7c8e
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    leftDriver: false
+    rightDriver: false
+    statusText: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - statusText: !<reference.Text> 00000000-0000-0000-0000-000000000000
+      rightDriver: !<MappingBased.AssignableType> 00000000-0000-0000-0000-000000000000
+      leftDriver: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @input Component.Text statusText {"hint":"Text component to write the status into."}'
+    - // @input AssignableType rightDriver
+    - // @input AssignableType_1 leftDriver

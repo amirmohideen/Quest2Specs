@@ -1,0 +1,13 @@
+- !<AssetCache>
+  AssetFiles:
+    0195d495-1ba7-44d6-afe3-d1a08ace0b0e: 22d52306-23d6-7152-c105-bd90efc3e3e9/9ed4a5e4acf52788c9867f92b779f3dd/Data/check_hovered.png
+  Assets:
+    - !<FileTexture/0195d495-1ba7-44d6-afe3-d1a08ace0b0e>
+      PackagePath: ""
+      FileInfo: !<FileTextureInfo>
+        Width: 128
+        Height: 128
+  SourceHash: 9ed4a5e4acf52788c9867f92b779f3dd
+  FileHash: a2b8e795901157d8f450ed35cff56d95
+  NativePackageItems:
+    []

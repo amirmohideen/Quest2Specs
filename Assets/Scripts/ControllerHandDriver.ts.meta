@@ -1,0 +1,97 @@
+- !<AssetImportMetadata/a32fe166-4f37-4325-9ca0-915d1c202a2f>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 0ff8b5ea-2c78-45d2-8870-b91c12bbe87a
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 0ff8b5ea-2c78-45d2-8870-b91c12bbe87a
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 45592df9-c766-4210-b251-c3376ecdbfcf
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/45592df9-c766-4210-b251-c3376ecdbfcf>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  ComponentUid: 57dd797e-0792-41c3-81e4-faed3bd748b1
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    calibrateButton: false
+    fistCurlAxis: false
+    fistJoints: false
+    fistMaxDegrees: false
+    handRoot: false
+    handedness: false
+    indexCurlAxis: false
+    indexJoints: false
+    indexMaxDegrees: false
+    internetModule: false
+    posScale: false
+    thumbCurlAxis: false
+    thumbJoints: false
+    thumbMaxDegrees: false
+    url: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - handedness: right
+      internetModule: !<reference.InternetModule> 00000000-0000-0000-0000-000000000000
+      url: "wss://YOUR-RELAY-HOST/specs"
+      handRoot: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      indexJoints: !<reference.SceneObject[]>
+        []
+      indexCurlAxis: !<Vec3> {x: 1.000000, y: 0.000000, z: 0.000000}
+      indexMaxDegrees: !<float> 70.000000
+      thumbJoints: !<reference.SceneObject[]>
+        []
+      thumbCurlAxis: !<Vec3> {x: 1.000000, y: 0.000000, z: 0.000000}
+      thumbMaxDegrees: !<float> 45.000000
+      fistJoints: !<reference.SceneObject[]>
+        []
+      fistCurlAxis: !<Vec3> {x: 1.000000, y: 0.000000, z: 0.000000}
+      fistMaxDegrees: !<float> 80.000000
+      posScale: !<float> 1.000000
+      calibrateButton: !<float> 4.000000
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @input string handedness = "right" {"hint":"Which controller this driver listens to. Add one driver per hand.", "widget":"combobox", "values":[{"label":"Right", "value":"right"}, {"label":"Left", "value":"left"}]}'
+    - '// @input Asset.InternetModule internetModule {"hint":"Internet Module asset used to open the secure WebSocket."}'
+    - "// @input string url = \"wss://YOUR-RELAY-HOST/specs\" {\"hint\":\"wss URL of the relay's consumer endpoint, e.g. wss://your-host/specs\"}"
+    - '// @input SceneObject handRoot {"hint":"Root of YOUR cloned hand rig. MUST be a child of the Camera. We drive its local transform."}'
+    - '// @ui {"widget":"group_start", "label":"Pinch — Index (trigger)"}'
+    - '// @input SceneObject[] indexJoints = {} {"hint":"Index joints to curl, base-first, e.g. [index-0, index-1]. Start with just index-0."}'
+    - '// @input vec3 indexCurlAxis = {1,0,0} {"hint":"Local axis the index curls around. Flip a sign if it bends the wrong way / try (0,0,1) if it twists."}'
+    - '// @input float indexMaxDegrees = 70 {"hint":"Index curl angle in degrees at full trigger."}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_start", "label":"Pinch — Thumb (trigger)"}'
+    - '// @input SceneObject[] thumbJoints = {} {"hint":"Thumb joints to curl, base-first, e.g. [thumb-0, thumb-1]. Start with just thumb-0."}'
+    - '// @input vec3 thumbCurlAxis = {1,0,0} {"hint":"Local axis the thumb curls around. Tune so the thumb meets the index."}'
+    - '// @input float thumbMaxDegrees = 45 {"hint":"Thumb curl angle in degrees at full trigger."}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_start", "label":"Fist — Middle/Ring/Pinky (grip)"}'
+    - '// @input SceneObject[] fistJoints = {} {"hint":"All other finger joints to curl when gripping, e.g. [mid-0, mid-1, ring-0, ring-1, pinky-0, pinky-1]."}'
+    - '// @input vec3 fistCurlAxis = {1,0,0} {"hint":"Local axis these fingers curl around (usually same as index)."}'
+    - '// @input float fistMaxDegrees = 80 {"hint":"Fist curl angle in degrees at full grip."}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_start", "label":"Tuning"}'
+    - '// @input float posScale = 1 {"hint":"Scales controller travel. 1 = 1:1. Lower it to keep the hand in a smaller volume."}'
+    - '// @input float calibrateButton = 4 {"hint":"Button index that re-zeroes the rest spot (Quest: 4 = A/X). Hold still and press."}'
+    - '// @ui {"widget":"group_end"}'

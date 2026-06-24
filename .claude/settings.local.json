@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk '/declare class quat /{f=1} f&&/^declare class /&&!/quat /{exit} f' Support/StudioLib.d.ts)",
+      "Bash(awk '/declare class vec3 /{f=1} f&&/^declare class /&&!/vec3 /{exit} f' Support/StudioLib.d.ts)"
+    ]
+  }
+}
