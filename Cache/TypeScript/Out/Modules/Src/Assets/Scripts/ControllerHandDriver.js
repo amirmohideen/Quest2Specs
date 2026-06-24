@@ -51,34 +51,32 @@ function component(target) {
     });
 }
 /**
- * ControllerHandDriver
+ * ControllerHandDriver — WORLD-LOCKED 6DoF
  *
  * Drives a custom hand rig in a Spectacles Lens from a Quest 3 controller, relayed
- * over a secure WebSocket. This is the "sink" side of the bridge:
+ * over a secure WebSocket:
  *
  *   Quest Browser (WebXR) --wss--> Node relay --wss--> THIS SCRIPT --> hand rig
  *
- * Add ONE of these per hand. Set `handedness` to "left" or "right"; the driver ignores
- * packets for the other hand. Both drivers can share the same relay/url (the relay
- * fans every packet out to every consumer, and each driver filters by handedness).
+ * The hand is placed in Spectacles WORLD space (the rig must NOT be parented to the Camera),
+ * so it stays put in the room as you turn your head, sitting where the controller physically is.
  *
- * Why a custom rig and not SIK's HandVisual?
- *   SIK's TrackedHand joints are read-only Keypoints bound to the device's native
- *   ObjectTracking3D hand tracker (see Keypoint.ts). You cannot inject external poses
- *   into them. So we drive our OWN cloned hand rig instead, using HandVisual only as a
- *   rigging reference (joint naming: wrist, thumb-0..3, index-0..3, mid-*, ring-*, pinky-*).
+ * The two devices have independent tracking origins, so we ALIGN them once at calibration.
+ * Both worlds are gravity-aligned (Y-up), so the only difference is a yaw (heading) rotation
+ * plus a translation. At calibration we:
+ *   - read the Spectacles Camera pose (our world reference),
+ *   - read the controller pose (Quest world),
+ *   - solve a yaw + translation that maps "controller now" to "a spot in front of the camera",
+ *   - capture the hand model's current world rotation as its rest pose.
+ * Then every frame:  handWorld = align ∘ controllerQuestPose.
  *
- * - FOLLOW:  we set `handRoot`'s LOCAL transform every packet. Make handRoot a child of
- *   the Camera so the hand sits/moves relative to your head.
- * - PINCH:   the analog TRIGGER curls the index + thumb toward each other.
- * - FIST:    the analog GRIP curls all fingers (index/thumb + the middle/ring/pinky in
- *   `fistJoints`). Trigger and grip combine via max() on the shared index/thumb joints.
+ * CALIBRATION GESTURE: point the controller forward along your gaze and press A/X.
  *
- * Coordinate frames:
- *   WebXR `local-floor` and Lens Studio are both right-handed, Y-up, -Z-forward, so
- *   position/rotation map directly (metres -> centimetres). Quest's origin is unrelated
- *   to the Spectacles origin, so we CALIBRATE on the first packet (and on the A/X button):
- *   wherever you hold the controller becomes the rest spot, and motion is applied as a delta.
+ * PINCH = trigger curls index+thumb.  FIST = grip curls the rest (+ index/thumb via max()).
+ *
+ * Why a custom rig and not SIK's HandVisual? SIK joints are read-only Keypoints bound to the
+ * native hand tracker. We use HandVisual only as a rigging reference (joint names: wrist,
+ * thumb-0..3, index-0..3, mid-*, ring-*, pinky-*).
  */
 const TAG = "[ControllerHandDriver]";
 const DEG2RAD = Math.PI / 180;
@@ -95,6 +93,7 @@ let ControllerHandDriver = (() => {
             this.internetModule = this.internetModule;
             this.url = this.url;
             this.handRoot = this.handRoot;
+            this.camera = this.camera;
             this.indexJoints = this.indexJoints;
             this.indexCurlAxis = this.indexCurlAxis;
             this.indexMaxDegrees = this.indexMaxDegrees;
@@ -104,21 +103,23 @@ let ControllerHandDriver = (() => {
             this.fistJoints = this.fistJoints;
             this.fistCurlAxis = this.fistCurlAxis;
             this.fistMaxDegrees = this.fistMaxDegrees;
+            this.anchorDistanceCm = this.anchorDistanceCm;
+            this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.calibrateButton = this.calibrateButton;
-            // Pinch/fist rest poses, captured at awake (parallel to the joint arrays)
+            // Pinch/fist rest poses
             this.indexRest = [];
             this.thumbRest = [];
             this.fistRest = [];
-            // Calibration reference
+            // Alignment (Quest world -> Spectacles world): handWorldPos = alignYaw*(questPos*100*scale) + alignPos
+            //                                               handWorldRot = alignYaw * questRot * modelOffset
             this.calibrated = false;
-            this.refPos = vec3.zero();
-            this.refRotInv = quat.quatIdentity();
-            this.anchorPos = vec3.zero();
-            this.anchorRot = quat.quatIdentity();
+            this.alignYaw = quat.quatIdentity();
+            this.alignPos = vec3.zero();
+            this.modelOffset = quat.quatIdentity();
             this.prevCalibButton = false;
             this.active = true;
-            // Live state for the debug HUD
+            // Debug HUD state
             this._connected = false;
             this._lastTrigger = 0;
             this._lastGrip = 0;
@@ -130,6 +131,7 @@ let ControllerHandDriver = (() => {
             this.internetModule = this.internetModule;
             this.url = this.url;
             this.handRoot = this.handRoot;
+            this.camera = this.camera;
             this.indexJoints = this.indexJoints;
             this.indexCurlAxis = this.indexCurlAxis;
             this.indexMaxDegrees = this.indexMaxDegrees;
@@ -139,21 +141,23 @@ let ControllerHandDriver = (() => {
             this.fistJoints = this.fistJoints;
             this.fistCurlAxis = this.fistCurlAxis;
             this.fistMaxDegrees = this.fistMaxDegrees;
+            this.anchorDistanceCm = this.anchorDistanceCm;
+            this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.calibrateButton = this.calibrateButton;
-            // Pinch/fist rest poses, captured at awake (parallel to the joint arrays)
+            // Pinch/fist rest poses
             this.indexRest = [];
             this.thumbRest = [];
             this.fistRest = [];
-            // Calibration reference
+            // Alignment (Quest world -> Spectacles world): handWorldPos = alignYaw*(questPos*100*scale) + alignPos
+            //                                               handWorldRot = alignYaw * questRot * modelOffset
             this.calibrated = false;
-            this.refPos = vec3.zero();
-            this.refRotInv = quat.quatIdentity();
-            this.anchorPos = vec3.zero();
-            this.anchorRot = quat.quatIdentity();
+            this.alignYaw = quat.quatIdentity();
+            this.alignPos = vec3.zero();
+            this.modelOffset = quat.quatIdentity();
             this.prevCalibButton = false;
             this.active = true;
-            // Live state for the debug HUD
+            // Debug HUD state
             this._connected = false;
             this._lastTrigger = 0;
             this._lastGrip = 0;
@@ -161,12 +165,10 @@ let ControllerHandDriver = (() => {
         }
         onAwake() {
             this.handTransform = this.handRoot.getTransform();
-            this.anchorPos = this.handTransform.getLocalPosition();
-            this.anchorRot = this.handTransform.getLocalRotation();
+            this.cameraTransform = this.camera.getTransform();
             this.indexRest = this.captureRest(this.indexJoints);
             this.thumbRest = this.captureRest(this.thumbJoints);
             this.fistRest = this.captureRest(this.fistJoints);
-            // Startup diagnostic — if any of these is 0 you forgot to assign that array in the Inspector.
             print(`${TAG} ${this.handedness} joints  index:${this.indexJoints.length}  ` +
                 `thumb:${this.thumbJoints.length}  fist:${this.fistJoints.length}`);
             this.connect();
@@ -174,12 +176,10 @@ let ControllerHandDriver = (() => {
         captureRest(joints) {
             return joints.map((j) => (j ? j.getTransform().getLocalRotation() : quat.quatIdentity()));
         }
-        /** Enable/disable the controller-driven hand (used by the toggle). */
         setActive(on) {
             this.active = on;
             this.handRoot.enabled = on;
         }
-        /** Re-zero the mapping next packet. Call from a UI button too if you like. */
         requestCalibration() {
             this.calibrated = false;
         }
@@ -187,7 +187,6 @@ let ControllerHandDriver = (() => {
         isConnected() {
             return this._connected;
         }
-        /** True if a matching packet arrived in the last ~0.5s. */
         isReceiving() {
             return this._lastRxTime >= 0 && getTime() - this._lastRxTime < 0.5;
         }
@@ -226,10 +225,14 @@ let ControllerHandDriver = (() => {
                     return;
                 }
                 if (pkt.hand && pkt.hand !== this.handedness)
-                    return; // not our hand
+                    return;
                 this._lastRxTime = getTime();
                 this.applyPacket(pkt);
             };
+        }
+        /** Horizontal heading (radians) of a world-space direction vector. */
+        headingOf(v) {
+            return Math.atan2(v.x, v.z);
         }
         applyPacket(p) {
             const questPos = new vec3(p.px, p.py, p.pz);
@@ -240,28 +243,38 @@ let ControllerHandDriver = (() => {
                 this.calibrated = false;
             this.prevCalibButton = calibPressed;
             if (!this.calibrated) {
-                this.refPos = questPos;
-                this.refRotInv = questRot.invert();
-                // Re-read anchor in case it was repositioned in the editor
-                this.anchorPos = this.handTransform.getLocalPosition();
-                this.anchorRot = this.handTransform.getLocalRotation();
+                this.calibrate(questPos, questRot);
                 this.calibrated = true;
             }
-            // FOLLOW — position: delta since calibration, metres -> cm, applied at the anchor.
-            const deltaM = questPos.sub(this.refPos);
-            const deltaCm = deltaM.uniformScale(100 * this.posScale);
-            this.handTransform.setLocalPosition(this.anchorPos.add(deltaCm));
-            // FOLLOW — rotation: world delta since calibration, applied to the anchor rotation.
-            const deltaRot = questRot.multiply(this.refRotInv);
-            this.handTransform.setLocalRotation(deltaRot.multiply(this.anchorRot));
-            // PINCH (trigger) + FIST (grip). Index/thumb take whichever is stronger so a full grip
-            // also closes them; middle/ring/pinky follow grip only. Each joint is written once.
+            // FOLLOW (world-locked)
+            const scaled = questPos.uniformScale(100 * this.posScale);
+            this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos));
+            this.handTransform.setWorldRotation(this.alignYaw.multiply(questRot).multiply(this.modelOffset));
+            // PINCH (trigger) + FIST (grip)
             this._lastTrigger = Math.max(0, Math.min(1, p.trigger));
             this._lastGrip = Math.max(0, Math.min(1, p.grip ?? 0));
             const indexThumb = Math.max(this._lastTrigger, this._lastGrip);
             this.applyCurl(this.indexJoints, this.indexRest, this.indexCurlAxis, this.indexMaxDegrees, indexThumb);
             this.applyCurl(this.thumbJoints, this.thumbRest, this.thumbCurlAxis, this.thumbMaxDegrees, indexThumb);
             this.applyCurl(this.fistJoints, this.fistRest, this.fistCurlAxis, this.fistMaxDegrees, this._lastGrip);
+        }
+        /** Solve the Quest-world -> Spectacles-world alignment from the current camera + controller pose. */
+        calibrate(questPos, questRot) {
+            const camPos = this.cameraTransform.getWorldPosition();
+            const camRot = this.cameraTransform.getWorldRotation();
+            const camFwd = camRot.multiplyVec3(new vec3(0, 0, -1)); // camera looks down local -Z
+            // Yaw: align the controller's heading to the camera's heading (assumes you point it forward).
+            const ctrlFwd = questRot.multiplyVec3(new vec3(0, 0, -1));
+            const phi = this.headingOf(camFwd) - this.headingOf(ctrlFwd) + this.yawTrimDegrees * DEG2RAD;
+            this.alignYaw = quat.angleAxis(phi, vec3.up());
+            // Translation: map the controller's current position to a spot in front of the camera.
+            const anchor = camPos.add(camFwd.uniformScale(this.anchorDistanceCm));
+            const scaledRef = questPos.uniformScale(100 * this.posScale);
+            this.alignPos = anchor.sub(this.alignYaw.multiplyVec3(scaledRef));
+            // Orientation offset so the hand starts at its authored (current) world rest pose.
+            const restRot = this.handTransform.getWorldRotation();
+            this.modelOffset = this.alignYaw.multiply(questRot).invert().multiply(restRot);
+            print(`${TAG} ${this.handedness} calibrated  yaw=${(phi / DEG2RAD).toFixed(1)}deg`);
         }
         applyCurl(joints, rest, axis, maxDeg, t) {
             if (joints.length === 0)

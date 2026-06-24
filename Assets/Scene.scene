@@ -5,6 +5,7 @@
     - !<own> 0005641c-028d-459a-0000-000000014b4d
     - !<own> 5aa0f98b-e799-448c-a2dc-cae5d04fa2a4
     - !<own> ffbdc74d-15f9-4ae4-afbb-497a7f1db2ac
+    - !<own> 4f8edcf2-8db0-43a8-80b6-13efdb29c0b7
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       []
@@ -25,7 +26,6 @@
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
   Children:
-    - !<own> 4f8edcf2-8db0-43a8-80b6-13efdb29c0b7
     - !<own> a2df07e4-51dc-4012-87f8-fb67c3253bc5
   Components:
     - !<own> 00000000-0000-0065-0000-000000000065
@@ -862,6 +862,8 @@
     indexCurlAxis: true
     fistCurlAxis: true
     fistMaxDegrees: true
+    anchorDistanceCm: true
+    yawTrimDegrees: true
     posScale: true
     calibrateButton: true
   ScriptTypesDefault:
@@ -872,6 +874,7 @@
       internetModule: !<reference.InternetModule> 466a25a9-b9bd-44bc-8eed-4cdb77da6045
       url: "wss://screenshots-brief-hollow-normally.trycloudflare.com"
       handRoot: !<reference.SceneObject> 1418d88c-6cb8-421c-a009-a9acced0abfe
+      camera: !<reference.SceneObject> 00000000-0000-0065-0000-000000000064
       indexJoints: !<reference.SceneObject[]>
         - !<reference> 28bc1a12-802e-47d6-a4b0-4b33f9b9c1a9
         - !<reference> 694c9ec3-dd2b-4e12-8f46-8037f43d11d0
@@ -902,6 +905,8 @@
         - !<reference> 844ab3cb-7d97-4bfe-b241-33e53450c2c1
       fistCurlAxis: !<Vec3> {x: 1.000000, y: 0.000000, z: 0.000000}
       fistMaxDegrees: !<float> 80.000000
+      anchorDistanceCm: !<float> 40.000000
+      yawTrimDegrees: !<float> 0.000000
       posScale: !<float> 1.000000
       calibrateButton: !<float> 4.000000
   ScriptTypes:
@@ -3719,6 +3724,8 @@
     indexCurlAxis: true
     fistCurlAxis: true
     fistMaxDegrees: true
+    anchorDistanceCm: true
+    yawTrimDegrees: true
     posScale: true
     calibrateButton: true
   ScriptTypesDefault:
@@ -3729,6 +3736,7 @@
       internetModule: !<reference.InternetModule> 466a25a9-b9bd-44bc-8eed-4cdb77da6045
       url: "wss://screenshots-brief-hollow-normally.trycloudflare.com"
       handRoot: !<reference.SceneObject> 10d8dc80-8b44-420f-948e-a5db01bf9e35
+      camera: !<reference.SceneObject> 00000000-0000-0065-0000-000000000064
       indexJoints: !<reference.SceneObject[]>
         - !<reference> f4a6f8f7-3d66-459e-894e-7bd2efbb7601
         - !<reference> 1997d5fc-008f-467a-bed2-4a6170fc2720
@@ -3758,6 +3766,8 @@
         - !<reference> e975dc66-6016-448a-a22a-288b3c022765
       fistCurlAxis: !<Vec3> {x: 1.000000, y: 0.000000, z: 0.000000}
       fistMaxDegrees: !<float> 80.000000
+      anchorDistanceCm: !<float> 40.000000
+      yawTrimDegrees: !<float> 0.000000
       posScale: !<float> 1.000000
       calibrateButton: !<float> 4.000000
   ScriptTypes:

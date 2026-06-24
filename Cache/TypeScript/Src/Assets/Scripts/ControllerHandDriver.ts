@@ -1,43 +1,41 @@
 /**
- * ControllerHandDriver
+ * ControllerHandDriver — WORLD-LOCKED 6DoF
  *
  * Drives a custom hand rig in a Spectacles Lens from a Quest 3 controller, relayed
- * over a secure WebSocket. This is the "sink" side of the bridge:
+ * over a secure WebSocket:
  *
  *   Quest Browser (WebXR) --wss--> Node relay --wss--> THIS SCRIPT --> hand rig
  *
- * Add ONE of these per hand. Set `handedness` to "left" or "right"; the driver ignores
- * packets for the other hand. Both drivers can share the same relay/url (the relay
- * fans every packet out to every consumer, and each driver filters by handedness).
+ * The hand is placed in Spectacles WORLD space (the rig must NOT be parented to the Camera),
+ * so it stays put in the room as you turn your head, sitting where the controller physically is.
  *
- * Why a custom rig and not SIK's HandVisual?
- *   SIK's TrackedHand joints are read-only Keypoints bound to the device's native
- *   ObjectTracking3D hand tracker (see Keypoint.ts). You cannot inject external poses
- *   into them. So we drive our OWN cloned hand rig instead, using HandVisual only as a
- *   rigging reference (joint naming: wrist, thumb-0..3, index-0..3, mid-*, ring-*, pinky-*).
+ * The two devices have independent tracking origins, so we ALIGN them once at calibration.
+ * Both worlds are gravity-aligned (Y-up), so the only difference is a yaw (heading) rotation
+ * plus a translation. At calibration we:
+ *   - read the Spectacles Camera pose (our world reference),
+ *   - read the controller pose (Quest world),
+ *   - solve a yaw + translation that maps "controller now" to "a spot in front of the camera",
+ *   - capture the hand model's current world rotation as its rest pose.
+ * Then every frame:  handWorld = align ∘ controllerQuestPose.
  *
- * - FOLLOW:  we set `handRoot`'s LOCAL transform every packet. Make handRoot a child of
- *   the Camera so the hand sits/moves relative to your head.
- * - PINCH:   the analog TRIGGER curls the index + thumb toward each other.
- * - FIST:    the analog GRIP curls all fingers (index/thumb + the middle/ring/pinky in
- *   `fistJoints`). Trigger and grip combine via max() on the shared index/thumb joints.
+ * CALIBRATION GESTURE: point the controller forward along your gaze and press A/X.
  *
- * Coordinate frames:
- *   WebXR `local-floor` and Lens Studio are both right-handed, Y-up, -Z-forward, so
- *   position/rotation map directly (metres -> centimetres). Quest's origin is unrelated
- *   to the Spectacles origin, so we CALIBRATE on the first packet (and on the A/X button):
- *   wherever you hold the controller becomes the rest spot, and motion is applied as a delta.
+ * PINCH = trigger curls index+thumb.  FIST = grip curls the rest (+ index/thumb via max()).
+ *
+ * Why a custom rig and not SIK's HandVisual? SIK joints are read-only Keypoints bound to the
+ * native hand tracker. We use HandVisual only as a rigging reference (joint names: wrist,
+ * thumb-0..3, index-0..3, mid-*, ring-*, pinky-*).
  */
 
 const TAG = "[ControllerHandDriver]"
 
 interface ControllerPacket {
-  hand?: string                            // "left" | "right"
-  px: number; py: number; pz: number       // position, metres (WebXR local-floor)
-  qx: number; qy: number; qz: number; qw: number   // orientation quaternion
-  trigger: number                          // 0..1 analog index trigger
-  grip?: number                            // 0..1 analog squeeze
-  buttons?: number[]                       // [trigger, grip, _, stick, A/X, B/Y]
+  hand?: string
+  px: number; py: number; pz: number       // position, metres (Quest local-floor world)
+  qx: number; qy: number; qz: number; qw: number   // orientation, Quest world
+  trigger: number
+  grip?: number
+  buttons?: number[]                        // [trigger, grip, _, stick, A/X, B/Y]
 }
 
 const DEG2RAD = Math.PI / 180
@@ -58,77 +56,81 @@ export class ControllerHandDriver extends BaseScriptComponent {
   url: string = "wss://YOUR-RELAY-HOST/specs"
 
   @input
-  @hint("Root of YOUR cloned hand rig. MUST be a child of the Camera. We drive its local transform.")
+  @hint("Root of YOUR cloned hand rig. Must be in WORLD space (NOT a child of the Camera).")
   handRoot!: SceneObject
+
+  @input
+  @hint("The Spectacles Camera SceneObject (the head). Used as the world reference for alignment.")
+  camera!: SceneObject
 
   @ui.group_start("Pinch — Index (trigger)")
   @input
-  @hint("Index joints to curl, base-first, e.g. [index-0, index-1]. Start with just index-0.")
+  @hint("Index joints to curl, base-first, e.g. [index-0, index-1].")
   @allowUndefined
   indexJoints: SceneObject[] = []
   @input
-  @hint("Local axis the index curls around. Flip a sign if it bends the wrong way / try (0,0,1) if it twists.")
   indexCurlAxis: vec3 = new vec3(1, 0, 0)
   @input
-  @hint("Index curl angle in degrees at full trigger.")
   indexMaxDegrees: number = 70
   @ui.group_end
 
   @ui.group_start("Pinch — Thumb (trigger)")
   @input
-  @hint("Thumb joints to curl, base-first, e.g. [thumb-0, thumb-1]. Start with just thumb-0.")
+  @hint("Thumb joints to curl, base-first, e.g. [thumb-0, thumb-1].")
   @allowUndefined
   thumbJoints: SceneObject[] = []
   @input
-  @hint("Local axis the thumb curls around. Tune so the thumb meets the index.")
   thumbCurlAxis: vec3 = new vec3(1, 0, 0)
   @input
-  @hint("Thumb curl angle in degrees at full trigger.")
   thumbMaxDegrees: number = 45
   @ui.group_end
 
   @ui.group_start("Fist — Middle/Ring/Pinky (grip)")
   @input
-  @hint("All other finger joints to curl when gripping, e.g. [mid-0, mid-1, ring-0, ring-1, pinky-0, pinky-1].")
+  @hint("Other finger joints to curl when gripping, e.g. [mid-0, mid-1, ring-0, ring-1, pinky-0, pinky-1].")
   @allowUndefined
   fistJoints: SceneObject[] = []
   @input
-  @hint("Local axis these fingers curl around (usually same as index).")
   fistCurlAxis: vec3 = new vec3(1, 0, 0)
   @input
-  @hint("Fist curl angle in degrees at full grip.")
   fistMaxDegrees: number = 80
   @ui.group_end
 
-  @ui.group_start("Tuning")
+  @ui.group_start("World-lock tuning")
   @input
-  @hint("Scales controller travel. 1 = 1:1. Lower it to keep the hand in a smaller volume.")
+  @hint("How far in front of you (cm) the hand sits at the moment you calibrate.")
+  anchorDistanceCm: number = 40
+  @input
+  @hint("Manual heading trim (degrees) if left/right feels rotated after calibration.")
+  yawTrimDegrees: number = 0
+  @input
+  @hint("Movement scale. 1 = physical 1:1. Raise to amplify reach.")
   posScale: number = 1.0
-
   @input
-  @hint("Button index that re-zeroes the rest spot (Quest: 4 = A/X). Hold still and press.")
+  @hint("Button index that calibrates (Quest: 4 = A/X). Point controller forward, hold still, press.")
   calibrateButton: number = 4
   @ui.group_end
 
   private socket: WebSocket | undefined
   private handTransform!: Transform
+  private cameraTransform!: Transform
 
-  // Pinch/fist rest poses, captured at awake (parallel to the joint arrays)
+  // Pinch/fist rest poses
   private indexRest: quat[] = []
   private thumbRest: quat[] = []
   private fistRest: quat[] = []
 
-  // Calibration reference
+  // Alignment (Quest world -> Spectacles world): handWorldPos = alignYaw*(questPos*100*scale) + alignPos
+  //                                               handWorldRot = alignYaw * questRot * modelOffset
   private calibrated = false
-  private refPos: vec3 = vec3.zero()
-  private refRotInv: quat = quat.quatIdentity()
-  private anchorPos: vec3 = vec3.zero()
-  private anchorRot: quat = quat.quatIdentity()
+  private alignYaw: quat = quat.quatIdentity()
+  private alignPos: vec3 = vec3.zero()
+  private modelOffset: quat = quat.quatIdentity()
   private prevCalibButton = false
 
   private active = true
 
-  // Live state for the debug HUD
+  // Debug HUD state
   private _connected = false
   private _lastTrigger = 0
   private _lastGrip = 0
@@ -136,14 +138,12 @@ export class ControllerHandDriver extends BaseScriptComponent {
 
   onAwake(): void {
     this.handTransform = this.handRoot.getTransform()
-    this.anchorPos = this.handTransform.getLocalPosition()
-    this.anchorRot = this.handTransform.getLocalRotation()
+    this.cameraTransform = this.camera.getTransform()
 
     this.indexRest = this.captureRest(this.indexJoints)
     this.thumbRest = this.captureRest(this.thumbJoints)
     this.fistRest = this.captureRest(this.fistJoints)
 
-    // Startup diagnostic — if any of these is 0 you forgot to assign that array in the Inspector.
     print(
       `${TAG} ${this.handedness} joints  index:${this.indexJoints.length}  ` +
         `thumb:${this.thumbJoints.length}  fist:${this.fistJoints.length}`
@@ -156,13 +156,11 @@ export class ControllerHandDriver extends BaseScriptComponent {
     return joints.map((j) => (j ? j.getTransform().getLocalRotation() : quat.quatIdentity()))
   }
 
-  /** Enable/disable the controller-driven hand (used by the toggle). */
   setActive(on: boolean): void {
     this.active = on
     this.handRoot.enabled = on
   }
 
-  /** Re-zero the mapping next packet. Call from a UI button too if you like. */
   requestCalibration(): void {
     this.calibrated = false
   }
@@ -171,7 +169,6 @@ export class ControllerHandDriver extends BaseScriptComponent {
   isConnected(): boolean {
     return this._connected
   }
-  /** True if a matching packet arrived in the last ~0.5s. */
   isReceiving(): boolean {
     return this._lastRxTime >= 0 && getTime() - this._lastRxTime < 0.5
   }
@@ -208,10 +205,15 @@ export class ControllerHandDriver extends BaseScriptComponent {
       } catch {
         return
       }
-      if (pkt.hand && pkt.hand !== this.handedness) return // not our hand
+      if (pkt.hand && pkt.hand !== this.handedness) return
       this._lastRxTime = getTime()
       this.applyPacket(pkt)
     }
+  }
+
+  /** Horizontal heading (radians) of a world-space direction vector. */
+  private headingOf(v: vec3): number {
+    return Math.atan2(v.x, v.z)
   }
 
   private applyPacket(p: ControllerPacket): void {
@@ -224,32 +226,45 @@ export class ControllerHandDriver extends BaseScriptComponent {
     this.prevCalibButton = calibPressed
 
     if (!this.calibrated) {
-      this.refPos = questPos
-      this.refRotInv = questRot.invert()
-      // Re-read anchor in case it was repositioned in the editor
-      this.anchorPos = this.handTransform.getLocalPosition()
-      this.anchorRot = this.handTransform.getLocalRotation()
+      this.calibrate(questPos, questRot)
       this.calibrated = true
     }
 
-    // FOLLOW — position: delta since calibration, metres -> cm, applied at the anchor.
-    const deltaM = questPos.sub(this.refPos)
-    const deltaCm = deltaM.uniformScale(100 * this.posScale)
-    this.handTransform.setLocalPosition(this.anchorPos.add(deltaCm))
+    // FOLLOW (world-locked)
+    const scaled = questPos.uniformScale(100 * this.posScale)
+    this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos))
+    this.handTransform.setWorldRotation(this.alignYaw.multiply(questRot).multiply(this.modelOffset))
 
-    // FOLLOW — rotation: world delta since calibration, applied to the anchor rotation.
-    const deltaRot = questRot.multiply(this.refRotInv)
-    this.handTransform.setLocalRotation(deltaRot.multiply(this.anchorRot))
-
-    // PINCH (trigger) + FIST (grip). Index/thumb take whichever is stronger so a full grip
-    // also closes them; middle/ring/pinky follow grip only. Each joint is written once.
+    // PINCH (trigger) + FIST (grip)
     this._lastTrigger = Math.max(0, Math.min(1, p.trigger))
     this._lastGrip = Math.max(0, Math.min(1, p.grip ?? 0))
     const indexThumb = Math.max(this._lastTrigger, this._lastGrip)
-
     this.applyCurl(this.indexJoints, this.indexRest, this.indexCurlAxis, this.indexMaxDegrees, indexThumb)
     this.applyCurl(this.thumbJoints, this.thumbRest, this.thumbCurlAxis, this.thumbMaxDegrees, indexThumb)
     this.applyCurl(this.fistJoints, this.fistRest, this.fistCurlAxis, this.fistMaxDegrees, this._lastGrip)
+  }
+
+  /** Solve the Quest-world -> Spectacles-world alignment from the current camera + controller pose. */
+  private calibrate(questPos: vec3, questRot: quat): void {
+    const camPos = this.cameraTransform.getWorldPosition()
+    const camRot = this.cameraTransform.getWorldRotation()
+    const camFwd = camRot.multiplyVec3(new vec3(0, 0, -1)) // camera looks down local -Z
+
+    // Yaw: align the controller's heading to the camera's heading (assumes you point it forward).
+    const ctrlFwd = questRot.multiplyVec3(new vec3(0, 0, -1))
+    const phi = this.headingOf(camFwd) - this.headingOf(ctrlFwd) + this.yawTrimDegrees * DEG2RAD
+    this.alignYaw = quat.angleAxis(phi, vec3.up())
+
+    // Translation: map the controller's current position to a spot in front of the camera.
+    const anchor = camPos.add(camFwd.uniformScale(this.anchorDistanceCm))
+    const scaledRef = questPos.uniformScale(100 * this.posScale)
+    this.alignPos = anchor.sub(this.alignYaw.multiplyVec3(scaledRef))
+
+    // Orientation offset so the hand starts at its authored (current) world rest pose.
+    const restRot = this.handTransform.getWorldRotation()
+    this.modelOffset = this.alignYaw.multiply(questRot).invert().multiply(restRot)
+
+    print(`${TAG} ${this.handedness} calibrated  yaw=${(phi / DEG2RAD).toFixed(1)}deg`)
   }
 
   private applyCurl(joints: SceneObject[], rest: quat[], axis: vec3, maxDeg: number, t: number): void {

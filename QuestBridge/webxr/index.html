@@ -76,17 +76,6 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
       xrSession.onend = () => log("VR session ended.");
     };
 
-    // Unit-quaternion helpers (for head-relative orientation).
-    function qConj(q) { return { x: -q.x, y: -q.y, z: -q.z, w: q.w }; }
-    function qMul(a, b) {
-      return {
-        x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
-        y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
-        z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
-        w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z
-      };
-    }
-
     function onFrame(t, frame) {
       const session = frame.session;
       session.requestAnimationFrame(onFrame); // keep the loop alive first
@@ -97,11 +86,6 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
       gl.clearColor(0.0, 0.15, 0.2, 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      // Headset orientation this frame. We send each controller's rotation RELATIVE to the
-      // head, so it maps straight onto the camera-parented hand no matter which way you face.
-      const viewer = frame.getViewerPose(refSpace);
-      const head = viewer ? viewer.transform.orientation : null;
-
       let lt = 0, rt = 0, sent = 0;
       for (const src of session.inputSources) {
         if (!src.gripSpace || (src.handedness !== "left" && src.handedness !== "right")) continue;
@@ -109,8 +93,7 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
         if (!pose) continue;
 
         const p = pose.transform.position;
-        const q = pose.transform.orientation;
-        const rq = head ? qMul(qConj(head), q) : q; // controller orientation relative to head
+        const q = pose.transform.orientation; // raw controller orientation in Quest world (local-floor)
         const gp = src.gamepad;
         // Quest mapping: buttons[0]=trigger, [1]=squeeze/grip, [3]=stick, [4]=A/X, [5]=B/Y
         const buttons = gp ? gp.buttons.map(b => b.value) : [];
@@ -122,7 +105,7 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
           ws.send(JSON.stringify({
             hand: src.handedness,
             px: p.x, py: p.y, pz: p.z,
-            qx: rq.x, qy: rq.y, qz: rq.z, qw: rq.w,
+            qx: q.x, qy: q.y, qz: q.z, qw: q.w,
             trigger, grip, buttons
           }));
           sent++;
