@@ -1226,8 +1226,7 @@ let Frame = (() => {
                 if (event.interactor.targetHitInfo && this.inputHandler.state.scaling) {
                     // On scaling drag.
                     const dragPos = this.computeHitPosition(event.interactor).localPosition;
-                    const dragDelta = dragPos.sub(this._dragStart);
-                    const sizeDelta = new vec2(dragDelta.x * Math.sign(this._dragStart.x) * 2, dragDelta.y * Math.sign(this._dragStart.y) * 2);
+                    const sizeDelta = new vec2((dragPos.x - this._dragStart.x) * Math.sign(this._dragStart.x) * 2, (dragPos.y - this._dragStart.y) * Math.sign(this._dragStart.y) * 2);
                     if (this.allowNonUniformScaling) {
                         const newSizeX = this.scalingSizeStart.x + sizeDelta.x;
                         const newSizeY = this.scalingSizeStart.y + sizeDelta.y;
@@ -1499,7 +1498,7 @@ let Frame = (() => {
                 this.shader.cursorPosition = normalizedPosition;
             }
             return {
-                localPosition: objectSpaceHit,
+                localPosition: new vec2(objectSpaceHit.x, objectSpaceHit.y),
                 normalizedPosition: normalizedPosition
             };
         }

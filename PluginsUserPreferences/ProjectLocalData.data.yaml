@@ -1,5 +1,8 @@
 data:
   externalSources:
+    - 01bb319b-7d4b-4100-b74a-3b136c62b188: /Users/amir/Library/Preferences/Snap/Lens Studio/LibraryComponents/SpectaclesInteractionKit@0.17.3/SpectaclesInteractionKit.lspkg
+    - 1a9e4c69-5630-4a0c-ae30-25d259659c98: /Users/amir/Library/Preferences/Snap/Lens Studio/LibraryComponents/SpectaclesUIKit@0.1.5/SpectaclesUIKit.lspkg
+    - 57417e63-873f-4d24-897a-ba357755a6d6: /Users/amir/Library/Preferences/Snap/Lens Studio/LibraryComponents/SpectaclesInteractionKitExamples@0.17.2/SpectaclesInteractionKitExamples.lspkg
     - 77fa0936-be7f-400f-8252-999acaad5e71: /Users/amir/Documents/GitHub/SpecsQuest/Assets/SpectaclesInteractionKit.lspkg/Assets/Textures/Base.png
     - c45af7dd-e037-4a7c-981f-5ffe94bf8417: /Applications/Lens Studio.app/Contents/JsPlugins/HelperScriptsRegistry/Assets/Scripts/Resources/Behavior.lsc
     - dcd0d5c9-25ec-4694-97b2-2f00ba2a8cbc: /Users/amir/Documents/GitHub/SpecsQuest/Assets/SpectaclesInteractionKit.lspkg/Assets/Shaders/simple_pbr.ss_graph

@@ -33,7 +33,7 @@ class DropShadowVisual extends Visual_1.Visual {
         }
         super.size = size;
         if (this.initialized) {
-            this.dropShadow.size = size.add(new vec3(this.currentSizeOffset.x, this.currentSizeOffset.y, 0));
+            this.dropShadow.size = new vec2(size.x + this.currentSizeOffset.x, size.y + this.currentSizeOffset.y);
         }
     }
     /**
@@ -159,7 +159,7 @@ class DropShadowVisual extends Visual_1.Visual {
             easing: "ease-out-quad",
             update: (t) => {
                 this.currentSizeOffset = vec2.lerp(initialSizeOffset, sizeOffset, t);
-                this.dropShadow.size = this.size.add(new vec3(this.currentSizeOffset.x, this.currentSizeOffset.y, 0));
+                this.dropShadow.size = new vec2(this.size.x + this.currentSizeOffset.x, this.size.y + this.currentSizeOffset.y);
             },
             duration: this.prevState
                 ? (this.animateDuration * initialSizeOffset.distance(sizeOffset)) /

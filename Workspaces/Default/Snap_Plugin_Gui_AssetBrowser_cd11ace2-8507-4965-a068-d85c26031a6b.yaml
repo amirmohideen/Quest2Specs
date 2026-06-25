@@ -1,13 +1,14 @@
 CollapsedEntities:
   type: stringset
   value:
-    size: 612
+    size: 804
     values:
       - Behavior.lsc
       - ControllerHandModelAssets
       - ControllerHandModelAssets/Base 2.png
       - ControllerHandModelAssets/SimplePBRMaterial 2.mat
       - ControllerHandModelAssets/simple_pbr 2.ss_graph
+      - DebugPanel_Frame.prefab
       - Device Camera Texture.deviceCameraTexture
       - Echopark.hdr
       - Echopark.hdr/Diffuse
@@ -51,7 +52,7 @@ CollapsedEntities:
       - Scripts/HandModeToggle.ts
       - Scripts/PalmFacingVisibility.ts
       - Scripts/ToggleSetActive.ts
-      - Settings_Interface.prefab
+      - SettingsPanel_Frame.prefab
       - SpectaclesInteractionKit.lspkg
       - SpectaclesInteractionKit.lspkg/Assets
       - SpectaclesInteractionKit.lspkg/Assets/Audio
@@ -477,6 +478,193 @@ CollapsedEntities:
       - SpectaclesInteractionKit.lspkg/VersionNumber.ts
       - SpectaclesInteractionKit.lspkg/package.native
       - SpectaclesInteractionKit.lspkg/tsconfig.json
+      - SpectaclesInteractionKitExamples.lspkg
+      - SpectaclesInteractionKitExamples.lspkg/README.md
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/ModernBodyTube_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/ModernFins_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/ModernNoseCone_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/SleekBodyTube_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/SleekFins_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/SleekNoseCone_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/SpaceAgeBodyTube_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/SpaceAgeFins_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Icons/SpaceAgeNoseCone_icon.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Meteor.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Planet.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Planet_rings.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Platform.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_fire.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_glass.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_glass_satellite.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_grey.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_metal.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_metal_red.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_plastic_01.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_plastic_02.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_plastic_03.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_plastic_03_logo.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_white.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Rocket_white_logo.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials/Objects/SIK_Satellite_blue.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/.hidden
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/.hidden/Lightbake.001
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/.hidden/white
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/Bases
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/Materials
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/Materials/Lightbake.001
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/Meshes
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/Meshes/Circular
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/Meshes/Cubic_01
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/Bases.fbx/Meshes/Hexagon_01
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Meteor
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Planet
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Planet1
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_bottom
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_bottom1
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_bottom2
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_bottom3
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_middle
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_middle1
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_middle2
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_top
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_01_top1
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_02_bottom
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_02_middle
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_02_top
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_bottom
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_bottom1
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_bottom2
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_bottom3
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_bottom4
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_middle
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_top
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_top1
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Rocket_03_top2
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Satellite
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Satellite1
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Satellite2
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/Meshes/Satellite3
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Meshes/SIK_Rockets.fbx/SIK_Rockets
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Modern Body Tube.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Modern Fins.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Modern Nose Cone.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Sleek Body Tube.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Sleek Fins.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Sleek Nose Cone.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Space Age Body Tube.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Space Age Fins.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/Parts/Space Age Nose Cone.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Body Tube Category.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Fins Category.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Modern Body Tube.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Modern Fins.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Modern Nose Cone.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Nose Cone Category.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Sleek Body Tube.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Sleek Fins.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Sleek Nose Cone.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Space Age Body Tube.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Space Age Fins.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Prefabs/ScrollViewListItems/Space Age Nose Cone.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/SFX
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/SFX/ui-rocket-ignition_c-1db_stereo4824.wav
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/SFX/ui-rocket-land-cutoff-c_-1dB_stereo4824.wav
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Scripts
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Scripts/ExhaustControls.ts
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Scripts/RocketConfigurator.ts
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Scripts/RocketGridContentCreator.ts
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Scripts/RocketLaunchControl.ts
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Scripts/RocketScrollViewItem.ts
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Shaders
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Shaders/Glass.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Shaders/Meteor.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Shaders/Planet.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Shaders/Planet_rings.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Shaders/Platform.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Shaders/Rocket.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/A-icon.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/B-icon.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/C-icon.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/SIK_Meteor_bc.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/SIK_Platforms_AO.jpg
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/SIK_Rockets_AO.jpg
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/SIK_Snap_logo.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/SIK_Space_logo_TEMP.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/body-tube_rocket-A.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/body-tube_rocket-B.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/body-tube_rocket-C.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/fins_rocket-A.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/fins_rocket-B.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/fins_rocket-C.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/nose-cone_rocket-A.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/nose-cone_rocket-B.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Textures/ScrollViewThumbnails/nose-cone_rocket-C.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Landing
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Landing/Bones_clouds_ANIM_mat_landing.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Landing/Bones_clouds_material_landing_.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Landing/CloudsLanding.animationAsset
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Landing/line1.mesh
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Start
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Start/Bones_clouds_ANIM_mat_takeoff.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Start/Bones_clouds_material_start_.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Start/CloudsStart.animationAsset
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Clouds Start/line1.mesh
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Custom Mesh Emitter
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Custom Mesh Emitter/Custom Mesh Emitter.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Custom Mesh Emitter/Rocket_clouds_emit.vfxgraph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Custom Mesh Emitter/cl_goup.mesh
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/Fire.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/Fire_ANIM_mat.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/Glow_ANIM_mat.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/Glow_MAt.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/blendshapes1.mesh
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/dots.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/engine_exhaust.prefab
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Exhaust/glow_plane.mesh
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Radial Heat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Radial Heat/Noise00.png
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Radial Heat/Plane.mesh
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Radial Heat/RadialHeat_ANIM_mat.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Radial Heat/Radial_heat.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Animations
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Animations/Base Layer Rocket 1.animationAsset
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Animations/Base Layer Rocket 2.animationAsset
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Animations/Base Layer Rocket 3.animationAsset
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Sparks
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Sparks/Rocket_sparks.mesh
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Sparks/Top_Rocket_Trail.mat
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Sparks/Top_Rocket_Trail.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/VFX/Rocket Sparks/stripe_noise 2.png
+      - SpectaclesInteractionKitExamples.lspkg/SIK Examples__PLACE_IN_SCENE.prefab
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Materials
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Materials/ImageMaterial 2.mat
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Materials/ImageMaterial 3.mat
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Materials/ImageMaterial.mat
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Scripts
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Scripts/UIController.ts
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Scripts/UIManager.ts
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Textures
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Textures/ImageMaterial.mat
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Textures/Polygon 2.png
+      - SpectaclesInteractionKitExamples.lspkg/UIStarter/Textures/image_unlit.ss_graph
+      - SpectaclesInteractionKitExamples.lspkg/package.native
+      - SpectaclesInteractionKitExamples.lspkg/package_dependencies.json
       - SpectaclesUIKit.lspkg
       - SpectaclesUIKit.lspkg/Audio
       - SpectaclesUIKit.lspkg/Audio/HoverAudioTrack.wav
@@ -507,12 +695,15 @@ CollapsedEntities:
       - SpectaclesUIKit.lspkg/Meshes/DefaultSphere.mesh
       - SpectaclesUIKit.lspkg/Meshes/StretchableCircle.mesh
       - SpectaclesUIKit.lspkg/Meshes/Unit Plane.mesh
+      - SpectaclesUIKit.lspkg/Prefabs
       - SpectaclesUIKit.lspkg/Prefabs/DropShadow.prefab
+      - SpectaclesUIKit.lspkg/Prefabs/ExampleInterface.prefab
       - SpectaclesUIKit.lspkg/Prefabs/FrameButton.prefab
       - SpectaclesUIKit.lspkg/Prefabs/ImageButton.prefab
       - SpectaclesUIKit.lspkg/Prefabs/LabelledButton.prefab
       - SpectaclesUIKit.lspkg/Prefabs/LabelledToggle.prefab
       - SpectaclesUIKit.lspkg/README.md
+      - SpectaclesUIKit.lspkg/Scripts
       - SpectaclesUIKit.lspkg/Scripts/BackPlate.ts
       - SpectaclesUIKit.lspkg/Scripts/Components
       - SpectaclesUIKit.lspkg/Scripts/Components/Button
@@ -554,6 +745,7 @@ CollapsedEntities:
       - SpectaclesUIKit.lspkg/Scripts/Components/Toggle/Toggleable.ts
       - SpectaclesUIKit.lspkg/Scripts/Components/VisualElement.ts
       - SpectaclesUIKit.lspkg/Scripts/DropShadow.ts
+      - SpectaclesUIKit.lspkg/Scripts/Example
       - SpectaclesUIKit.lspkg/Scripts/Example/Capsule3D
       - SpectaclesUIKit.lspkg/Scripts/Example/Capsule3D/Capsule3DButton.ts
       - SpectaclesUIKit.lspkg/Scripts/Example/Capsule3D/Visual

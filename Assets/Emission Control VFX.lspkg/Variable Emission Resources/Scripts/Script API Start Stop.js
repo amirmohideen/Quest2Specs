@@ -1,9 +1,13 @@
 //@input Component.VFXComponent vfxComp
 
-// This function will be called by the Button's callback
+// 1. On start, explicitly turn off emission to match your button's default state
+if (script.vfxComp) {
+    script.vfxComp.emitting = false;
+}
+
+// 2. This function continues to handle the toggles when clicked
 script.onButtonToggle = function(isToggled) {
     if (script.vfxComp) {
-        // If the button is active/toggled on, emit. Otherwise, stop.
         script.vfxComp.emitting = isToggled;
     }
 };

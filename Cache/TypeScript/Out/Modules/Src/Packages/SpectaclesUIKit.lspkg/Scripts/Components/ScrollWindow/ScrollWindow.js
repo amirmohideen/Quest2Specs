@@ -397,14 +397,14 @@ let ScrollWindow = (() => {
                                 this.committedSnapTarget.y = null;
                                 this.cancelChildInteraction(event);
                             }
-                            this.dragAmount = interactorPos.sub(this.interactorOffset);
+                            this.dragAmount = new vec2(interactorPos.x - this.interactorOffset.x, interactorPos.y - this.interactorOffset.y);
                             let newPosition = this.startPosition.add(interactorPos.sub(this.interactorOffset));
                             newPosition.z = 0;
                             // Apply overscroll resistance if needed
                             newPosition = this.applyOverscrollIfNeeded(newPosition);
                             this.updateScrollerPosition(newPosition);
                             this.scrollDragEvent.invoke({
-                                startPosition: this.startPosition,
+                                startPosition: new vec2(this.startPosition.x, this.startPosition.y),
                                 dragAmount: this.dragAmount
                             });
                             if (event.target.sceneObject === this.sceneObject || event.propagationPhase === "BubbleUp") {
@@ -998,14 +998,14 @@ let ScrollWindow = (() => {
                                 this.committedSnapTarget.y = null;
                                 this.cancelChildInteraction(event);
                             }
-                            this.dragAmount = interactorPos.sub(this.interactorOffset);
+                            this.dragAmount = new vec2(interactorPos.x - this.interactorOffset.x, interactorPos.y - this.interactorOffset.y);
                             let newPosition = this.startPosition.add(interactorPos.sub(this.interactorOffset));
                             newPosition.z = 0;
                             // Apply overscroll resistance if needed
                             newPosition = this.applyOverscrollIfNeeded(newPosition);
                             this.updateScrollerPosition(newPosition);
                             this.scrollDragEvent.invoke({
-                                startPosition: this.startPosition,
+                                startPosition: new vec2(this.startPosition.x, this.startPosition.y),
                                 dragAmount: this.dragAmount
                             });
                             if (event.target.sceneObject === this.sceneObject || event.propagationPhase === "BubbleUp") {
