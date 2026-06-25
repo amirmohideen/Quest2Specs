@@ -62,6 +62,17 @@ export class ControllerInteractor extends BaseInteractor {
   @hint("Trigger value (0..1) at which a pinch counts as a select.")
   selectThreshold: number = 0.5
 
+  @input
+  @hint("Draw a ray line that STOPS at the cursor/hit. Turn OFF the SIK 'Draw Debug' above so the forever-ray goes away.")
+  drawRayLine: boolean = true
+  @input
+  @widget(new ColorWidget())
+  @hint("Color of the ray line.")
+  rayColor: vec4 = new vec4(1, 1, 1, 1)
+  @input
+  @hint("Ray length (cm) when not pointing at an interactable.")
+  rayFallbackLengthCm: number = 100
+
   private indirectTargetProvider!: IndirectTargetProvider
   private rayProvider!: ControllerRayProvider
 
@@ -153,6 +164,18 @@ export class ControllerInteractor extends BaseInteractor {
     this.updateDragVector()
     this.processTriggerEvents()
     this.handleSelectionLifecycle(this.indirectTargetProvider)
+
+    if (this.drawRayLine) this.drawRay()
+  }
+
+  /** Same look as SIK's drawDebug ray, but ends at the cursor/hit instead of at max distance. */
+  private drawRay(): void {
+    const start = this.startPoint
+    const dir = this.direction
+    if (!start || !dir) return
+    const hit = this.targetHitInfo?.hit.position
+    const end = hit ?? start.add(dir.uniformScale(this.rayFallbackLengthCm))
+    global.debugRenderSystem.drawLine(start, end, this.rayColor)
   }
 
   isTargeting(): boolean {

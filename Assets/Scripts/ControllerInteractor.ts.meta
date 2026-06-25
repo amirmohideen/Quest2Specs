@@ -28,8 +28,11 @@
   ScriptInputsHidden:
     _drawDebug: false
     aimForwardLocal: false
+    drawRayLine: false
     driver: false
     indirectDragThreshold: false
+    rayColor: false
+    rayFallbackLengthCm: false
     rayOrigin: false
     selectThreshold: false
   ScriptTypesHidden:
@@ -47,6 +50,9 @@
       driver: !<MappingBased.AssignableType> 00000000-0000-0000-0000-000000000000
       aimForwardLocal: !<Vec3> {x: 0.000000, y: 0.000000, z: 1.000000}
       selectThreshold: 0.500000
+      drawRayLine: true
+      rayColor: !<Vec4> {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+      rayFallbackLengthCm: !<float> 100.000000
   ScriptTypes:
     -
       {}
@@ -63,3 +69,6 @@
     - '// @input AssignableType driver {"hint":"The ControllerHandDriver for this same hand. Its trigger value drives the pinch/select."}'
     - '// @input vec3 aimForwardLocal = {0,0,1} {"hint":"Local aim axis of rayOrigin. If the ray points backwards, flip this to (0,0,-1)."}'
     - '// @input float selectThreshold = 0.5 {"hint":"Trigger value (0..1) at which a pinch counts as a select."}'
+    - "// @input bool drawRayLine = true {\"hint\":\"Draw a ray line that STOPS at the cursor/hit. Turn OFF the SIK 'Draw Debug' above so the forever-ray goes away.\"}"
+    - '// @input vec4 rayColor = {1,1,1,1} {"hint":"Color of the ray line.", "widget":"color"}'
+    - '// @input float rayFallbackLengthCm = 100 {"hint":"Ray length (cm) when not pointing at an interactable."}'
