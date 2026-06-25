@@ -403,6 +403,7 @@
     - !<own> f7490754-49b3-4464-b98c-05bb5ac71296
     - !<own> c1e57150-edc6-4b25-abfd-ae256a1f835b
     - !<own> 51ec3956-0644-48cb-bcea-7813b079c4a4
+    - !<own> 3bcb105b-5bda-43af-a101-f99e6f337183
   Components:
     - !<own> 7e3560c6-1e04-41cb-9a6e-0615fde9a527
 - !<SceneObject/11011e74-164a-4fc3-a8a0-763f6a9795d3>
@@ -607,6 +608,21 @@
   ScriptTypes:
     "":
       {}
+- !<SceneObject/1b27a355-53ed-4657-a802-451222891504>
+  PrefabRemaps:
+    []
+  Name: LeftControllerInteractor
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> b9325977-05e7-44c1-9129-433fa89c0b35
 - !<SceneObject/1be2dd1d-c962-46d6-b5a9-05228e532e18>
   PrefabRemaps:
     []
@@ -1471,6 +1487,21 @@
   ScriptTypes:
     "":
       {}
+- !<SceneObject/3bcb105b-5bda-43af-a101-f99e6f337183>
+  PrefabRemaps:
+    []
+  Name: rayOrigin
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 90.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    []
 - !<RenderMeshVisual/3cdde323-fdf8-42da-98c1-8c1a8a31b97e>
   PrefabRemaps:
     []
@@ -1578,6 +1609,7 @@
   Enabled: true
   ScriptAsset: !<reference> 3053e9d1-af7d-4a08-b6ac-40e102dbeaab
   ScriptInputsDefault:
+    _drawDebug: true
     sphereCastEnabled: true
     spherecastRadii: true
     spherecastDistanceThresholds: true
@@ -1590,7 +1622,7 @@
     {}
   ScriptInputs:
     "":
-      _drawDebug: true
+      _drawDebug: false
       sphereCastEnabled: false
       spherecastRadii: !<float[]>
         - 0.500000
@@ -3844,6 +3876,46 @@
     - !<own> 287aed38-37e4-417c-b695-b3b1714839f0
   Components:
     []
+- !<ScriptComponent/b9325977-05e7-44c1-9129-433fa89c0b35>
+  PrefabRemaps:
+    []
+  Name: ControllerInteractor
+  Enabled: true
+  ScriptAsset: !<reference> 3053e9d1-af7d-4a08-b6ac-40e102dbeaab
+  ScriptInputsDefault:
+    _drawDebug: true
+    sphereCastEnabled: true
+    spherecastRadii: true
+    spherecastDistanceThresholds: true
+    _maxRaycastDistance: true
+    indirectTargetingVolumeMultiplier: true
+    indirectDragThreshold: true
+    aimForwardLocal: true
+    selectThreshold: true
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      _drawDebug: false
+      sphereCastEnabled: false
+      spherecastRadii: !<float[]>
+        - 0.500000
+        - 2.000000
+        - 4.000000
+      spherecastDistanceThresholds: !<float[]>
+        - 0.000000
+        - 12.000000
+        - 30.000000
+      _maxRaycastDistance: !<float> 500.000000
+      indirectTargetingVolumeMultiplier: !<float> 1.000000
+      indirectDragThreshold: !<float> 10.000000
+      rayOrigin: !<reference.SceneObject> 3bcb105b-5bda-43af-a101-f99e6f337183
+      driver: !<MappingBased.AssignableType> bd3d9ce1-3aa9-4594-ad13-8076c1201005
+      aimForwardLocal: !<Vec3> {x: 0.000000, y: 0.000000, z: 1.000000}
+      selectThreshold: 0.500000
+  ScriptTypes:
+    "":
+      {}
 - !<SceneObject/b9527455-3058-4cc8-9255-783169419f0d>
   PrefabRemaps:
     []
@@ -4565,7 +4637,7 @@
 - !<SceneObject/e0c191dd-f95c-400d-bc9f-75f7e65cdd4a>
   PrefabRemaps:
     []
-  Name: ControllerInteractor
+  Name: RightControllerInteractor
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
@@ -5208,6 +5280,7 @@
     - !<own> 6ecf7400-9abd-4dad-b25a-bfd52b85a692
     - !<own> bbdb536e-2525-4942-8897-5838148915b2
     - !<own> e0c191dd-f95c-400d-bc9f-75f7e65cdd4a
+    - !<own> 1b27a355-53ed-4657-a802-451222891504
     - !<own> c3dff291-dcc4-4727-8ab0-b0f64a9b99ee
     - !<own> 4961477b-bc35-4354-af44-71c344e32e6a
   Components:
