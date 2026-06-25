@@ -1,3 +1,5 @@
 data:
   externalSources:
-    []
+    - 77fa0936-be7f-400f-8252-999acaad5e71: /Users/amir/Documents/GitHub/SpecsQuest/Assets/SpectaclesInteractionKit.lspkg/Assets/Textures/Base.png
+    - c45af7dd-e037-4a7c-981f-5ffe94bf8417: /Applications/Lens Studio.app/Contents/JsPlugins/HelperScriptsRegistry/Assets/Scripts/Resources/Behavior.lsc
+    - dcd0d5c9-25ec-4694-97b2-2f00ba2a8cbc: /Users/amir/Documents/GitHub/SpecsQuest/Assets/SpectaclesInteractionKit.lspkg/Assets/Shaders/simple_pbr.ss_graph

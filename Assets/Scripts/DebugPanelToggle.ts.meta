@@ -1,0 +1,50 @@
+- !<AssetImportMetadata/b5ed331b-5bf6-49c7-a034-8ea9e162f576>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> fba9870a-c47f-48d0-8ece-00e27db99498
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> fba9870a-c47f-48d0-8ece-00e27db99498
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> 92b611c4-128e-4b7b-a3da-0673e34292e4
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/92b611c4-128e-4b7b-a3da-0673e34292e4>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  ComponentUid: a93c1d04-7b66-4062-97c4-4e7d443aa89c
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    buttonObject: false
+    panel: false
+    startVisible: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - buttonObject: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      panel: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      startVisible: false
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - "// @input SceneObject buttonObject {\"hint\":\"The palm button's SceneObject. Must have an Interactable (any SIK or UIKit button does).\"}"
+    - '// @input SceneObject panel {"hint":"The debug panel root (camera-tied). Enabled/disabled by pinching the button."}'
+    - '// @input bool startVisible {"hint":"Whether the panel is visible on launch."}'

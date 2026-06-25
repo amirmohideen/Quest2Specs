@@ -1,0 +1,96 @@
+- !<AssetImportMetadata/c49b092a-d043-20ee-4115-ac1c8af78895>
+  ImportedAssetIds:
+    ObjectPrefab: !<reference> 86dd2335-3753-4cfa-b1cc-dc03383a0684
+  ImporterName: ObjectPrefabImporter
+  PrimaryAsset: !<reference> 86dd2335-3753-4cfa-b1cc-dc03383a0684
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    AssetLibraryId: 5KUNHsU81qaNHrCt4nY59o
+  AssetDataMap:
+    ObjectPrefab: !<own> 0fa78f89-2364-4fe9-b2bd-e588c1445381
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<ObjectPrefabAssetData/0fa78f89-2364-4fe9-b2bd-e588c1445381>
+  Prototype: !<ObjectOwner/ac9f0300-ebef-482b-a89b-d2a11f0204b5>
+    PackagePath: ""
+    objects:
+      - !<own> 404f06f6-4f86-4b06-4971-ad9a68a418e4
+- !<SceneObject/17af34dd-5809-49f3-6c44-7e4e59f17948>
+  PrefabRemaps:
+    []
+  Name: Script API Start Stop
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> d0bb1292-9fda-437f-7b5e-7054b1680df9
+- !<VFXComponent/1979409f-9542-4466-42fb-63256bad4863>
+  PrefabRemaps:
+    []
+  Name: VFX Component
+  Enabled: true
+  RenderOrder: 0
+  StretchMode: Stretch
+  VerticalAlignment: Center
+  HorizontalAlignment: Center
+  MeshShadowMode: None
+  ShadowColor: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+  ShadowDensity: 1.000000
+  VFXAsset: !<reference> 691948de-fd96-4813-8082-dc5bdb6e92e0
+- !<SceneObject/404f06f6-4f86-4b06-4971-ad9a68a418e4>
+  PrefabRemaps:
+    []
+  Name: "API Start Stop [TAP TO START/STOP]"
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> 8c10ea04-a8f3-49a5-5800-ecbcc111779c
+    - !<own> 17af34dd-5809-49f3-6c44-7e4e59f17948
+  Components:
+    []
+- !<SceneObject/8c10ea04-a8f3-49a5-5800-ecbcc111779c>
+  PrefabRemaps:
+    []
+  Name: Simple Emitter
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 1979409f-9542-4466-42fb-63256bad4863
+- !<ScriptComponent/d0bb1292-9fda-437f-7b5e-7054b1680df9>
+  PrefabRemaps:
+    []
+  Name: Script API Start Stop
+  Enabled: true
+  ScriptAsset: !<reference> 8091b77f-67b3-45b2-9824-79595c138f57
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      vfxComp: !<reference.VFXComponent> 1979409f-9542-4466-42fb-63256bad4863
+  ScriptTypes:
+    "":
+      {}

@@ -1,13 +1,57 @@
 CollapsedEntities:
   type: stringset
   value:
-    size: 567
+    size: 612
     values:
+      - Behavior.lsc
+      - ControllerHandModelAssets
+      - ControllerHandModelAssets/Base 2.png
+      - ControllerHandModelAssets/SimplePBRMaterial 2.mat
+      - ControllerHandModelAssets/simple_pbr 2.ss_graph
+      - Device Camera Texture.deviceCameraTexture
+      - Echopark.hdr
+      - Echopark.hdr/Diffuse
+      - Echopark.hdr/Specular
+      - Emission Control VFX.lspkg
+      - Emission Control VFX.lspkg/Variable Emission Resources
+      - Emission Control VFX.lspkg/Variable Emission Resources/Materials
+      - Emission Control VFX.lspkg/Variable Emission Resources/Materials/PBR.mat
+      - Emission Control VFX.lspkg/Variable Emission Resources/Meshes
+      - Emission Control VFX.lspkg/Variable Emission Resources/Meshes/Box.mesh
+      - Emission Control VFX.lspkg/Variable Emission Resources/Prefabs
+      - "Emission Control VFX.lspkg/Variable Emission Resources/Prefabs/API Start Stop [TAP TO START_STOP].prefab"
+      - "Emission Control VFX.lspkg/Variable Emission Resources/Prefabs/Burst Amount [TAP TO BURST].prefab"
+      - Emission Control VFX.lspkg/Variable Emission Resources/Prefabs/Emit When Moved.prefab
+      - Emission Control VFX.lspkg/Variable Emission Resources/Prefabs/Variable Emission.prefab
+      - Emission Control VFX.lspkg/Variable Emission Resources/Scripts
+      - Emission Control VFX.lspkg/Variable Emission Resources/Scripts/Script API Start Stop.js
+      - Emission Control VFX.lspkg/Variable Emission Resources/Scripts/Script Burst On Tap.js
+      - Emission Control VFX.lspkg/Variable Emission Resources/Scripts/Script Emit When Moved.js
+      - Emission Control VFX.lspkg/Variable Emission Resources/Shader
+      - Emission Control VFX.lspkg/Variable Emission Resources/Shader/pbr.ss_graph
+      - Emission Control VFX.lspkg/Variable Emission Resources/Textures
+      - Emission Control VFX.lspkg/Variable Emission Resources/Textures/Base.png
+      - Emission Control VFX.lspkg/Variable Emission Resources/Textures/MaterialParams.png
+      - Emission Control VFX.lspkg/Variable Emission Resources/Textures/Normal.png
+      - Emission Control VFX.lspkg/Variable Emission Resources/Textures/Particles Texture.png
+      - Emission Control VFX.lspkg/Variable Emission Resources/VFX
+      - Emission Control VFX.lspkg/Variable Emission Resources/VFX/Burst Amount.vfxgraph
+      - Emission Control VFX.lspkg/Variable Emission Resources/VFX/Emit When Moved.vfxgraph
+      - Emission Control VFX.lspkg/Variable Emission Resources/VFX/Simple Emitter.vfxgraph
+      - Emission Control VFX.lspkg/Variable Emission Resources/VFX/Variable Emission.vfxgraph
+      - Emission Control VFX.lspkg/package.native
       - Internet Module.internetModule
+      - Render Target.renderTarget
+      - Scene.scene
+      - Scripts
       - Scripts/BridgeDebugHud.ts
       - Scripts/ControllerHandDriver.ts
       - Scripts/ControllerInteractor.ts
+      - Scripts/DebugPanelToggle.ts
       - Scripts/HandModeToggle.ts
+      - Scripts/PalmFacingVisibility.ts
+      - Scripts/ToggleSetActive.ts
+      - Settings_Interface.prefab
       - SpectaclesInteractionKit.lspkg
       - SpectaclesInteractionKit.lspkg/Assets
       - SpectaclesInteractionKit.lspkg/Assets/Audio
@@ -195,6 +239,7 @@ CollapsedEntities:
       - SpectaclesInteractionKit.lspkg/Components/Interaction/Headlock/HeadlockTranslationCalculator.ts
       - SpectaclesInteractionKit.lspkg/Components/Interaction/Interactable
       - SpectaclesInteractionKit.lspkg/Components/Interaction/Interactable/Interactable.ts
+      - SpectaclesInteractionKit.lspkg/Components/Interaction/Interactable/InteractableEventHandler.ts
       - SpectaclesInteractionKit.lspkg/Components/Interaction/InteractableManipulation
       - SpectaclesInteractionKit.lspkg/Components/Interaction/InteractableManipulation/InteractableManipulation.ts
       - SpectaclesInteractionKit.lspkg/Components/Interaction/InteractionPlane
@@ -299,12 +344,14 @@ CollapsedEntities:
       - SpectaclesInteractionKit.lspkg/Core/Interactor/ColliderTargetProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/DirectTargetProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/DragProvider.ts
+      - SpectaclesInteractionKit.lspkg/Core/Interactor/FingertipConstants.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/HandRayProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/IndirectTargetProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/Interactor.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/InteractorEvent.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/MobileRayProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/MouseTargetProvider.ts
+      - SpectaclesInteractionKit.lspkg/Core/Interactor/PhysicalInteractionProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/PokeTargetProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/RayProvider.ts
       - SpectaclesInteractionKit.lspkg/Core/Interactor/TouchRayProvider.ts
@@ -430,6 +477,7 @@ CollapsedEntities:
       - SpectaclesInteractionKit.lspkg/VersionNumber.ts
       - SpectaclesInteractionKit.lspkg/package.native
       - SpectaclesInteractionKit.lspkg/tsconfig.json
+      - SpectaclesUIKit.lspkg
       - SpectaclesUIKit.lspkg/Audio
       - SpectaclesUIKit.lspkg/Audio/HoverAudioTrack.wav
       - SpectaclesUIKit.lspkg/Audio/SliderProgressionAudioTrack.wav
@@ -460,13 +508,11 @@ CollapsedEntities:
       - SpectaclesUIKit.lspkg/Meshes/StretchableCircle.mesh
       - SpectaclesUIKit.lspkg/Meshes/Unit Plane.mesh
       - SpectaclesUIKit.lspkg/Prefabs/DropShadow.prefab
-      - SpectaclesUIKit.lspkg/Prefabs/ExampleInterface.prefab
       - SpectaclesUIKit.lspkg/Prefabs/FrameButton.prefab
       - SpectaclesUIKit.lspkg/Prefabs/ImageButton.prefab
       - SpectaclesUIKit.lspkg/Prefabs/LabelledButton.prefab
       - SpectaclesUIKit.lspkg/Prefabs/LabelledToggle.prefab
       - SpectaclesUIKit.lspkg/README.md
-      - SpectaclesUIKit.lspkg/Scripts
       - SpectaclesUIKit.lspkg/Scripts/BackPlate.ts
       - SpectaclesUIKit.lspkg/Scripts/Components
       - SpectaclesUIKit.lspkg/Scripts/Components/Button
@@ -508,7 +554,6 @@ CollapsedEntities:
       - SpectaclesUIKit.lspkg/Scripts/Components/Toggle/Toggleable.ts
       - SpectaclesUIKit.lspkg/Scripts/Components/VisualElement.ts
       - SpectaclesUIKit.lspkg/Scripts/DropShadow.ts
-      - SpectaclesUIKit.lspkg/Scripts/Example
       - SpectaclesUIKit.lspkg/Scripts/Example/Capsule3D
       - SpectaclesUIKit.lspkg/Scripts/Example/Capsule3D/Capsule3DButton.ts
       - SpectaclesUIKit.lspkg/Scripts/Example/Capsule3D/Visual

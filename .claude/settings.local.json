@@ -10,7 +10,11 @@
       "Bash(grep \"\\\\.ts$\")",
       "Bash(awk '/enum InteractorInputType/,/}/' Core/Interactor/Interactor.ts)",
       "Bash(awk '/enum InteractorTriggerType/,/}/' Core/Interactor/Interactor.ts)",
-      "Bash(awk '/enum TargetingMode/,/}/' Core/Interactor/Interactor.ts)"
+      "Bash(awk '/enum TargetingMode/,/}/' Core/Interactor/Interactor.ts)",
+      "Bash(grep -E \"\\\\.ts$\")",
+      "Bash(awk '/Callback/{p=1} p{print} /^}/{if\\(p\\)c++; if\\(c>=2\\)exit}' Scripts/Utility/SceneUtilities.ts)",
+      "Bash(awk 'NR>=1507 && NR<=1560' Support/StudioLib.d.ts)",
+      "Bash(awk 'NR>=20105 && NR<=20180' Support/StudioLib.d.ts)"
     ]
   }
 }

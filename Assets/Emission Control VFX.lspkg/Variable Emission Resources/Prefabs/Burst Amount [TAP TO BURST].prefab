@@ -1,0 +1,185 @@
+- !<ObjectPrefab/3fbab6f9-5085-4bac-a68f-6dcda17f76c1>
+  PackagePath: ""
+  objects:
+    - !<own> 87e19877-8fe7-45ef-ad0a-850cb7a0a7c1
+  LazyLoading: false
+  RetainAssets: true
+- !<SceneObject/2bc8ae57-517f-4190-96d7-d79516534046>
+  PrefabRemaps:
+    []
+  Name: VFX Graph
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> e7288c4c-9fde-47b2-b6b2-4d1ccb4bd7f6
+- !<SceneObject/440ce78e-1059-4ad9-b49e-797c2f2071e5>
+  PrefabRemaps:
+    []
+  Name: Debug Text
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 1.000000, y: -5.000000, z: 28.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> 80e7f9dd-7432-4689-8f28-6bd502b38519
+- !<Text/80e7f9dd-7432-4689-8f28-6bd502b38519>
+  PrefabRemaps:
+    []
+  Name: Text
+  Enabled: true
+  RenderOrder: 0
+  StretchMode: Stretch
+  VerticalAlignment: Center
+  HorizontalAlignment: Left
+  MeshShadowMode: None
+  ShadowColor: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+  ShadowDensity: 1.000000
+  Text: "Spawn Amount:"
+  Editable: false
+  ShowEditingPreview: true
+  TouchHandler: !<reference> 00000000-0000-0000-0000-000000000000
+  SizeToFit: false
+  FontSize: 48
+  Font: !<reference> 00000000-0000-0000-0000-000000000000
+  LayoutRect:
+    left: -7.500000
+    bottom: -2.250000
+    right: 7.500000
+    top: 2.250000
+  OverflowVertical: Overflow
+  OverflowHorizontal: Overflow
+  Fill: !<TextFill>
+    Mode: Solid
+    Color: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+    Texture: !<reference> 00000000-0000-0000-0000-000000000000
+    ColorTint: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+    TileCount: 5.000000
+    TileZone: Rect
+    TextureStretch: FitWidth
+  BlendMode: PremultipliedAlpha
+  Outline: !<OutlineSettings>
+    Enabled: true
+    Fill: !<TextFill>
+      Mode: Solid
+      Color: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}
+      Texture: !<reference> 00000000-0000-0000-0000-000000000000
+      ColorTint: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+      TileCount: 5.000000
+      TileZone: Rect
+      TextureStretch: FitWidth
+    Size: 0.250000
+  Dropshadow: !<DropshadowSettings>
+    Enabled: false
+    Fill: !<TextFill>
+      Mode: Solid
+      Color: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}
+      Texture: !<reference> 00000000-0000-0000-0000-000000000000
+      ColorTint: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+      TileCount: 5.000000
+      TileZone: Rect
+      TextureStretch: FitWidth
+    OffsetX: 0.250000
+    OffsetY: 0.250000
+  Background: !<BackgroundSettings>
+    Enabled: false
+    Fill: !<TextFill>
+      Mode: Solid
+      Color: {x: 0.000000, y: 0.000000, z: 0.000000, w: 1.000000}
+      Texture: !<reference> 00000000-0000-0000-0000-000000000000
+      ColorTint: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+      TileCount: 5.000000
+      TileZone: Rect
+      TextureStretch: FitWidth
+    Margins:
+      left: 0.000000
+      bottom: 0.000000
+      right: 0.000000
+      top: 0.000000
+    CornerRadius: 0.000000
+  AdvancedLayout: !<TextAdvancedLayout>
+    ExtentsTarget: !<reference> 00000000-0000-0000-0000-000000000000
+    LetterSpacing: 0.000000
+    LineSpacing: 1.000000
+    CapitalizationOverride: None
+  DepthTest: false
+  TwoSided: false
+- !<SceneObject/87e19877-8fe7-45ef-ad0a-850cb7a0a7c1>
+  PrefabRemaps:
+    - 2bc8ae57-517f-4190-96d7-d79516534046: 2bc8ae57-517f-4190-6928-286ae9acbfb9
+    - 440ce78e-1059-4ad9-b49e-797c2f2071e5: 440ce78e-1059-4ad9-4b61-8683d0df8e1a
+    - 80e7f9dd-7432-4689-8f28-6bd502b38519: 80e7f9dd-7432-4689-70d7-942afd4c7ae6
+    - 87e19877-8fe7-45ef-ad0a-850cb7a0a7c1: 87e19877-8fe7-45ef-52f5-7af3485f583e
+    - b78d0091-60db-4e38-b474-276dd16c92ca: b78d0091-60db-4e38-4b8b-d8922e936d35
+    - c31a7bc9-23c1-4692-867a-979a925dfa6b: c31a7bc9-23c1-4692-7985-68656da20594
+    - e7288c4c-9fde-47b2-b6b2-4d1ccb4bd7f6: e7288c4c-9fde-47b2-494d-b2e334b42809
+  Name: "Burst Amount [TAP TO BURST]"
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> 2bc8ae57-517f-4190-96d7-d79516534046
+    - !<own> c31a7bc9-23c1-4692-867a-979a925dfa6b
+    - !<own> 440ce78e-1059-4ad9-b49e-797c2f2071e5
+  Components:
+    []
+- !<ScriptComponent/b78d0091-60db-4e38-b474-276dd16c92ca>
+  PrefabRemaps:
+    []
+  Name: Script Burst On Tap
+  Enabled: true
+  ScriptAsset: !<reference> 7cf8fa69-0b06-441b-9461-5aa40e2b2685
+  ScriptInputsDefault:
+    {}
+  ScriptTypesDefault:
+    {}
+  ScriptInputs:
+    "":
+      vfx: !<reference.VFXAsset> 9da0b88a-1d88-47d5-a7af-a2d057fc6256
+      debugText: !<reference.Text> 80e7f9dd-7432-4689-8f28-6bd502b38519
+  ScriptTypes:
+    "":
+      {}
+- !<SceneObject/c31a7bc9-23c1-4692-867a-979a925dfa6b>
+  PrefabRemaps:
+    []
+  Name: Script Burst On Tap
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> b78d0091-60db-4e38-b474-276dd16c92ca
+- !<VFXComponent/e7288c4c-9fde-47b2-b6b2-4d1ccb4bd7f6>
+  PrefabRemaps:
+    []
+  Name: VFX Component
+  Enabled: true
+  RenderOrder: 0
+  StretchMode: Stretch
+  VerticalAlignment: Center
+  HorizontalAlignment: Center
+  MeshShadowMode: None
+  ShadowColor: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+  ShadowDensity: 1.000000
+  VFXAsset: !<reference> 9da0b88a-1d88-47d5-a7af-a2d057fc6256

@@ -1,0 +1,51 @@
+- !<ObjectPrefab/b0c037e3-5033-48fc-bbf3-11124fd8b0ce>
+  PackagePath: ""
+  objects:
+    - !<own> 15c58c75-cd79-4eec-a1d6-220f6f63ce22
+  LazyLoading: false
+  RetainAssets: true
+- !<SceneObject/15c58c75-cd79-4eec-a1d6-220f6f63ce22>
+  PrefabRemaps:
+    - 15c58c75-cd79-4eec-a1d6-220f6f63ce22: 15c58c75-cd79-4eec-5e29-ddf0909c31dd
+    - 54530eaf-17c5-4ea9-8637-b9a8fddeb356: 54530eaf-17c5-4ea9-79c8-465702214ca9
+    - c5b6bb09-fa03-4105-988f-7d0871ba5eba: c5b6bb09-fa03-4105-6770-82f78e45a145
+  Name: Variable Emission
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    - !<own> 54530eaf-17c5-4ea9-8637-b9a8fddeb356
+  Components:
+    []
+- !<SceneObject/54530eaf-17c5-4ea9-8637-b9a8fddeb356>
+  PrefabRemaps:
+    []
+  Name: Variable Emission
+  Enabled: true
+  Layers: 1
+  LocalTransform: !<TransformEntity>
+    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
+    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
+    HasSegmentScaleCompensation: false
+  Children:
+    []
+  Components:
+    - !<own> c5b6bb09-fa03-4105-988f-7d0871ba5eba
+- !<VFXComponent/c5b6bb09-fa03-4105-988f-7d0871ba5eba>
+  PrefabRemaps:
+    []
+  Name: VFX Component
+  Enabled: true
+  RenderOrder: 0
+  StretchMode: Stretch
+  VerticalAlignment: Center
+  HorizontalAlignment: Center
+  MeshShadowMode: None
+  ShadowColor: {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
+  ShadowDensity: 1.000000
+  VFXAsset: !<reference> 67eedcc7-e6cb-4f83-9712-f60c5d206d6f
