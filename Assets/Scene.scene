@@ -1169,16 +1169,25 @@
     yawTrimDegrees: true
     posScale: true
     calibrateButton: true
-    nudgeButton: true
+    nudgeUpButton: true
+    nudgeDownButton: true
     nudgeStepCm: true
     nudgeAxisWorld: true
+    enableStickMove: true
+    stickSpeedCmPerSec: true
+    stickDeadzone: true
+    stickForwardAxisWorld: true
+    stickRightAxisWorld: true
+    stickXIndex: true
+    stickYIndex: true
+    maxStickOffsetCm: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
     "":
       handedness: right
       internetModule: !<reference.InternetModule> 466a25a9-b9bd-44bc-8eed-4cdb77da6045
-      url: "wss://screenshots-brief-hollow-normally.trycloudflare.com"
+      url: "wss://journals-legislature-nickname-quoted.trycloudflare.com"
       handRoot: !<reference.SceneObject> 1418d88c-6cb8-421c-a009-a9acced0abfe
       camera: !<reference.SceneObject> 00000000-0000-0065-0000-000000000064
       indexJoints: !<reference.SceneObject[]>
@@ -1215,9 +1224,18 @@
       yawTrimDegrees: !<float> 0.000000
       posScale: !<float> 1.000000
       calibrateButton: !<float> 4.000000
-      nudgeButton: !<float> 5.000000
+      nudgeUpButton: !<float> 5.000000
+      nudgeDownButton: !<float> 4.000000
       nudgeStepCm: !<float> 3.000000
       nudgeAxisWorld: !<Vec3> {x: 0.000000, y: 1.000000, z: 0.000000}
+      enableStickMove: true
+      stickSpeedCmPerSec: !<float> 30.000000
+      stickDeadzone: 0.150000
+      stickForwardAxisWorld: !<Vec3> {x: 0.000000, y: 0.000000, z: -1.000000}
+      stickRightAxisWorld: !<Vec3> {x: -1.000000, y: 0.000000, z: 0.000000}
+      stickXIndex: !<float> 2.000000
+      stickYIndex: !<float> 3.000000
+      maxStickOffsetCm: !<float> 150.000000
   ScriptTypes:
     "":
       {}
@@ -4471,16 +4489,25 @@
     yawTrimDegrees: true
     posScale: true
     calibrateButton: true
-    nudgeButton: true
+    nudgeUpButton: true
+    nudgeDownButton: true
     nudgeStepCm: true
     nudgeAxisWorld: true
+    enableStickMove: true
+    stickSpeedCmPerSec: true
+    stickDeadzone: true
+    stickForwardAxisWorld: true
+    stickRightAxisWorld: true
+    stickXIndex: true
+    stickYIndex: true
+    maxStickOffsetCm: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
     "":
       handedness: left
       internetModule: !<reference.InternetModule> 466a25a9-b9bd-44bc-8eed-4cdb77da6045
-      url: "wss://screenshots-brief-hollow-normally.trycloudflare.com"
+      url: "wss://journals-legislature-nickname-quoted.trycloudflare.com"
       handRoot: !<reference.SceneObject> 10d8dc80-8b44-420f-948e-a5db01bf9e35
       camera: !<reference.SceneObject> 00000000-0000-0065-0000-000000000064
       indexJoints: !<reference.SceneObject[]>
@@ -4516,9 +4543,18 @@
       yawTrimDegrees: !<float> 0.000000
       posScale: !<float> 1.000000
       calibrateButton: !<float> 4.000000
-      nudgeButton: !<float> 5.000000
+      nudgeUpButton: !<float> 5.000000
+      nudgeDownButton: !<float> 4.000000
       nudgeStepCm: !<float> 3.000000
       nudgeAxisWorld: !<Vec3> {x: 0.000000, y: 1.000000, z: 0.000000}
+      enableStickMove: true
+      stickSpeedCmPerSec: !<float> 30.000000
+      stickDeadzone: 0.150000
+      stickForwardAxisWorld: !<Vec3> {x: 0.000000, y: 0.000000, z: -1.000000}
+      stickRightAxisWorld: !<Vec3> {x: -1.000000, y: 0.000000, z: 0.000000}
+      stickXIndex: !<float> 2.000000
+      stickYIndex: !<float> 3.000000
+      maxStickOffsetCm: !<float> 150.000000
   ScriptTypes:
     "":
       {}
@@ -5091,7 +5127,7 @@
   PrefabRemaps:
     []
   Name: ControllerBridge
-  Enabled: false
+  Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
     Position: {x: 0.000000, y: 0.000000, z: 0.000000}
@@ -5395,7 +5431,6 @@
     customKnobSize: true
     _knobSize: true
     onFinishedCallbacks: true
-    _defaultValue: true
   ScriptTypesDefault:
     {}
   ScriptInputs:
@@ -5415,7 +5450,7 @@
           functionName: setActiveFromValue
       onFinishedCallbacks:
         []
-      _defaultValue: 0
+      _defaultValue: 1
   ScriptTypes:
     "":
       {}

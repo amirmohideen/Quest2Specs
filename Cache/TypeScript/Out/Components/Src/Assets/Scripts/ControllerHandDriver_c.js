@@ -36,10 +36,21 @@ function checkUndefined(property, showIfData) {
 // @input vec3 anchorOffsetCm = {0,-25,35} {"hint":"Where the hand sits at calibration, relative to your head in cm: x=right, y=up, z=forward. Lower y to drop it to where you hold the controllers (negative y = down)."}
 // @input float yawTrimDegrees {"hint":"Manual heading trim (degrees) if left/right feels rotated after calibration."}
 // @input float posScale = 1 {"hint":"Movement scale. 1 = physical 1:1. Raise to amplify reach."}
-// @input float calibrateButton = 4 {"hint":"Button index that calibrates / re-anchors (Quest: 4 = A/X). Point controller forward, hold still, press."}
-// @input float nudgeButton = 5 {"hint":"Button index that nudges hand height live (Quest: 5 = B on right / Y on left). Right raises, left lowers. Affects both hands."}
-// @input float nudgeStepCm = 3 {"hint":"Centimetres moved per nudge press."}
-// @input vec3 nudgeAxisWorld = {0,1,0} {"hint":"World direction a +nudge moves the hands (default up). Right controller's B = +, left's Y = -."}
+// @input float calibrateButton = 3 {"hint":"Button that resets / re-anchors THIS hand (Quest: 3 = thumbstick click). Clears stick/height offsets too."}
+// @input float nudgeUpButton = 5 {"hint":"Button that raises THIS hand a step (Quest: 5 = B on right / Y on left)."}
+// @input float nudgeDownButton = 4 {"hint":"Button that lowers THIS hand a step (Quest: 4 = A on right / X on left)."}
+// @input float nudgeStepCm = 3 {"hint":"Centimetres moved per button press."}
+// @input vec3 nudgeAxisWorld = {0,1,0} {"hint":"World direction a raise moves this hand (default up = +Y)."}
+// @ui {"widget":"group_end"}
+// @ui {"widget":"group_start", "label":"Stick slide (this hand's thumbstick)"}
+// @input bool enableStickMove = true {"hint":"Let this hand's thumbstick slide the hand. Right stick moves the right hand, left stick the left hand."}
+// @input float stickSpeedCmPerSec = 30 {"hint":"How fast (cm/sec) the hand slides at full stick deflection."}
+// @input float stickDeadzone = 0.15 {"hint":"Ignore stick magnitudes below this (drift)."}
+// @input vec3 stickForwardAxisWorld = {0,0,-1} {"hint":"World direction the hand slides when the stick is pushed forward/up (default -Z)."}
+// @input vec3 stickRightAxisWorld = {1,0,0} {"hint":"World direction the hand slides when the stick is pushed right (default +X, so left = -X)."}
+// @input float stickXIndex = 2 {"hint":"Gamepad axis index for stick X (Quest = 2)."}
+// @input float stickYIndex = 3 {"hint":"Gamepad axis index for stick Y (Quest = 3)."}
+// @input float maxStickOffsetCm = 150 {"hint":"Clamp the total stick slide (cm) so the hand can't fly away."}
 // @ui {"widget":"group_end"}
 if (!global.BaseScriptComponent) {
     function BaseScriptComponent() {}
@@ -70,9 +81,18 @@ awakeEvent.bind(() => {
     checkUndefined("yawTrimDegrees", []);
     checkUndefined("posScale", []);
     checkUndefined("calibrateButton", []);
-    checkUndefined("nudgeButton", []);
+    checkUndefined("nudgeUpButton", []);
+    checkUndefined("nudgeDownButton", []);
     checkUndefined("nudgeStepCm", []);
     checkUndefined("nudgeAxisWorld", []);
+    checkUndefined("enableStickMove", []);
+    checkUndefined("stickSpeedCmPerSec", []);
+    checkUndefined("stickDeadzone", []);
+    checkUndefined("stickForwardAxisWorld", []);
+    checkUndefined("stickRightAxisWorld", []);
+    checkUndefined("stickXIndex", []);
+    checkUndefined("stickYIndex", []);
+    checkUndefined("maxStickOffsetCm", []);
     if (script.onAwake) {
        script.onAwake();
     }

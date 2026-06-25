@@ -36,12 +36,10 @@ interface ControllerPacket {
   trigger: number
   grip?: number
   buttons?: number[]                        // [trigger, grip, _, stick, A/X, B/Y]
+  axes?: number[]                           // [touchpadX, touchpadY, stickX, stickY]
 }
 
 const DEG2RAD = Math.PI / 180
-
-// Shared across both hand drivers (same script module): live height tuned with B/Y in-headset.
-let sharedNudgeCm = 0
 
 @component
 export class ControllerHandDriver extends BaseScriptComponent {
@@ -110,17 +108,47 @@ export class ControllerHandDriver extends BaseScriptComponent {
   @hint("Movement scale. 1 = physical 1:1. Raise to amplify reach.")
   posScale: number = 1.0
   @input
-  @hint("Button index that calibrates / re-anchors (Quest: 4 = A/X). Point controller forward, hold still, press.")
-  calibrateButton: number = 4
+  @hint("Button that resets / re-anchors THIS hand (Quest: 3 = thumbstick click). Clears stick/height offsets too.")
+  calibrateButton: number = 3
   @input
-  @hint("Button index that nudges hand height live (Quest: 5 = B on right / Y on left). Right raises, left lowers. Affects both hands.")
-  nudgeButton: number = 5
+  @hint("Button that raises THIS hand a step (Quest: 5 = B on right / Y on left).")
+  nudgeUpButton: number = 5
   @input
-  @hint("Centimetres moved per nudge press.")
+  @hint("Button that lowers THIS hand a step (Quest: 4 = A on right / X on left).")
+  nudgeDownButton: number = 4
+  @input
+  @hint("Centimetres moved per button press.")
   nudgeStepCm: number = 3
   @input
-  @hint("World direction a +nudge moves the hands (default up). Right controller's B = +, left's Y = -.")
+  @hint("World direction a raise moves this hand (default up = +Y).")
   nudgeAxisWorld: vec3 = new vec3(0, 1, 0)
+  @ui.group_end
+
+  @ui.group_start("Stick slide (this hand's thumbstick)")
+  @input
+  @hint("Let this hand's thumbstick slide the hand. Right stick moves the right hand, left stick the left hand.")
+  enableStickMove: boolean = true
+  @input
+  @hint("How fast (cm/sec) the hand slides at full stick deflection.")
+  stickSpeedCmPerSec: number = 30
+  @input
+  @hint("Ignore stick magnitudes below this (drift).")
+  stickDeadzone: number = 0.15
+  @input
+  @hint("World direction the hand slides when the stick is pushed forward/up (default -Z).")
+  stickForwardAxisWorld: vec3 = new vec3(0, 0, -1)
+  @input
+  @hint("World direction the hand slides when the stick is pushed right (default +X, so left = -X).")
+  stickRightAxisWorld: vec3 = new vec3(1, 0, 0)
+  @input
+  @hint("Gamepad axis index for stick X (Quest = 2).")
+  stickXIndex: number = 2
+  @input
+  @hint("Gamepad axis index for stick Y (Quest = 3).")
+  stickYIndex: number = 3
+  @input
+  @hint("Clamp the total stick slide (cm) so the hand can't fly away.")
+  maxStickOffsetCm: number = 150
   @ui.group_end
 
   private socket: WebSocket | undefined
@@ -139,7 +167,12 @@ export class ControllerHandDriver extends BaseScriptComponent {
   private alignPos: vec3 = vec3.zero()
   private modelOffset: quat = quat.quatIdentity()
   private prevCalibButton = false
-  private prevNudgeButton = false
+  private prevUpButton = false
+  private prevDownButton = false
+  private heightOffsetCm = 0
+
+  private stickOffset: vec3 = vec3.zero()
+  private lastStickTime = -1
 
   private active = true
 
@@ -261,23 +294,32 @@ export class ControllerHandDriver extends BaseScriptComponent {
     if (calibPressed && !this.prevCalibButton) this.calibrated = false
     this.prevCalibButton = calibPressed
 
-    // Rising-edge nudge button (B on right raises, Y on left lowers) -> shared live height.
-    const nudgePressed = !!(p.buttons && p.buttons[this.nudgeButton] > 0.5)
-    if (nudgePressed && !this.prevNudgeButton) {
-      sharedNudgeCm += this.handedness === "right" ? this.nudgeStepCm : -this.nudgeStepCm
-      print(`${TAG} height nudge -> ${sharedNudgeCm.toFixed(0)}cm`)
+    // Per-hand height nudge: up button (B/Y) raises this hand, down button (A/X) lowers it.
+    const upPressed = !!(p.buttons && p.buttons[this.nudgeUpButton] > 0.5)
+    if (upPressed && !this.prevUpButton) {
+      this.heightOffsetCm += this.nudgeStepCm
+      print(`${TAG} ${this.handedness} height -> ${this.heightOffsetCm.toFixed(0)}cm`)
     }
-    this.prevNudgeButton = nudgePressed
+    this.prevUpButton = upPressed
+
+    const downPressed = !!(p.buttons && p.buttons[this.nudgeDownButton] > 0.5)
+    if (downPressed && !this.prevDownButton) {
+      this.heightOffsetCm -= this.nudgeStepCm
+      print(`${TAG} ${this.handedness} height -> ${this.heightOffsetCm.toFixed(0)}cm`)
+    }
+    this.prevDownButton = downPressed
 
     if (!this.calibrated) {
       this.calibrate(questPos, questRot)
       this.calibrated = true
     }
 
-    // FOLLOW (world-locked) + live shared height nudge
+    // FOLLOW (world-locked) + live height nudge (B/Y) + thumbstick slide (X/Z)
+    this.updateStickOffset(p.axes)
     const scaled = questPos.uniformScale(100 * this.posScale)
-    const nudge = this.nudgeAxisWorld.uniformScale(sharedNudgeCm)
-    this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos).add(nudge))
+    const nudge = this.nudgeAxisWorld.uniformScale(this.heightOffsetCm)
+    const worldPos = this.alignYaw.multiplyVec3(scaled).add(this.alignPos).add(nudge).add(this.stickOffset)
+    this.handTransform.setWorldPosition(worldPos)
     this.handTransform.setWorldRotation(this.alignYaw.multiply(questRot).multiply(this.modelOffset))
 
     // PINCH (trigger) + FIST (grip)
@@ -291,6 +333,10 @@ export class ControllerHandDriver extends BaseScriptComponent {
 
   /** Solve the Quest-world -> Spectacles-world alignment from the current camera + controller pose. */
   private calibrate(questPos: vec3, questRot: quat): void {
+    // A reset re-anchors AND clears the manual stick/height offsets for a clean default pose.
+    this.stickOffset = vec3.zero()
+    this.heightOffsetCm = 0
+
     const camPos = this.cameraTransform.getWorldPosition()
     const camRot = this.cameraTransform.getWorldRotation()
     const camRight = camRot.multiplyVec3(new vec3(1, 0, 0))
@@ -316,6 +362,38 @@ export class ControllerHandDriver extends BaseScriptComponent {
     this.modelOffset = this.alignYaw.multiply(questRot).invert().multiply(restRot)
 
     print(`${TAG} ${this.handedness} calibrated  yaw=${(phi / DEG2RAD).toFixed(1)}deg`)
+  }
+
+  /** Integrate this hand's thumbstick into a persistent positional slide (X/Z by default). */
+  private updateStickOffset(axes?: number[]): void {
+    const now = getTime()
+    if (!this.enableStickMove || !axes) {
+      this.lastStickTime = now
+      return
+    }
+    const dt = this.lastStickTime < 0 ? 0 : Math.min(0.1, now - this.lastStickTime)
+    this.lastStickTime = now
+    if (dt <= 0) return
+
+    let sx = axes[this.stickXIndex] ?? 0
+    let sy = axes[this.stickYIndex] ?? 0
+    if (Math.abs(sx) < this.stickDeadzone) sx = 0
+    if (Math.abs(sy) < this.stickDeadzone) sy = 0
+    if (sx === 0 && sy === 0) return
+
+    // WebXR: stick up = -Y, stick right = +X.
+    const forward = -sy
+    const right = sx
+    const move = this.stickForwardAxisWorld
+      .uniformScale(forward)
+      .add(this.stickRightAxisWorld.uniformScale(right))
+      .uniformScale(this.stickSpeedCmPerSec * dt)
+    this.stickOffset = this.stickOffset.add(move)
+
+    const len = this.stickOffset.length
+    if (len > this.maxStickOffsetCm) {
+      this.stickOffset = this.stickOffset.uniformScale(this.maxStickOffsetCm / len)
+    }
   }
 
   private applyCurl(joints: SceneObject[], rest: quat[], axis: vec3, maxDeg: number, t: number): void {

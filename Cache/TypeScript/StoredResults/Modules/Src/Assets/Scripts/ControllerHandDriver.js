@@ -80,8 +80,6 @@ function component(target) {
  */
 const TAG = "[ControllerHandDriver]";
 const DEG2RAD = Math.PI / 180;
-// Shared across both hand drivers (same script module): live height tuned with B/Y in-headset.
-let sharedNudgeCm = 0;
 let ControllerHandDriver = (() => {
     let _classDecorators = [component];
     let _classDescriptor;
@@ -109,9 +107,18 @@ let ControllerHandDriver = (() => {
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.calibrateButton = this.calibrateButton;
-            this.nudgeButton = this.nudgeButton;
+            this.nudgeUpButton = this.nudgeUpButton;
+            this.nudgeDownButton = this.nudgeDownButton;
             this.nudgeStepCm = this.nudgeStepCm;
             this.nudgeAxisWorld = this.nudgeAxisWorld;
+            this.enableStickMove = this.enableStickMove;
+            this.stickSpeedCmPerSec = this.stickSpeedCmPerSec;
+            this.stickDeadzone = this.stickDeadzone;
+            this.stickForwardAxisWorld = this.stickForwardAxisWorld;
+            this.stickRightAxisWorld = this.stickRightAxisWorld;
+            this.stickXIndex = this.stickXIndex;
+            this.stickYIndex = this.stickYIndex;
+            this.maxStickOffsetCm = this.maxStickOffsetCm;
             // Pinch/fist rest poses
             this.indexRest = [];
             this.thumbRest = [];
@@ -123,7 +130,11 @@ let ControllerHandDriver = (() => {
             this.alignPos = vec3.zero();
             this.modelOffset = quat.quatIdentity();
             this.prevCalibButton = false;
-            this.prevNudgeButton = false;
+            this.prevUpButton = false;
+            this.prevDownButton = false;
+            this.heightOffsetCm = 0;
+            this.stickOffset = vec3.zero();
+            this.lastStickTime = -1;
             this.active = true;
             // Debug HUD state
             this._connected = false;
@@ -151,9 +162,18 @@ let ControllerHandDriver = (() => {
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.calibrateButton = this.calibrateButton;
-            this.nudgeButton = this.nudgeButton;
+            this.nudgeUpButton = this.nudgeUpButton;
+            this.nudgeDownButton = this.nudgeDownButton;
             this.nudgeStepCm = this.nudgeStepCm;
             this.nudgeAxisWorld = this.nudgeAxisWorld;
+            this.enableStickMove = this.enableStickMove;
+            this.stickSpeedCmPerSec = this.stickSpeedCmPerSec;
+            this.stickDeadzone = this.stickDeadzone;
+            this.stickForwardAxisWorld = this.stickForwardAxisWorld;
+            this.stickRightAxisWorld = this.stickRightAxisWorld;
+            this.stickXIndex = this.stickXIndex;
+            this.stickYIndex = this.stickYIndex;
+            this.maxStickOffsetCm = this.maxStickOffsetCm;
             // Pinch/fist rest poses
             this.indexRest = [];
             this.thumbRest = [];
@@ -165,7 +185,11 @@ let ControllerHandDriver = (() => {
             this.alignPos = vec3.zero();
             this.modelOffset = quat.quatIdentity();
             this.prevCalibButton = false;
-            this.prevNudgeButton = false;
+            this.prevUpButton = false;
+            this.prevDownButton = false;
+            this.heightOffsetCm = 0;
+            this.stickOffset = vec3.zero();
+            this.lastStickTime = -1;
             this.active = true;
             // Debug HUD state
             this._connected = false;
@@ -275,21 +299,29 @@ let ControllerHandDriver = (() => {
             if (calibPressed && !this.prevCalibButton)
                 this.calibrated = false;
             this.prevCalibButton = calibPressed;
-            // Rising-edge nudge button (B on right raises, Y on left lowers) -> shared live height.
-            const nudgePressed = !!(p.buttons && p.buttons[this.nudgeButton] > 0.5);
-            if (nudgePressed && !this.prevNudgeButton) {
-                sharedNudgeCm += this.handedness === "right" ? this.nudgeStepCm : -this.nudgeStepCm;
-                print(`${TAG} height nudge -> ${sharedNudgeCm.toFixed(0)}cm`);
+            // Per-hand height nudge: up button (B/Y) raises this hand, down button (A/X) lowers it.
+            const upPressed = !!(p.buttons && p.buttons[this.nudgeUpButton] > 0.5);
+            if (upPressed && !this.prevUpButton) {
+                this.heightOffsetCm += this.nudgeStepCm;
+                print(`${TAG} ${this.handedness} height -> ${this.heightOffsetCm.toFixed(0)}cm`);
             }
-            this.prevNudgeButton = nudgePressed;
+            this.prevUpButton = upPressed;
+            const downPressed = !!(p.buttons && p.buttons[this.nudgeDownButton] > 0.5);
+            if (downPressed && !this.prevDownButton) {
+                this.heightOffsetCm -= this.nudgeStepCm;
+                print(`${TAG} ${this.handedness} height -> ${this.heightOffsetCm.toFixed(0)}cm`);
+            }
+            this.prevDownButton = downPressed;
             if (!this.calibrated) {
                 this.calibrate(questPos, questRot);
                 this.calibrated = true;
             }
-            // FOLLOW (world-locked) + live shared height nudge
+            // FOLLOW (world-locked) + live height nudge (B/Y) + thumbstick slide (X/Z)
+            this.updateStickOffset(p.axes);
             const scaled = questPos.uniformScale(100 * this.posScale);
-            const nudge = this.nudgeAxisWorld.uniformScale(sharedNudgeCm);
-            this.handTransform.setWorldPosition(this.alignYaw.multiplyVec3(scaled).add(this.alignPos).add(nudge));
+            const nudge = this.nudgeAxisWorld.uniformScale(this.heightOffsetCm);
+            const worldPos = this.alignYaw.multiplyVec3(scaled).add(this.alignPos).add(nudge).add(this.stickOffset);
+            this.handTransform.setWorldPosition(worldPos);
             this.handTransform.setWorldRotation(this.alignYaw.multiply(questRot).multiply(this.modelOffset));
             // PINCH (trigger) + FIST (grip)
             this._lastTrigger = Math.max(0, Math.min(1, p.trigger));
@@ -301,6 +333,9 @@ let ControllerHandDriver = (() => {
         }
         /** Solve the Quest-world -> Spectacles-world alignment from the current camera + controller pose. */
         calibrate(questPos, questRot) {
+            // A reset re-anchors AND clears the manual stick/height offsets for a clean default pose.
+            this.stickOffset = vec3.zero();
+            this.heightOffsetCm = 0;
             const camPos = this.cameraTransform.getWorldPosition();
             const camRot = this.cameraTransform.getWorldRotation();
             const camRight = camRot.multiplyVec3(new vec3(1, 0, 0));
@@ -322,6 +357,38 @@ let ControllerHandDriver = (() => {
             const restRot = this.handTransform.getWorldRotation();
             this.modelOffset = this.alignYaw.multiply(questRot).invert().multiply(restRot);
             print(`${TAG} ${this.handedness} calibrated  yaw=${(phi / DEG2RAD).toFixed(1)}deg`);
+        }
+        /** Integrate this hand's thumbstick into a persistent positional slide (X/Z by default). */
+        updateStickOffset(axes) {
+            const now = getTime();
+            if (!this.enableStickMove || !axes) {
+                this.lastStickTime = now;
+                return;
+            }
+            const dt = this.lastStickTime < 0 ? 0 : Math.min(0.1, now - this.lastStickTime);
+            this.lastStickTime = now;
+            if (dt <= 0)
+                return;
+            let sx = axes[this.stickXIndex] ?? 0;
+            let sy = axes[this.stickYIndex] ?? 0;
+            if (Math.abs(sx) < this.stickDeadzone)
+                sx = 0;
+            if (Math.abs(sy) < this.stickDeadzone)
+                sy = 0;
+            if (sx === 0 && sy === 0)
+                return;
+            // WebXR: stick up = -Y, stick right = +X.
+            const forward = -sy;
+            const right = sx;
+            const move = this.stickForwardAxisWorld
+                .uniformScale(forward)
+                .add(this.stickRightAxisWorld.uniformScale(right))
+                .uniformScale(this.stickSpeedCmPerSec * dt);
+            this.stickOffset = this.stickOffset.add(move);
+            const len = this.stickOffset.length;
+            if (len > this.maxStickOffsetCm) {
+                this.stickOffset = this.stickOffset.uniformScale(this.maxStickOffsetCm / len);
+            }
         }
         applyCurl(joints, rest, axis, maxDeg, t) {
             if (joints.length === 0)

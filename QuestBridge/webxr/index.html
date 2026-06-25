@@ -97,6 +97,7 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
         const gp = src.gamepad;
         // Quest mapping: buttons[0]=trigger, [1]=squeeze/grip, [3]=stick, [4]=A/X, [5]=B/Y
         const buttons = gp ? gp.buttons.map(b => b.value) : [];
+        const axes = gp ? Array.from(gp.axes) : []; // Quest: [touchpadX, touchpadY, stickX, stickY]
         const trigger = gp?.buttons[0]?.value ?? 0;
         const grip = gp?.buttons[1]?.value ?? 0;
         if (src.handedness === "left") lt = trigger; else rt = trigger;
@@ -106,7 +107,7 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
             hand: src.handedness,
             px: p.x, py: p.y, pz: p.z,
             qx: q.x, qy: q.y, qz: q.z, qw: q.w,
-            trigger, grip, buttons
+            trigger, grip, buttons, axes
           }));
           sent++;
         }
