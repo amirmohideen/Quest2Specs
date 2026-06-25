@@ -36,7 +36,7 @@ function checkUndefined(property, showIfData) {
 // @input vec3 anchorOffsetCm = {0,-25,35} {"hint":"Where the hand sits at calibration, relative to your head in cm: x=right, y=up, z=forward. Lower y to drop it to where you hold the controllers (negative y = down)."}
 // @input float yawTrimDegrees {"hint":"Manual heading trim (degrees) if left/right feels rotated after calibration."}
 // @input float posScale = 1 {"hint":"Movement scale. 1 = physical 1:1. Raise to amplify reach."}
-// @input float calibrateButton = 3 {"hint":"Button that resets / re-anchors THIS hand (Quest: 3 = thumbstick click). Clears stick/height offsets too."}
+// @input float resetButton = 3 {"hint":"Button that resets / re-anchors THIS hand (Quest: 3 = thumbstick click). Clears stick/height offsets too."}
 // @input float nudgeUpButton = 5 {"hint":"Button that raises THIS hand a step (Quest: 5 = B on right / Y on left)."}
 // @input float nudgeDownButton = 4 {"hint":"Button that lowers THIS hand a step (Quest: 4 = A on right / X on left)."}
 // @input float nudgeStepCm = 3 {"hint":"Centimetres moved per button press."}
@@ -47,7 +47,7 @@ function checkUndefined(property, showIfData) {
 // @input float stickSpeedCmPerSec = 30 {"hint":"How fast (cm/sec) the hand slides at full stick deflection."}
 // @input float stickDeadzone = 0.15 {"hint":"Ignore stick magnitudes below this (drift)."}
 // @input vec3 stickForwardAxisWorld = {0,0,-1} {"hint":"World direction the hand slides when the stick is pushed forward/up (default -Z)."}
-// @input vec3 stickRightAxisWorld = {1,0,0} {"hint":"World direction the hand slides when the stick is pushed right (default +X, so left = -X)."}
+// @input vec3 stickRightDir = {1,0,0} {"hint":"World direction the hand slides when the stick is pushed right (default +X, so left = -X)."}
 // @input float stickXIndex = 2 {"hint":"Gamepad axis index for stick X (Quest = 2)."}
 // @input float stickYIndex = 3 {"hint":"Gamepad axis index for stick Y (Quest = 3)."}
 // @input float maxStickOffsetCm = 150 {"hint":"Clamp the total stick slide (cm) so the hand can't fly away."}
@@ -80,7 +80,7 @@ awakeEvent.bind(() => {
     checkUndefined("anchorOffsetCm", []);
     checkUndefined("yawTrimDegrees", []);
     checkUndefined("posScale", []);
-    checkUndefined("calibrateButton", []);
+    checkUndefined("resetButton", []);
     checkUndefined("nudgeUpButton", []);
     checkUndefined("nudgeDownButton", []);
     checkUndefined("nudgeStepCm", []);
@@ -89,7 +89,7 @@ awakeEvent.bind(() => {
     checkUndefined("stickSpeedCmPerSec", []);
     checkUndefined("stickDeadzone", []);
     checkUndefined("stickForwardAxisWorld", []);
-    checkUndefined("stickRightAxisWorld", []);
+    checkUndefined("stickRightDir", []);
     checkUndefined("stickXIndex", []);
     checkUndefined("stickYIndex", []);
     checkUndefined("maxStickOffsetCm", []);

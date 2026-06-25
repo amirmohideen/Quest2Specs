@@ -106,7 +106,7 @@ let ControllerHandDriver = (() => {
             this.anchorOffsetCm = this.anchorOffsetCm;
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
-            this.calibrateButton = this.calibrateButton;
+            this.resetButton = this.resetButton;
             this.nudgeUpButton = this.nudgeUpButton;
             this.nudgeDownButton = this.nudgeDownButton;
             this.nudgeStepCm = this.nudgeStepCm;
@@ -115,7 +115,7 @@ let ControllerHandDriver = (() => {
             this.stickSpeedCmPerSec = this.stickSpeedCmPerSec;
             this.stickDeadzone = this.stickDeadzone;
             this.stickForwardAxisWorld = this.stickForwardAxisWorld;
-            this.stickRightAxisWorld = this.stickRightAxisWorld;
+            this.stickRightDir = this.stickRightDir;
             this.stickXIndex = this.stickXIndex;
             this.stickYIndex = this.stickYIndex;
             this.maxStickOffsetCm = this.maxStickOffsetCm;
@@ -161,7 +161,7 @@ let ControllerHandDriver = (() => {
             this.anchorOffsetCm = this.anchorOffsetCm;
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
-            this.calibrateButton = this.calibrateButton;
+            this.resetButton = this.resetButton;
             this.nudgeUpButton = this.nudgeUpButton;
             this.nudgeDownButton = this.nudgeDownButton;
             this.nudgeStepCm = this.nudgeStepCm;
@@ -170,7 +170,7 @@ let ControllerHandDriver = (() => {
             this.stickSpeedCmPerSec = this.stickSpeedCmPerSec;
             this.stickDeadzone = this.stickDeadzone;
             this.stickForwardAxisWorld = this.stickForwardAxisWorld;
-            this.stickRightAxisWorld = this.stickRightAxisWorld;
+            this.stickRightDir = this.stickRightDir;
             this.stickXIndex = this.stickXIndex;
             this.stickYIndex = this.stickYIndex;
             this.maxStickOffsetCm = this.maxStickOffsetCm;
@@ -295,7 +295,7 @@ let ControllerHandDriver = (() => {
             const questPos = new vec3(p.px, p.py, p.pz);
             const questRot = new quat(p.qw, p.qx, p.qy, p.qz);
             // Rising-edge calibrate button (A/X) -> re-anchor.
-            const calibPressed = !!(p.buttons && p.buttons[this.calibrateButton] > 0.5);
+            const calibPressed = !!(p.buttons && p.buttons[this.resetButton] > 0.5);
             if (calibPressed && !this.prevCalibButton)
                 this.calibrated = false;
             this.prevCalibButton = calibPressed;
@@ -382,7 +382,7 @@ let ControllerHandDriver = (() => {
             const right = sx;
             const move = this.stickForwardAxisWorld
                 .uniformScale(forward)
-                .add(this.stickRightAxisWorld.uniformScale(right))
+                .add(this.stickRightDir.uniformScale(right))
                 .uniformScale(this.stickSpeedCmPerSec * dt);
             this.stickOffset = this.stickOffset.add(move);
             const len = this.stickOffset.length;

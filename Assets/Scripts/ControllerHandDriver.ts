@@ -109,7 +109,7 @@ export class ControllerHandDriver extends BaseScriptComponent {
   posScale: number = 1.0
   @input
   @hint("Button that resets / re-anchors THIS hand (Quest: 3 = thumbstick click). Clears stick/height offsets too.")
-  calibrateButton: number = 3
+  resetButton: number = 3
   @input
   @hint("Button that raises THIS hand a step (Quest: 5 = B on right / Y on left).")
   nudgeUpButton: number = 5
@@ -139,7 +139,7 @@ export class ControllerHandDriver extends BaseScriptComponent {
   stickForwardAxisWorld: vec3 = new vec3(0, 0, -1)
   @input
   @hint("World direction the hand slides when the stick is pushed right (default +X, so left = -X).")
-  stickRightAxisWorld: vec3 = new vec3(1, 0, 0)
+  stickRightDir: vec3 = new vec3(1, 0, 0)
   @input
   @hint("Gamepad axis index for stick X (Quest = 2).")
   stickXIndex: number = 2
@@ -290,7 +290,7 @@ export class ControllerHandDriver extends BaseScriptComponent {
     const questRot = new quat(p.qw, p.qx, p.qy, p.qz)
 
     // Rising-edge calibrate button (A/X) -> re-anchor.
-    const calibPressed = !!(p.buttons && p.buttons[this.calibrateButton] > 0.5)
+    const calibPressed = !!(p.buttons && p.buttons[this.resetButton] > 0.5)
     if (calibPressed && !this.prevCalibButton) this.calibrated = false
     this.prevCalibButton = calibPressed
 
@@ -386,7 +386,7 @@ export class ControllerHandDriver extends BaseScriptComponent {
     const right = sx
     const move = this.stickForwardAxisWorld
       .uniformScale(forward)
-      .add(this.stickRightAxisWorld.uniformScale(right))
+      .add(this.stickRightDir.uniformScale(right))
       .uniformScale(this.stickSpeedCmPerSec * dt)
     this.stickOffset = this.stickOffset.add(move)
 
