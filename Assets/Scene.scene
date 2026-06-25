@@ -246,7 +246,7 @@
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 16.508162, z: -80.000000}
+    Position: {x: 24.127644, y: 20.000000, z: -80.000000}
     Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
@@ -339,7 +339,7 @@
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: -316.508057}
+    Position: {x: 0.000000, y: -10.000000, z: -316.508057}
     Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
     Scale: {x: 10.000000, y: 10.000000, z: 10.000000}
     HasSegmentScaleCompensation: false
@@ -1723,7 +1723,7 @@
   Enabled: false
   Layers: 1
   LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: -80.000000}
+    Position: {x: 0.000000, y: 6.000000, z: -80.000000}
     Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
@@ -3779,6 +3779,7 @@
   Enabled: true
   ScriptAsset: !<reference> e9fab106-b1fe-4b85-a942-4bd3238983c4
   ScriptInputsDefault:
+    autoShowHide: true
     _appearance: true
     _padding: true
     allowNonUniformScaling: true
@@ -3806,7 +3807,7 @@
     {}
   ScriptInputs:
     "":
-      autoShowHide: false
+      autoShowHide: true
       _appearance: Large
       _innerSize: !<Vec2> {x: 20.000000, y: 5.000000}
       _padding: !<Vec2> {x: 0.000000, y: 0.000000}

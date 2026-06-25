@@ -1,26 +1,17 @@
-- !<AssetImportMetadata/2cb94c3b-8262-4b86-b93b-4d35fd3ecd50>
-  ImportedAssetIds:
-    ObjectPrefab: !<reference> 10a9757a-961a-46af-8fe4-f5d5ed028611
-  ImporterName: ObjectPrefabImporter
-  PrimaryAsset: !<reference> 10a9757a-961a-46af-8fe4-f5d5ed028611
-  PackageType: NotAPackage
-  LegacyPackagePolicy: ~
-  ExtraData:
-    {}
-  AssetDataMap:
-    ObjectPrefab: !<own> 9c5f9ce7-a1b0-4517-a33c-9c81f5d8cd47
-  DependentFiles:
-    []
-  ImporterSettings: !<AssetImporterSettings>
-    {}
-  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
-- !<ScriptComponent/17dd25d0-1912-445c-7c2c-4f1a95617b95>
+- !<ObjectPrefab/10a9757a-961a-46af-8fe4-f5d5ed028611>
+  PackagePath: ""
+  objects:
+    - !<own> 35f61b25-2549-416a-af83-86d658e25775
+  LazyLoading: false
+  RetainAssets: true
+- !<ScriptComponent/17dd25d0-1912-445c-83d3-b0e56a9e846a>
   PrefabRemaps:
     []
   Name: Frame
   Enabled: true
   ScriptAsset: !<reference> e9fab106-b1fe-4b85-a942-4bd3238983c4
   ScriptInputsDefault:
+    autoShowHide: true
     _appearance: true
     _padding: true
     allowNonUniformScaling: true
@@ -48,7 +39,7 @@
     {}
   ScriptInputs:
     "":
-      autoShowHide: false
+      autoShowHide: true
       _appearance: Large
       _innerSize: !<Vec2> {x: 20.000000, y: 5.000000}
       _padding: !<Vec2> {x: 0.000000, y: 0.000000}
@@ -82,9 +73,13 @@
   ScriptTypes:
     "":
       {}
-- !<SceneObject/35f61b25-2549-416a-507c-7929a71da88a>
+- !<SceneObject/35f61b25-2549-416a-af83-86d658e25775>
   PrefabRemaps:
-    []
+    - 17dd25d0-1912-445c-83d3-b0e56a9e846a: 17dd25d0-1912-445c-7c2c-4f1a95617b95
+    - 35f61b25-2549-416a-af83-86d658e25775: 35f61b25-2549-416a-507c-7929a71da88a
+    - 4453338c-244a-42c7-964b-6b6dbcbe6144: 4453338c-244a-42c7-69b4-949243419ebb
+    - 468b67e0-792e-4c46-a8c7-2958a8d4229d: 468b67e0-792e-4c46-5738-d6a7572bdd62
+    - 9affabaf-ab27-429f-a48c-6137bdf2af34: 9affabaf-ab27-429f-5b73-9ec8420d50cb
   Name: DebugPanel_Frame
   Enabled: false
   Layers: 1
@@ -94,10 +89,10 @@
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
   Children:
-    - !<own> 4453338c-244a-42c7-69b4-949243419ebb
+    - !<own> 4453338c-244a-42c7-964b-6b6dbcbe6144
   Components:
-    - !<own> 17dd25d0-1912-445c-7c2c-4f1a95617b95
-- !<SceneObject/4453338c-244a-42c7-69b4-949243419ebb>
+    - !<own> 17dd25d0-1912-445c-83d3-b0e56a9e846a
+- !<SceneObject/4453338c-244a-42c7-964b-6b6dbcbe6144>
   PrefabRemaps:
     []
   Name: Content
@@ -109,10 +104,10 @@
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
   Children:
-    - !<own> 9affabaf-ab27-429f-5b73-9ec8420d50cb
+    - !<own> 9affabaf-ab27-429f-a48c-6137bdf2af34
   Components:
     []
-- !<Text/468b67e0-792e-4c46-5738-d6a7572bdd62>
+- !<Text/468b67e0-792e-4c46-a8c7-2958a8d4229d>
   PrefabRemaps:
     []
   Name: Text
@@ -193,7 +188,7 @@
     CapitalizationOverride: None
   DepthTest: false
   TwoSided: false
-- !<SceneObject/9affabaf-ab27-429f-5b73-9ec8420d50cb>
+- !<SceneObject/9affabaf-ab27-429f-a48c-6137bdf2af34>
   PrefabRemaps:
     []
   Name: DebugText
@@ -207,9 +202,4 @@
   Children:
     []
   Components:
-    - !<own> 468b67e0-792e-4c46-5738-d6a7572bdd62
-- !<ObjectPrefabAssetData/9c5f9ce7-a1b0-4517-a33c-9c81f5d8cd47>
-  Prototype: !<ObjectOwner/143da4ea-92aa-41ac-a06e-58d251da86a6>
-    PackagePath: ""
-    objects:
-      - !<own> 35f61b25-2549-416a-507c-7929a71da88a
+    - !<own> 468b67e0-792e-4c46-a8c7-2958a8d4229d

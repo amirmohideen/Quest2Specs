@@ -1,14 +1,13 @@
 CollapsedEntities:
   type: stringset
   value:
-    size: 804
+    size: 805
     values:
       - Behavior.lsc
       - ControllerHandModelAssets
       - ControllerHandModelAssets/Base 2.png
       - ControllerHandModelAssets/SimplePBRMaterial 2.mat
       - ControllerHandModelAssets/simple_pbr 2.ss_graph
-      - DebugPanel_Frame.prefab
       - Device Camera Texture.deviceCameraTexture
       - Echopark.hdr
       - Echopark.hdr/Diffuse
@@ -42,6 +41,9 @@ CollapsedEntities:
       - Emission Control VFX.lspkg/Variable Emission Resources/VFX/Variable Emission.vfxgraph
       - Emission Control VFX.lspkg/package.native
       - Internet Module.internetModule
+      - Prefabs
+      - Prefabs/DebugPanel_Frame.prefab
+      - Prefabs/SettingsPanel_Frame.prefab
       - Render Target.renderTarget
       - Scene.scene
       - Scripts
@@ -52,7 +54,6 @@ CollapsedEntities:
       - Scripts/HandModeToggle.ts
       - Scripts/PalmFacingVisibility.ts
       - Scripts/ToggleSetActive.ts
-      - SettingsPanel_Frame.prefab
       - SpectaclesInteractionKit.lspkg
       - SpectaclesInteractionKit.lspkg/Assets
       - SpectaclesInteractionKit.lspkg/Assets/Audio
