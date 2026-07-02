@@ -15,7 +15,7 @@ metaInfo:
     []
   lensName: SpecsQuest
   lensDescriptors:
-    - EXPERIMENTAL_API
+    []
   lensApplicability:
     - Front
     - Back

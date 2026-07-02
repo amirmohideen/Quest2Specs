@@ -4420,6 +4420,7 @@
   ScriptAsset: !<reference> 3053e9d1-af7d-4a08-b6ac-40e102dbeaab
   ScriptInputsDefault:
     indirectDragThreshold: true
+    _drawDebug: true
     aimForwardLocal: true
     selectThreshold: true
     drawRayLine: true
@@ -4430,7 +4431,7 @@
   ScriptInputs:
     "":
       indirectDragThreshold: !<float> 10.000000
-      _drawDebug: true
+      _drawDebug: false
       rayOrigin: !<reference.SceneObject> 3bcb105b-5bda-43af-a101-f99e6f337183
       driver: !<MappingBased.AssignableType> bd3d9ce1-3aa9-4594-ad13-8076c1201005
       aimForwardLocal: !<Vec3> {x: 0.000000, y: 0.000000, z: 1.000000}
