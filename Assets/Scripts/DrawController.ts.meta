@@ -1,0 +1,87 @@
+- !<AssetImportMetadata/7cb60650-37cd-4ffa-a87e-278210042b40>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 699cf168-4da9-4662-99e0-c4243ea9eb88
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 699cf168-4da9-4662-99e0-c4243ea9eb88
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> d89621b5-f285-4e08-8d97-0a637de4bc56
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/d89621b5-f285-4e08-8d97-0a637de4bc56>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  ComponentUid: f1a24546-c6ec-410f-8021-f9fd6f79b477
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    autoDelete: false
+    autoDeleteSeconds: false
+    brushTip: false
+    camera: false
+    chunkSizePoints: false
+    color: false
+    driver: false
+    interactorToSuppress: false
+    maxThicknessCm: false
+    minPointDistanceCm: false
+    minThicknessCm: false
+    startEnabled: false
+    strokeMaterial: false
+    triggerThreshold: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - driver: !<MappingBased.AssignableType> 00000000-0000-0000-0000-000000000000
+      brushTip: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      camera: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      strokeMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      color: !<Vec4> {x: 1.000000, y: 0.200000, z: 0.200000, w: 1.000000}
+      minThicknessCm: 0.300000
+      maxThicknessCm: !<float> 2.000000
+      triggerThreshold: 0.100000
+      minPointDistanceCm: 0.400000
+      chunkSizePoints: !<float> 60.000000
+      autoDelete: true
+      autoDeleteSeconds: !<float> 5.000000
+      interactorToSuppress: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
+      startEnabled: false
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - '// @input AssignableType driver {"hint":"ControllerHandDriver of the drawing hand (left). Its trigger drives the ink."}'
+    - "// @input SceneObject brushTip {\"hint\":\"Where the ink comes out (e.g. the left hand's index-3 fingertip).\"}"
+    - '// @input SceneObject camera {"hint":"The Spectacles Camera. Stroke ribbons face it while being drawn."}'
+    - '// @input Asset.Material strokeMaterial {"hint":"Material cloned for each stroke (use an Unlit material). baseColor is set to Color."}'
+    - '// @input vec4 color = {1,0.2,0.2,1} {"hint":"Stroke color.", "widget":"color"}'
+    - '// @ui {"widget":"group_start", "label":"Brush"}'
+    - '// @input float minThicknessCm = 0.3 {"hint":"Line thickness (cm) at a light trigger press."}'
+    - '// @input float maxThicknessCm = 2 {"hint":"Line thickness (cm) at full trigger press."}'
+    - '// @input float triggerThreshold = 0.1 {"hint":"Trigger value at which ink starts flowing."}'
+    - '// @input float minPointDistanceCm = 0.4 {"hint":"Minimum hand travel (cm) between stroke samples."}'
+    - '// @input float chunkSizePoints = 60 {"hint":"Max points per mesh CHUNK before a new one starts (seamlessly, no visible gap). Keep this LOW (e.g. 40-80) - rebuilding the stroke mesh gets more expensive the more points it has, so an unbounded single mesh will eventually stall a frame and freeze the lens. Long strokes become many small cheap chunks instead of one ever-growing expensive one."}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_start", "label":"Auto delete"}'
+    - "// @input bool autoDelete = true {\"hint\":\"Delete each stroke automatically after it's finished.\"}"
+    - "// @input float autoDeleteSeconds = 5 {\"hint\":\"Seconds after finishing a stroke before it's deleted.\"}"
+    - '// @ui {"widget":"group_end"}'
+    - '// @input AssignableType_1 interactorToSuppress {"hint":"Optional: the LEFT ControllerInteractor — suppressed while draw mode is on."}'
+    - '// @input bool startEnabled {"hint":"Start with draw mode on?"}'

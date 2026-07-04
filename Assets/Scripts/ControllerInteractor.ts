@@ -73,8 +73,30 @@ export class ControllerInteractor extends BaseInteractor {
   @hint("Ray length (cm) when not pointing at an interactable.")
   rayFallbackLengthCm: number = 100
 
+  @ui.group_start("Poke (fingertip touch)")
+  @input
+  @hint("Fingertip joint used for poking (this hand's index-3). Leave empty to disable poke.")
+  @allowUndefined
+  fingertip: SceneObject | undefined
+  @input
+  @hint("Radius (cm) of the fingertip poke sphere.")
+  pokeRadiusCm: number = 1.2
+  @input
+  @hint("Poke only works while the trigger is released (below this value), so the index finger is extended.")
+  pokeMaxTrigger: number = 0.3
+  @input
+  @hint("Seconds after a poke ends before a new poke can start (debounce).")
+  pokeCooldownSec: number = 0.15
+  @ui.group_end
+
   private indirectTargetProvider!: IndirectTargetProvider
   private rayProvider!: ControllerRayProvider
+
+  // Poke state
+  private touchedByCollider = new Map<ColliderComponent, Interactable>()
+  private pokeTarget: Interactable | null = null
+  private pokeEndTarget: Interactable | null = null
+  private pokeBlockedUntil = 0
 
   onAwake(): void {
     this.inputType = InteractorInputType.CustomController
@@ -89,6 +111,57 @@ export class ControllerInteractor extends BaseInteractor {
       spherecastRadii: this.spherecastRadii,
       spherecastDistanceThresholds: this.spherecastDistanceThresholds
     })
+
+    this.setupPokeCollider()
+  }
+
+  /** Sphere trigger on the fingertip; tracks which Interactable colliders it's touching. */
+  private setupPokeCollider(): void {
+    if (!this.fingertip) return
+    const collider = this.fingertip.createComponent("Physics.ColliderComponent")
+    const shape = Shape.createSphereShape()
+    shape.radius = this.pokeRadiusCm
+    collider.shape = shape
+    collider.intangible = true
+    collider.fitVisual = false
+    // UI colliders are intangible; without this the fingertip sphere would never see them.
+    collider.overlapFilter.includeIntangible = true
+
+    collider.onOverlapEnter.add((e) => {
+      const other = e.overlap.collider
+      const interactable = this.interactionManager.getInteractableByCollider(other) as Interactable | null
+      if (interactable) this.touchedByCollider.set(other, interactable)
+    })
+    collider.onOverlapExit.add((e) => {
+      this.touchedByCollider.delete(e.overlap.collider)
+    })
+  }
+
+  /** Nearest touched Interactable, or null when poke is not allowed right now. */
+  private findPokeTarget(triggerVal: number): Interactable | null {
+    if (!this.fingertip || triggerVal > this.pokeMaxTrigger) return null
+
+    // Prune destroyed/disabled entries.
+    for (const [c, i] of this.touchedByCollider) {
+      if (isNull(c) || isNull(i) || isNull(i.sceneObject) || !i.sceneObject.isEnabledInHierarchy) {
+        this.touchedByCollider.delete(c)
+      }
+    }
+    if (this.touchedByCollider.size === 0) return null
+    // Debounce: block NEW pokes right after one ended (an ongoing poke keeps its target).
+    if (this.pokeTarget === null && getTime() < this.pokeBlockedUntil) return null
+
+    const tipPos = this.fingertip.getTransform().getWorldPosition()
+    let best: Interactable | null = null
+    let bestDist = Infinity
+    for (const [c, i] of this.touchedByCollider) {
+      const d = c.getSceneObject().getTransform().getWorldPosition().distance(tipPos)
+      if (d < bestDist) {
+        bestDist = d
+        best = i
+      }
+    }
+    return best
   }
 
   // ---- targeting geometry (delegated to the indirect provider) ----
@@ -114,12 +187,14 @@ export class ControllerInteractor extends BaseInteractor {
     return this.indirectTargetProvider?.currentInteractableHitInfo ?? null
   }
   get activeTargetingMode(): TargetingMode {
+    if (this.pokeTarget) return TargetingMode.Poke
     return this.indirectTargetProvider?.targetingMode ?? TargetingMode.None
   }
   get maxRaycastDistance(): number {
     return this._maxRaycastDistance
   }
   get interactionStrength(): number | null {
+    if (this.pokeTarget) return 1
     return this.driver ? this.driver.getLastTrigger() : 0
   }
 
@@ -134,6 +209,11 @@ export class ControllerInteractor extends BaseInteractor {
   // ---- hover queries ----
   get isHoveringCurrentInteractable(): boolean | null {
     if (!this.currentInteractable) return null
+    // While poking (and on the release frame), we ARE on the target — this is what makes the
+    // InteractionManager dispatch TriggerEnd (a click) instead of TriggerEndOutside (a cancel).
+    if (this.currentInteractable === this.pokeTarget || this.currentInteractable === this.pokeEndTarget) {
+      return true
+    }
     return this.indirectTargetProvider.isHoveringInteractable(this.currentInteractable)
   }
   get hoveredInteractables(): Interactable[] {
@@ -156,16 +236,36 @@ export class ControllerInteractor extends BaseInteractor {
     if (!this.isActive()) return
 
     this.indirectTargetProvider.update()
-    this.currentInteractable = this.indirectTargetProvider.currentInteractableHitInfo?.interactable ?? null
 
-    const selecting = (this.driver?.getLastTrigger() ?? 0) >= this.selectThreshold
-    this.currentTrigger = selecting ? InteractorTriggerType.Select : InteractorTriggerType.None
+    const triggerVal = this.driver?.getLastTrigger() ?? 0
+    const wasPoking = this.pokeTarget !== null
+    this.pokeTarget = this.findPokeTarget(triggerVal)
+    const pokeJustEnded = wasPoking && this.pokeTarget === null
+    if (pokeJustEnded) this.pokeBlockedUntil = getTime() + this.pokeCooldownSec
+
+    if (this.pokeTarget) {
+      // Touching with an extended finger: poke-select the touched Interactable.
+      this.currentInteractable = this.pokeTarget
+      this.currentTrigger = InteractorTriggerType.Poke
+      this.pokeEndTarget = this.pokeTarget
+    } else if (pokeJustEnded && this.pokeEndTarget && !isNull(this.pokeEndTarget.sceneObject)) {
+      // Keep the poked target for the release frame so it receives TriggerEnd (a click),
+      // not TriggerEndOutside (a cancel).
+      this.currentInteractable = this.pokeEndTarget
+      this.currentTrigger = InteractorTriggerType.None
+    } else {
+      this.pokeEndTarget = null
+      this.currentInteractable = this.indirectTargetProvider.currentInteractableHitInfo?.interactable ?? null
+      this.currentTrigger = triggerVal >= this.selectThreshold ? InteractorTriggerType.Select : InteractorTriggerType.None
+    }
 
     this.updateDragVector()
     this.processTriggerEvents()
-    this.handleSelectionLifecycle(this.indirectTargetProvider)
+    if (!this.pokeTarget && !pokeJustEnded) {
+      this.handleSelectionLifecycle(this.indirectTargetProvider)
+    }
 
-    if (this.drawRayLine) this.drawRay()
+    if (this.drawRayLine && !this.pokeTarget) this.drawRay()
   }
 
   /** Same look as SIK's drawDebug ray, but ends at the cursor/hit instead of at max distance. */
@@ -182,7 +282,13 @@ export class ControllerInteractor extends BaseInteractor {
     return this.isActive()
   }
   isActive(): boolean {
-    return this.rayOrigin !== null && this.rayOrigin.isEnabledInHierarchy && this.driver !== null
+    return this._inputEnabled && this.rayOrigin !== null && this.rayOrigin.isEnabledInHierarchy && this.driver !== null
+  }
+
+  private _inputEnabled = true
+  /** Externally suppress this interactor (e.g. while its hand is drawing). */
+  override setInputEnabled(enabled: boolean): void {
+    this._inputEnabled = enabled
   }
   protected clearCurrentHitInfo(): void {
     this.indirectTargetProvider?.clearCurrentInteractableHitInfo()

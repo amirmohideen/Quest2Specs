@@ -1,13 +1,15 @@
 CollapsedEntities:
   type: stringset
   value:
-    size: 805
+    size: 807
     values:
       - Behavior.lsc
       - ControllerHandModelAssets
       - ControllerHandModelAssets/Base 2.png
       - ControllerHandModelAssets/SimplePBRMaterial 2.mat
+      - ControllerHandModelAssets/UnlitDraw.mat
       - ControllerHandModelAssets/simple_pbr 2.ss_graph
+      - ControllerHandModelAssets/unlitDraw.ss_graph
       - Device Camera Texture.deviceCameraTexture
       - Echopark.hdr
       - Echopark.hdr/Diffuse
@@ -51,6 +53,7 @@ CollapsedEntities:
       - Scripts/ControllerHandDriver.ts
       - Scripts/ControllerInteractor.ts
       - Scripts/DebugPanelToggle.ts
+      - Scripts/DrawController.ts
       - Scripts/HandModeToggle.ts
       - Scripts/PalmFacingVisibility.ts
       - Scripts/ToggleSetActive.ts
@@ -479,7 +482,6 @@ CollapsedEntities:
       - SpectaclesInteractionKit.lspkg/VersionNumber.ts
       - SpectaclesInteractionKit.lspkg/package.native
       - SpectaclesInteractionKit.lspkg/tsconfig.json
-      - SpectaclesInteractionKitExamples.lspkg
       - SpectaclesInteractionKitExamples.lspkg/README.md
       - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop
       - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials

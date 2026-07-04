@@ -14,7 +14,12 @@
       "Bash(grep -E \"\\\\.ts$\")",
       "Bash(awk '/Callback/{p=1} p{print} /^}/{if\\(p\\)c++; if\\(c>=2\\)exit}' Scripts/Utility/SceneUtilities.ts)",
       "Bash(awk 'NR>=1507 && NR<=1560' Support/StudioLib.d.ts)",
-      "Bash(awk 'NR>=20105 && NR<=20180' Support/StudioLib.d.ts)"
+      "Bash(awk 'NR>=20105 && NR<=20180' Support/StudioLib.d.ts)",
+      "Bash(awk '/class OverlapEnterEventArgs/,/^}/' Support/StudioLib.d.ts)",
+      "Bash(awk '/declare class Overlap /,/^}/' Support/StudioLib.d.ts)",
+      "Bash(awk 'NR>=4895 && NR<=4990' Support/StudioLib.d.ts)",
+      "Bash(awk '/declare class MeshBuilder /{f=1} f&&/^declare class /&&!/MeshBuilder /{exit} f' Support/StudioLib.d.ts)",
+      "Bash(awk '/declare class Material /{f=1} f&&/^declare class /&&!/Material /{exit} f' Support/StudioLib.d.ts)"
     ]
   }
 }

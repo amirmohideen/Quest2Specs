@@ -30,7 +30,11 @@
     aimForwardLocal: false
     drawRayLine: false
     driver: false
+    fingertip: false
     indirectDragThreshold: false
+    pokeCooldownSec: false
+    pokeMaxTrigger: false
+    pokeRadiusCm: false
     rayColor: false
     rayFallbackLengthCm: false
     rayOrigin: false
@@ -53,6 +57,10 @@
       drawRayLine: true
       rayColor: !<Vec4> {x: 1.000000, y: 1.000000, z: 1.000000, w: 1.000000}
       rayFallbackLengthCm: !<float> 100.000000
+      fingertip: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      pokeRadiusCm: 1.200000
+      pokeMaxTrigger: 0.300000
+      pokeCooldownSec: 0.150000
   ScriptTypes:
     -
       {}
@@ -72,3 +80,9 @@
     - "// @input bool drawRayLine = true {\"hint\":\"Draw a ray line that STOPS at the cursor/hit. Turn OFF the SIK 'Draw Debug' above so the forever-ray goes away.\"}"
     - '// @input vec4 rayColor = {1,1,1,1} {"hint":"Color of the ray line.", "widget":"color"}'
     - '// @input float rayFallbackLengthCm = 100 {"hint":"Ray length (cm) when not pointing at an interactable."}'
+    - '// @ui {"widget":"group_start", "label":"Poke (fingertip touch)"}'
+    - "// @input SceneObject fingertip {\"hint\":\"Fingertip joint used for poking (this hand's index-3). Leave empty to disable poke.\"}"
+    - '// @input float pokeRadiusCm = 1.2 {"hint":"Radius (cm) of the fingertip poke sphere."}'
+    - '// @input float pokeMaxTrigger = 0.3 {"hint":"Poke only works while the trigger is released (below this value), so the index finger is extended."}'
+    - '// @input float pokeCooldownSec = 0.15 {"hint":"Seconds after a poke ends before a new poke can start (debounce)."}'
+    - '// @ui {"widget":"group_end"}'
