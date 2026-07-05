@@ -19,7 +19,12 @@
       "Bash(awk '/declare class Overlap /,/^}/' Support/StudioLib.d.ts)",
       "Bash(awk 'NR>=4895 && NR<=4990' Support/StudioLib.d.ts)",
       "Bash(awk '/declare class MeshBuilder /{f=1} f&&/^declare class /&&!/MeshBuilder /{exit} f' Support/StudioLib.d.ts)",
-      "Bash(awk '/declare class Material /{f=1} f&&/^declare class /&&!/Material /{exit} f' Support/StudioLib.d.ts)"
+      "Bash(awk '/declare class Material /{f=1} f&&/^declare class /&&!/Material /{exit} f' Support/StudioLib.d.ts)",
+      "Bash(git fetch *)",
+      "Bash(git rev-list *)",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

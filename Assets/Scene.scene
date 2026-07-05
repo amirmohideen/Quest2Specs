@@ -4496,7 +4496,7 @@
     "":
       handedness: right
       internetModule: !<reference.InternetModule> 466a25a9-b9bd-44bc-8eed-4cdb77da6045
-      url: "wss://generates-materials-proposal-exec.trycloudflare.com"
+      url: "wss://quest2specs.onrender.com"
       handRoot: !<reference.SceneObject> 1418d88c-6cb8-421c-a009-a9acced0abfe
       camera: !<reference.SceneObject> 00000000-0000-0065-0000-000000000064
       indexJoints: !<reference.SceneObject[]>
@@ -21192,7 +21192,7 @@
     "":
       handedness: left
       internetModule: !<reference.InternetModule> 466a25a9-b9bd-44bc-8eed-4cdb77da6045
-      url: "wss://generates-materials-proposal-exec.trycloudflare.com"
+      url: "wss://quest2specs.onrender.com"
       handRoot: !<reference.SceneObject> 10d8dc80-8b44-420f-948e-a5db01bf9e35
       camera: !<reference.SceneObject> 00000000-0000-0065-0000-000000000064
       indexJoints: !<reference.SceneObject[]>

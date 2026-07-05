@@ -13,7 +13,7 @@ metaInfo:
     []
   tags:
     []
-  lensName: SpecsQuest
+  lensName: Quest2Specs
   lensDescriptors:
     []
   lensApplicability:
@@ -22,7 +22,7 @@ metaInfo:
   lensClientCompatibilities:
     - Spectacles
   platformBundlesEnabled: false
-  iconHash: ""
+  iconHash: 996c79d14c83ff765b9401eac300f50b
   videoPreviewHash: ""
   fromTemplateName: Spectacles
   fromTemplateUrl: Lens Studio 5.15.4.26022322
