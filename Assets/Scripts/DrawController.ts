@@ -84,6 +84,18 @@ many small cheap chunks instead of one ever-growing expensive one."
   chunkSizePoints: number = 60
   @ui.group_end
 
+  @ui.group_start("Brush Tip Visual")
+  @input
+  @hint("Scale the brushTip sphere live to match the current line thickness, based on trigger press.")
+  scaleBrushTip: boolean = true
+  @input
+  @hint(
+    "Correction multiplier if the brushTip sphere's own mesh isn't exactly 1cm diameter at scale \
+1. Leave at 1 and adjust only if the sphere looks too big/small compared to the drawn line."
+  )
+  brushTipScaleMultiplier: number = 1
+  @ui.group_end
+
   @ui.group_start("Auto delete")
   @input
   @hint("Delete each stroke automatically after it's finished.")
@@ -149,15 +161,29 @@ many small cheap chunks instead of one ever-growing expensive one."
     this.finished = []
   }
 
+  /** Maps a trigger value to a line width in cm, clamped to [minThicknessCm, maxThicknessCm]. */
+  private computeWidth(trigger: number): number {
+    const t = (trigger - this.triggerThreshold) / (1 - this.triggerThreshold)
+    const clamped = Math.max(0, Math.min(1, t))
+    return this.minThicknessCm + (this.maxThicknessCm - this.minThicknessCm) * clamped
+  }
+
   // ---- Main loop ----
   private onUpdate(): void {
     this.reapOldStrokes()
+
+    // Live pressure gauge: the tip sphere tracks the same width the line would get right now,
+    // even before you cross triggerThreshold (it rests at minThicknessCm) or when draw mode is off.
+    const isDrawing = this.drawOn && this.driver.isReceiving()
+    const width = this.computeWidth(isDrawing ? this.driver.getLastTrigger() : 0)
+    if (this.scaleBrushTip) {
+      const d = width * this.brushTipScaleMultiplier
+      this.tipTf.setLocalScale(new vec3(d, d, d))
+    }
+
     if (!this.drawOn) return
 
-    const trigger = this.driver.getLastTrigger()
-    if (trigger >= this.triggerThreshold && this.driver.isReceiving()) {
-      const t = (trigger - this.triggerThreshold) / (1 - this.triggerThreshold)
-      const width = this.minThicknessCm + (this.maxThicknessCm - this.minThicknessCm) * Math.min(1, t)
+    if (isDrawing && this.driver.getLastTrigger() >= this.triggerThreshold) {
       this.addPoint(this.tipTf.getWorldPosition(), width)
     } else {
       this.finalizeStroke()

@@ -29,6 +29,7 @@
     autoDelete: false
     autoDeleteSeconds: false
     brushTip: false
+    brushTipScaleMultiplier: false
     camera: false
     chunkSizePoints: false
     color: false
@@ -37,6 +38,7 @@
     maxThicknessCm: false
     minPointDistanceCm: false
     minThicknessCm: false
+    scaleBrushTip: false
     startEnabled: false
     strokeMaterial: false
     triggerThreshold: false
@@ -59,6 +61,8 @@
       triggerThreshold: 0.100000
       minPointDistanceCm: 0.400000
       chunkSizePoints: !<float> 60.000000
+      scaleBrushTip: true
+      brushTipScaleMultiplier: !<float> 1.000000
       autoDelete: true
       autoDeleteSeconds: !<float> 5.000000
       interactorToSuppress: !<MappingBased.AssignableType_1> 00000000-0000-0000-0000-000000000000
@@ -78,6 +82,10 @@
     - '// @input float triggerThreshold = 0.1 {"hint":"Trigger value at which ink starts flowing."}'
     - '// @input float minPointDistanceCm = 0.4 {"hint":"Minimum hand travel (cm) between stroke samples."}'
     - '// @input float chunkSizePoints = 60 {"hint":"Max points per mesh CHUNK before a new one starts (seamlessly, no visible gap). Keep this LOW (e.g. 40-80) - rebuilding the stroke mesh gets more expensive the more points it has, so an unbounded single mesh will eventually stall a frame and freeze the lens. Long strokes become many small cheap chunks instead of one ever-growing expensive one."}'
+    - '// @ui {"widget":"group_end"}'
+    - '// @ui {"widget":"group_start", "label":"Brush Tip Visual"}'
+    - '// @input bool scaleBrushTip = true {"hint":"Scale the brushTip sphere live to match the current line thickness, based on trigger press."}'
+    - "// @input float brushTipScaleMultiplier = 1 {\"hint\":\"Correction multiplier if the brushTip sphere's own mesh isn't exactly 1cm diameter at scale 1. Leave at 1 and adjust only if the sphere looks too big/small compared to the drawn line.\"}"
     - '// @ui {"widget":"group_end"}'
     - '// @ui {"widget":"group_start", "label":"Auto delete"}'
     - "// @input bool autoDelete = true {\"hint\":\"Delete each stroke automatically after it's finished.\"}"
