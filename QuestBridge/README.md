@@ -27,15 +27,17 @@ npm start            # -> Bridge on http://localhost:8080
 
 A plain LAN `ws://` won't work — Spectacles' `createWebSocket` and WebXR both need TLS.
 
-**Option A — ngrok (fastest for dev, lowest latency):**
-```bash
-ngrok http 8080
-```
-Copy the forwarding URL it prints, e.g. `https://ab12cd34.ngrok-free.app`.
-> Free-tier ngrok URLs change every restart — you'll re-paste them when that happens.
+**Option A — Render (recommended: free, permanent URL, nothing runs on your Mac):**
+See [Deploying to Render](#deploying-to-render-free-permanent-url) below. Your Mac doesn't
+need to run the relay at all once this is set up — the URL never changes between sessions.
 
-**Option B — hosted (no install, stable URL):** deploy the `relay/` folder to
-Glitch / Render / Railway / Fly. They give you a permanent `https://…` URL.
+**Option B — a local tunnel (fastest for active dev, but the URL usually resets):**
+```bash
+cloudflared tunnel --url http://localhost:8080     # no interstitial, unlike ngrok's free tier
+```
+or `ngrok http 8080`. Both print a temporary `https://…` URL that changes on every restart
+(a *named* Cloudflare Tunnel can be made permanent, but needs a domain in your Cloudflare
+account) — fine for quick local testing, annoying for daily use.
 
 From your public host URL `https://HOST`, your three endpoints are:
 
@@ -86,6 +88,31 @@ Quest's tracking origin is unrelated to the Spectacles origin, so the mapping is
 With controller mode on: hold a controller where you want that hand to sit, press the
 **A/X button** (or re-toggle controller mode), and it zeroes. From there the hand follows the
 controller's movement and rotation, anchored to that spot. Calibrate each hand.
+
+## Deploying to Render (free, permanent URL)
+
+Render builds straight from this GitHub repo, so the relay runs in the cloud instead of on
+your Mac — no tunnel, and the URL never changes between sessions.
+
+1. Push this repo to GitHub if you haven't (`git push origin main`).
+2. At [dashboard.render.com](https://dashboard.render.com): **New +** → **Web Service**.
+3. Connect the `SpecsQuest` repo (Render asks to install its GitHub app the first time).
+4. Configure the service:
+   - **Root Directory:** `QuestBridge/relay`
+   - **Runtime:** Node
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Instance Type:** Free
+5. Click **Create Web Service**. First build takes a couple of minutes.
+6. Render gives you a permanent URL like `https://specsquest-relay.onrender.com` — that's
+   your `HOST` everywhere above (e.g. driver `url` = `wss://specsquest-relay.onrender.com/specs`).
+
+`server.js` already reads `process.env.PORT`, which Render sets automatically — no code
+changes needed.
+
+**Free-tier caveat:** the service sleeps after ~15 min with no traffic and takes 20-50s to
+wake on the next connection. Fine for personal use; if that first-connect delay bothers you,
+Render's paid tier keeps it always-on.
 
 ## Tuning / gotchas
 - **Mirrored / wrong-axis motion?** Both spaces are right-handed Y-up/-Z-forward so it usually
