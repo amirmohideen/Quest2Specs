@@ -20,8 +20,7 @@
   </div>
   <div class="row"><button id="enter">Enter VR & stream both controllers</button></div>
   <div id="log">Open this page in the Quest Browser, then press "Enter VR".
-Note: once you're in VR the headset shows a teal screen (that's correct — this page only
-streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data is flowing.</div>
+Once in VR, this same log is drawn as a panel in front of you.</div>
 
   <script>
     const logEl = document.getElementById("log");
@@ -33,6 +32,92 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
 
     let ws, xrSession, refSpace, gl, glCanvas;
     let reconnectUrl = null;
+
+    // ---- In-VR HUD: draws the log as a screen-locked panel so you can read status while in VR
+    // instead of just a blank teal screen. Plain WebGL (no libraries) so it works in both a
+    // WebGL1 and WebGL2 context - GLSL ES 1.00 shaders run fine on either.
+    let hud = null;
+
+    function setupHud() {
+      const vs = `attribute vec2 aPos; attribute vec2 aUv; varying vec2 vUv;
+        void main() { vUv = aUv; gl_Position = vec4(aPos, 0.0, 1.0); }`;
+      const fs = `precision mediump float; varying vec2 vUv; uniform sampler2D uTex;
+        void main() { gl_FragColor = texture2D(uTex, vUv); }`;
+
+      function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s));
+        return s;
+      }
+      const program = gl.createProgram();
+      gl.attachShader(program, compile(gl.VERTEX_SHADER, vs));
+      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(program);
+
+      // A panel anchored toward the bottom-left of each eye's view (NDC space, -1..1).
+      const x = -0.95, y = -0.9, w = 1.1, h = 0.6;
+      const verts = new Float32Array([
+        x,     y,     0, 1,   x + w, y,     1, 1,   x,     y + h, 0, 0,
+        x,     y + h, 0, 0,   x + w, y,     1, 1,   x + w, y + h, 1, 0
+      ]);
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+
+      const canvas2d = document.createElement("canvas");
+      canvas2d.width = 900; canvas2d.height = 500;
+      const ctx2d = canvas2d.getContext("2d");
+
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+      hud = {program, buffer, texture, canvas2d, ctx2d, lastText: null};
+    }
+
+    function updateHudTexture(text) {
+      if (text === hud.lastText) return; // skip the GPU upload when nothing changed
+      hud.lastText = text;
+      const ctx = hud.ctx2d;
+      ctx.fillStyle = "#101820e0";
+      ctx.fillRect(0, 0, hud.canvas2d.width, hud.canvas2d.height);
+      ctx.fillStyle = "#7CFFB2";
+      ctx.font = "26px ui-monospace, monospace";
+      ctx.textBaseline = "top";
+      text.split("\n").slice(0, 15).forEach((line, i) => ctx.fillText(line, 16, 16 + i * 32));
+      gl.bindTexture(gl.TEXTURE_2D, hud.texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, hud.canvas2d);
+    }
+
+    function drawHud(views, glLayer) {
+      updateHudTexture(logEl.textContent);
+
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      gl.useProgram(hud.program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, hud.buffer);
+      const aPos = gl.getAttribLocation(hud.program, "aPos");
+      const aUv = gl.getAttribLocation(hud.program, "aUv");
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 16, 0);
+      gl.enableVertexAttribArray(aUv);
+      gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 16, 8);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, hud.texture);
+      gl.uniform1i(gl.getUniformLocation(hud.program, "uTex"), 0);
+
+      for (const view of views) {
+        const vp = glLayer.getViewport(view);
+        gl.viewport(vp.x, vp.y, vp.width, vp.height);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
+      gl.disable(gl.BLEND);
+    }
 
     // No auto-reconnect here previously: if this socket dropped even once mid-session (a brief
     // network blip, the host recycling the connection, anything), streaming stopped for good
@@ -62,6 +147,7 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
       gl = glCanvas.getContext("webgl2", { xrCompatible: true })
         || glCanvas.getContext("webgl", { xrCompatible: true });
       if (!gl) { log("Could not create a WebGL context."); return; }
+      setupHud();
 
       try {
         xrSession = await navigator.xr.requestSession("immersive-vr", {
@@ -90,11 +176,14 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
       const session = frame.session;
       session.requestAnimationFrame(onFrame); // keep the loop alive first
 
-      // Clear the base framebuffer so the headset shows teal (proof the loop is running).
+      // Clear the base framebuffer (dark background behind the HUD panel).
       const glLayer = session.renderState.baseLayer;
       gl.bindFramebuffer(gl.FRAMEBUFFER, glLayer.framebuffer);
-      gl.clearColor(0.0, 0.15, 0.2, 1.0);
+      gl.clearColor(0.05, 0.05, 0.07, 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      const viewerPose = frame.getViewerPose(refSpace);
+      if (viewerPose && hud) drawHud(viewerPose.views, glLayer);
 
       let lt = 0, rt = 0, sent = 0;
       for (const src of session.inputSources) {
@@ -124,7 +213,8 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
       }
       if (Math.floor(t / 1000) !== onFrame._sec) {
         onFrame._sec = Math.floor(t / 1000);
-        log(`streaming ${sent} controller(s)  L-trig ${lt.toFixed(2)}  R-trig ${rt.toFixed(2)}`);
+        const buffered = ws ? ws.bufferedAmount : 0; // >0 growing = this socket is falling behind
+        log(`sent:${sent}  L-trig ${lt.toFixed(2)}  R-trig ${rt.toFixed(2)}  buffered:${buffered}B`);
       }
     }
     onFrame._sec = -1;

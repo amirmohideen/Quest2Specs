@@ -136,6 +136,8 @@ let ControllerHandDriver = (() => {
             this.stickOffset = vec3.zero();
             this.lastStickTime = -1;
             this.active = true;
+            // Only the FRESHEST unapplied packet is kept — see onmessage below for why.
+            this.pendingPacket = null;
             // Debug HUD state
             this._connected = false;
             this._lastTrigger = 0;
@@ -191,6 +193,8 @@ let ControllerHandDriver = (() => {
             this.stickOffset = vec3.zero();
             this.lastStickTime = -1;
             this.active = true;
+            // Only the FRESHEST unapplied packet is kept — see onmessage below for why.
+            this.pendingPacket = null;
             // Debug HUD state
             this._connected = false;
             this._lastTrigger = 0;
@@ -207,6 +211,14 @@ let ControllerHandDriver = (() => {
                 `thumb:${this.thumbJoints.length}  fist:${this.fistJoints.length}`);
             this.forceAlwaysDrawn(this.handRoot);
             this.connect();
+            // Apply at most one packet per rendered frame - see onmessage for why this matters.
+            const update = this.createEvent("UpdateEvent");
+            update.bind(() => {
+                if (this.pendingPacket) {
+                    this.applyPacket(this.pendingPacket);
+                    this.pendingPacket = null;
+                }
+            });
         }
         captureRest(joints) {
             return joints.map((j) => (j ? j.getTransform().getLocalRotation() : quat.quatIdentity()));
@@ -284,7 +296,11 @@ let ControllerHandDriver = (() => {
                 if (pkt.hand && pkt.hand !== this.handedness)
                     return;
                 this._lastRxTime = getTime();
-                this.applyPacket(pkt);
+                // Overwrite, don't queue: if several packets arrive before the next rendered frame (the
+                // device fell behind for a moment), only the newest one matters. Applying every packet in
+                // order here is what caused stale state (e.g. an old grab) to visibly replay late while
+                // the current state waited behind it in the backlog.
+                this.pendingPacket = pkt;
             };
         }
         /** Horizontal heading (radians) of a world-space direction vector. */

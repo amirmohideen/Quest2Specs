@@ -45,6 +45,14 @@ const consumers = new Set(); // Spectacles ControllerHandDriver clients
 let producers = 0;
 let msgCount = 0;
 
+// Pose/button data is only useful as "what's true right now" — an old value is actively wrong,
+// not just late. If a consumer's socket can't drain as fast as we're forwarding (weak wifi to
+// the headset, a busy main thread, etc.), skip sending to THAT consumer rather than queueing more
+// on top of an already-backed-up pipe. Without this, ws.send() buffers unboundedly and delivers
+// strictly in order, so old state (e.g. a grab from seconds ago) gets replayed late while the
+// current state waits behind it.
+const MAX_BUFFERED_BYTES = 4096; // ~20 packets' worth
+
 wss.on("connection", (sock, req) => {
   const isQuest = (req.url || "").includes("quest");
   console.log(`+ ${isQuest ? "quest(producer)" : "specs(consumer)"} connected`);
@@ -70,7 +78,11 @@ wss.on("connection", (sock, req) => {
   sock.on("message", (data) => {
     msgCount++;
     const msg = data.toString();
-    for (const c of consumers) if (c.readyState === 1) c.send(msg);
+    for (const c of consumers) {
+      if (c.readyState !== 1) continue;
+      if (c.bufferedAmount > MAX_BUFFERED_BYTES) continue; // consumer is behind - drop this frame for it
+      c.send(msg);
+    }
   });
   sock.on("close", () => {
     producers--;
