@@ -44,6 +44,7 @@ const wss = new WebSocketServer({ server });
 const consumers = new Set(); // Spectacles ControllerHandDriver clients
 let producers = 0;
 let msgCount = 0;
+let droppedCount = 0; // packets skipped because a consumer was backed up - see MAX_BUFFERED_BYTES
 
 // Pose/button data is only useful as "what's true right now" — an old value is actively wrong,
 // not just late. If a consumer's socket can't drain as fast as we're forwarding (weak wifi to
@@ -80,7 +81,10 @@ wss.on("connection", (sock, req) => {
     const msg = data.toString();
     for (const c of consumers) {
       if (c.readyState !== 1) continue;
-      if (c.bufferedAmount > MAX_BUFFERED_BYTES) continue; // consumer is behind - drop this frame for it
+      if (c.bufferedAmount > MAX_BUFFERED_BYTES) {
+        droppedCount++; // consumer is behind - drop this frame for it instead of queueing more
+        continue;
+      }
       c.send(msg);
     }
   });
@@ -106,7 +110,10 @@ setInterval(() => {
 // Heartbeat so you can SEE data flowing from the terminal.
 setInterval(() => {
   if (msgCount > 0 || producers > 0) {
-    console.log(`… ${(msgCount / 2).toFixed(0)} msg/s  | producers:${producers} consumers:${consumers.size}`);
+    console.log(
+      `… ${(msgCount / 2).toFixed(0)} msg/s  | producers:${producers} consumers:${consumers.size}` +
+        `  dropped:${droppedCount}`
+    );
   }
   msgCount = 0;
 }, 2000);
