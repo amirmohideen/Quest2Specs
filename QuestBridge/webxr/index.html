@@ -32,11 +32,21 @@ streams data, it doesn't draw a scene). Watch the RELAY TERMINAL to confirm data
     relayInput.value = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/quest";
 
     let ws, xrSession, refSpace, gl, glCanvas;
+    let reconnectUrl = null;
 
+    // No auto-reconnect here previously: if this socket dropped even once mid-session (a brief
+    // network blip, the host recycling the connection, anything), streaming stopped for good
+    // until you manually restarted VR. That's a much worse failure than a brief stutter.
     function openSocket(url) {
+      reconnectUrl = url;
       ws = new WebSocket(url);
       ws.onopen = () => log("WS connected: " + url);
-      ws.onclose = () => log("WS closed");
+      ws.onclose = () => {
+        log("WS closed - reconnecting in 1s");
+        setTimeout(() => {
+          if (reconnectUrl) openSocket(reconnectUrl);
+        }, 1000);
+      };
       ws.onerror = () => log("WS error (is the relay running and reachable over wss?)");
     }
 
