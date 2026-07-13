@@ -1,5 +1,5 @@
 /**
- * BridgeDebugHud
+ * BridgeDebug
  *
  * Tiny on-lens readout to confirm the Quest->Spectacles bridge is alive before you
  * finish rigging. Shows, per hand: socket connected? data flowing? live trigger value.
@@ -13,7 +13,7 @@
 import {ControllerHandDriver} from "./ControllerHandDriver"
 
 @component
-export class BridgeDebugHud extends BaseScriptComponent {
+export class BridgeDebug extends BaseScriptComponent {
   @input
   @hint("Text component to write the status into.")
   statusText!: Text

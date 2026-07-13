@@ -6,10 +6,10 @@
     - !<own> 5aa0f98b-e799-448c-a2dc-cae5d04fa2a4
     - !<own> ffbdc74d-15f9-4ae4-afbb-497a7f1db2ac
     - !<own> 080170a5-da25-4d62-ac5f-cc236dc02972
+    - !<own> 216090f4-2a1a-45bc-a8e9-93831db723d3
     - !<own> 031f1620-8e76-479f-9ebb-4578a101e619
     - !<own> 3cdd0231-42db-4213-9a67-0e3d09740d03
     - !<own> cdb79f01-c1e3-4252-a967-58a3e7dbda8a
-    - !<own> 216090f4-2a1a-45bc-a8e9-93831db723d3
   layers: !<Layers/267ee9a7-aff2-4f9d-9a49-f71214747d03>
     userLayers:
       []
@@ -845,7 +845,7 @@
 - !<ScriptComponent/1adc3168-eacb-4daa-bf29-4b61771f6c2e>
   PrefabRemaps:
     []
-  Name: BridgeDebugHud
+  Name: BridgeDebug
   Enabled: true
   ScriptAsset: !<reference> 883bcc5d-024e-42a1-b6cd-fb539f22db69
   ScriptInputsDefault:
@@ -863,7 +863,7 @@
 - !<SceneObject/1b27a355-53ed-4657-a802-451222891504>
   PrefabRemaps:
     []
-  Name: LeftControllerInteractor
+  Name: "[ControllerInteractor] Left"
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
@@ -2176,7 +2176,7 @@
 - !<SceneObject/4961477b-bc35-4354-af44-71c344e32e6a>
   PrefabRemaps:
     []
-  Name: BridgeDebugHUD
+  Name: BridgeDebug
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
@@ -5938,25 +5938,6 @@
     - !<own> 7db11996-f25b-413e-b374-c4db27bbfc7e
   Components:
     []
-- !<SceneObject/dec0a8e4-8a6d-4228-bba4-00269ad6009e>
-  PrefabRemaps:
-    []
-  Name: ControllerBridge
-  Enabled: true
-  Layers: 1
-  LocalTransform: !<TransformEntity>
-    Position: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Rotation: {x: 0.000000, y: 0.000000, z: 0.000000}
-    Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
-    HasSegmentScaleCompensation: false
-  Children:
-    - !<own> 4f8edcf2-8db0-43a8-80b6-13efdb29c0b7
-    - !<own> 6ecf7400-9abd-4dad-b25a-bfd52b85a692
-    - !<own> bbdb536e-2525-4942-8897-5838148915b2
-    - !<own> e0c191dd-f95c-400d-bc9f-75f7e65cdd4a
-    - !<own> 1b27a355-53ed-4657-a802-451222891504
-  Components:
-    []
 - !<SceneObject/df55d398-0754-4405-b827-6c5326fcd5b8>
   PrefabRemaps:
     []
@@ -6060,7 +6041,7 @@
 - !<SceneObject/e0c191dd-f95c-400d-bc9f-75f7e65cdd4a>
   PrefabRemaps:
     []
-  Name: RightControllerInteractor
+  Name: "[ControllerInteractor] Right"
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
@@ -6745,7 +6726,7 @@
 - !<SceneObject/ffbdc74d-15f9-4ae4-afbb-497a7f1db2ac>
   PrefabRemaps:
     []
-  Name: Quest2SpecsBridge
+  Name: QuestControllers2SpecsBridge
   Enabled: true
   Layers: 1
   LocalTransform: !<TransformEntity>
@@ -6754,7 +6735,11 @@
     Scale: {x: 1.000000, y: 1.000000, z: 1.000000}
     HasSegmentScaleCompensation: false
   Children:
+    - !<own> 4f8edcf2-8db0-43a8-80b6-13efdb29c0b7
+    - !<own> bbdb536e-2525-4942-8897-5838148915b2
+    - !<own> 6ecf7400-9abd-4dad-b25a-bfd52b85a692
+    - !<own> 1b27a355-53ed-4657-a802-451222891504
+    - !<own> e0c191dd-f95c-400d-bc9f-75f7e65cdd4a
     - !<own> 4961477b-bc35-4354-af44-71c344e32e6a
-    - !<own> dec0a8e4-8a6d-4228-bba4-00269ad6009e
   Components:
     []

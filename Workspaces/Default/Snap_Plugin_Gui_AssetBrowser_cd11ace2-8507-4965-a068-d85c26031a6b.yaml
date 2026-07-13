@@ -49,7 +49,7 @@ CollapsedEntities:
       - Render Target.renderTarget
       - Scene.scene
       - Scripts
-      - Scripts/BridgeDebugHud.ts
+      - Scripts/BridgeDebug.ts
       - Scripts/ControllerHandDriver.ts
       - Scripts/ControllerInteractor.ts
       - Scripts/DebugPanelToggle.ts

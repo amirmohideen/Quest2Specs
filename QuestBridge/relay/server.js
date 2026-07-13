@@ -49,6 +49,14 @@ wss.on("connection", (sock, req) => {
   const isQuest = (req.url || "").includes("quest");
   console.log(`+ ${isQuest ? "quest(producer)" : "specs(consumer)"} connected`);
 
+  // Heartbeat target: a connection that dies without a clean close (app force-quit, wifi
+  // drop, device sleep) never fires "close" and would otherwise sit in `consumers` forever,
+  // silently eating a tiny bit of every future broadcast. The interval below reaps it.
+  sock.isAlive = true;
+  sock.on("pong", () => {
+    sock.isAlive = true;
+  });
+
   if (!isQuest) {
     consumers.add(sock);
     sock.on("close", () => {
@@ -69,6 +77,19 @@ wss.on("connection", (sock, req) => {
     console.log("- producer left");
   });
 });
+
+// Ping every connection periodically; terminate anything that didn't pong back since the last
+// check. This is what actually prunes zombie sockets that a clean "close" event would've missed.
+setInterval(() => {
+  for (const sock of wss.clients) {
+    if (sock.isAlive === false) {
+      sock.terminate(); // fires "close" on this end, so consumers/producers bookkeeping stays correct
+      continue;
+    }
+    sock.isAlive = false;
+    sock.ping();
+  }
+}, 15000);
 
 // Heartbeat so you can SEE data flowing from the terminal.
 setInterval(() => {
