@@ -18,9 +18,11 @@
  *   - capture the hand model's current world rotation as its rest pose.
  * Then every frame:  handWorld = align ∘ controllerQuestPose.
  *
- * CALIBRATION GESTURE: touch the controller to your Spectacles (grip at your glasses),
- * pointing forward, and click the joystick. The hand lands on the real controller and 1:1
- * metric tracking keeps it matched to the controller's physical position from then on.
+ * CALIBRATION GESTURE: rest the controller on your thigh pointing forward, look at it, and
+ * click the joystick. The hand model is placed at a fixed offset (`calibrationOffsetCm`) from
+ * where you're looking, its forward matched to the controller's pointing direction, and it
+ * follows the controller's movement 1:1 from then on. Fine-tune the resting spot afterward
+ * with the thumbstick slide and the A/B height-nudge buttons.
  *
  * PINCH = trigger curls index+thumb.  FIST = grip curls the rest (+ index/thumb via max()).
  *
@@ -101,8 +103,8 @@ export class ControllerHandDriver extends BaseScriptComponent {
 
   @ui.group_start("World-lock tuning")
   @input
-  @hint("Where the hand lands relative to your head at the moment you click reset (cm: x=right, y=up, z=forward). For the hand to MATCH the controller's real position: TOUCH the controller to your Spectacles when clicking reset, and keep this small (~(0,0,10) = grip just ahead of your eyes). For a floating hand at a comfy spot instead, use e.g. (0,-25,35) and reset with the controller anywhere.")
-  calibrationOffsetCm: vec3 = new vec3(0, 0, 10)
+  @hint("Fixed offset from your head where the hand lands when you click reset (cm: x=right, y=up, z=forward). e.g. (0,-25,35) = 25 down and 35 forward of where you're looking, roughly a controller resting on your thigh. Fine-tune live with the thumbstick slide and A/B height buttons.")
+  calibrationOffsetCm: vec3 = new vec3(0, -25, 35)
   @input
   @hint("Manual heading trim (degrees) if left/right feels rotated after calibration.")
   yawTrimDegrees: number = 0
@@ -366,9 +368,8 @@ export class ControllerHandDriver extends BaseScriptComponent {
     const phi = this.headingOf(camFwd) - this.headingOf(ctrlFwd) + this.yawTrimDegrees * DEG2RAD
     this.alignYaw = quat.angleAxis(phi, vec3.up())
 
-    // Translation: map the controller's current position to your chosen spot relative to the
-    // head. With the touch-to-face gesture the controller physically IS at that spot when you
-    // click, so the hand lands on the real controller and 1:1 tracking keeps it there.
+    // Translation: map the controller's current position to the fixed offset spot relative to
+    // where you're looking. From this moment on, controller movement applies 1:1 on top of it.
     const o = this.calibrationOffsetCm
     const anchor = camPos
       .add(camRight.uniformScale(o.x))

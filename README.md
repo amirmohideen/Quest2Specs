@@ -56,12 +56,12 @@ you'd rather not depend on a hosted server.
 5. Launch the **Quest2Specs** Lens.
 6. Pick up your Quest controllers.
 7. Calibrate each hand:
-   - Hold the controller so it **touches your Spectacles** (grip right at your glasses),
-     pointing forward, then **click the joystick** (press down on the thumbstick). The virtual
-     hand lands exactly on the controller and follows its real position 1:1 from then on. Do
-     this for both controllers.
-   - **Move the joystick** to slide that hand forward/back and left/right.
-   - **Primary button** (A / X) lowers the hand, **Secondary button** (B / Y) raises it.
+   - Grab your controllers and rest them on your thighs, pointing forward. Look at your
+     controllers, then **click the joystick** (press down on the thumbstick) to reset that
+     hand. Do this for both controllers.
+   - If needed, fine-tune from there: **move the joystick** to slide the hand forward/back and
+     left/right, and use the **Primary button** (A / X) to lower it or the **Secondary button**
+     (B / Y) to raise it.
    - **Trigger** pinches (also used to select UI and to draw, depending on mode).
    - **Grip** (the side squeeze button) makes a full fist.
 
@@ -124,11 +124,13 @@ rotation follow the controller, the trigger curls the index finger and thumb int
 the grip curls the rest of the fingers into a fist.
 
 **5. The tricky part — lining up two separate "worlds."** The Quest and the Spectacles each
-track space independently; they have no shared sense of where "here" is. That's what the
-joystick-click calibration step does: it tells the system "the controller is right here, and
-I'm looking this way," and from that single moment on, the hand's movement in your Spectacles
-is mapped to match your controller's real, physical movement — even though the two devices
-never actually talk about a shared coordinate system beyond that one handshake.
+track space independently; they have no shared sense of where "here" is. So the two worlds get
+lined up at the moment you click the joystick, using a fixed offset (configurable in the
+`ControllerHandDriver` script): the Lens takes the direction you're currently looking, applies
+that offset from your Spectacles' position, and places the hand model at the resulting spot. At
+the same time, the hand model's forward is set to match whichever direction the controller is
+pointing. From that single handshake on, every movement of the controller is applied 1:1 to the
+hand — even though the two devices never share a coordinate system beyond that moment.
 
 Everything else — pinch-to-select UI, poke-to-press buttons, and in-air drawing — is built on
 top of this same live hand data, the same way Spectacles' own native hand tracking would drive
@@ -145,8 +147,8 @@ those interactions, just powered by a controller instead of your bare hands.
 - **Screen looks blank/teal in VR** — that's expected; the WebXR page doesn't render a scene,
   it only streams controller data. A status panel is shown at eye level once you're in VR.
 - **Hand position feels off after a while** — the two devices' tracking can drift apart over a
-  long session. Touch the controller to your Spectacles again and click the joystick to
-  re-anchor.
+  long session. Click the joystick again to re-anchor, then fine-tune with the joystick and
+  A/B buttons if needed.
 
 ---
 

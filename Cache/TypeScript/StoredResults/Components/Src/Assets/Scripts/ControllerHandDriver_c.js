@@ -33,7 +33,7 @@ function checkUndefined(property, showIfData) {
 // @input float fistMaxDegrees = 80
 // @ui {"widget":"group_end"}
 // @ui {"widget":"group_start", "label":"World-lock tuning"}
-// @input vec3 anchorOffsetCm = {0,-25,35} {"hint":"Where the hand sits at calibration, relative to your head in cm: x=right, y=up, z=forward. Lower y to drop it to where you hold the controllers (negative y = down)."}
+// @input vec3 calibrationOffsetCm = {0,-25,35} {"hint":"Fixed offset from your head where the hand lands when you click reset (cm: x=right, y=up, z=forward). e.g. (0,-25,35) = 25 down and 35 forward of where you're looking, roughly a controller resting on your thigh. Fine-tune live with the thumbstick slide and A/B height buttons."}
 // @input float yawTrimDegrees {"hint":"Manual heading trim (degrees) if left/right feels rotated after calibration."}
 // @input float posScale = 1 {"hint":"Movement scale. 1 = physical 1:1. Raise to amplify reach."}
 // @input float resetButton = 3 {"hint":"Button that resets / re-anchors THIS hand (Quest: 3 = thumbstick click). Clears stick/height offsets too."}
@@ -77,7 +77,7 @@ awakeEvent.bind(() => {
     checkUndefined("thumbMaxDegrees", []);
     checkUndefined("fistCurlAxis", []);
     checkUndefined("fistMaxDegrees", []);
-    checkUndefined("anchorOffsetCm", []);
+    checkUndefined("calibrationOffsetCm", []);
     checkUndefined("yawTrimDegrees", []);
     checkUndefined("posScale", []);
     checkUndefined("resetButton", []);

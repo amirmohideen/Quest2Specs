@@ -70,7 +70,11 @@ function component(target) {
  *   - capture the hand model's current world rotation as its rest pose.
  * Then every frame:  handWorld = align ∘ controllerQuestPose.
  *
- * CALIBRATION GESTURE: point the controller forward along your gaze and press A/X.
+ * CALIBRATION GESTURE: rest the controller on your thigh pointing forward, look at it, and
+ * click the joystick. The hand model is placed at a fixed offset (`calibrationOffsetCm`) from
+ * where you're looking, its forward matched to the controller's pointing direction, and it
+ * follows the controller's movement 1:1 from then on. Fine-tune the resting spot afterward
+ * with the thumbstick slide and the A/B height-nudge buttons.
  *
  * PINCH = trigger curls index+thumb.  FIST = grip curls the rest (+ index/thumb via max()).
  *
@@ -103,7 +107,7 @@ let ControllerHandDriver = (() => {
             this.fistJoints = this.fistJoints;
             this.fistCurlAxis = this.fistCurlAxis;
             this.fistMaxDegrees = this.fistMaxDegrees;
-            this.anchorOffsetCm = this.anchorOffsetCm;
+            this.calibrationOffsetCm = this.calibrationOffsetCm;
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.resetButton = this.resetButton;
@@ -160,7 +164,7 @@ let ControllerHandDriver = (() => {
             this.fistJoints = this.fistJoints;
             this.fistCurlAxis = this.fistCurlAxis;
             this.fistMaxDegrees = this.fistMaxDegrees;
-            this.anchorOffsetCm = this.anchorOffsetCm;
+            this.calibrationOffsetCm = this.calibrationOffsetCm;
             this.yawTrimDegrees = this.yawTrimDegrees;
             this.posScale = this.posScale;
             this.resetButton = this.resetButton;
@@ -361,8 +365,9 @@ let ControllerHandDriver = (() => {
             const ctrlFwd = questRot.multiplyVec3(new vec3(0, 0, -1));
             const phi = this.headingOf(camFwd) - this.headingOf(ctrlFwd) + this.yawTrimDegrees * DEG2RAD;
             this.alignYaw = quat.angleAxis(phi, vec3.up());
-            // Translation: map the controller's current position to your chosen spot relative to the head.
-            const o = this.anchorOffsetCm;
+            // Translation: map the controller's current position to the fixed offset spot relative to
+            // where you're looking. From this moment on, controller movement applies 1:1 on top of it.
+            const o = this.calibrationOffsetCm;
             const anchor = camPos
                 .add(camRight.uniformScale(o.x))
                 .add(camUp.uniformScale(o.y))
