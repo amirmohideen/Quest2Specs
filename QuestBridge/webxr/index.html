@@ -39,8 +39,8 @@ Once in VR, this same log is drawn as a panel in front of you.</div>
     let hud = null;
 
     function setupHud() {
-      const vs = `attribute vec2 aPos; attribute vec2 aUv; varying vec2 vUv;
-        void main() { vUv = aUv; gl_Position = vec4(aPos, 0.0, 1.0); }`;
+      const vs = `attribute vec2 aPos; attribute vec2 aUv; uniform mat4 uMvp; varying vec2 vUv;
+        void main() { vUv = aUv; gl_Position = uMvp * vec4(aPos, 0.0, 1.0); }`;
       const fs = `precision mediump float; varying vec2 vUv; uniform sampler2D uTex;
         void main() { gl_FragColor = texture2D(uTex, vUv); }`;
 
@@ -56,8 +56,10 @@ Once in VR, this same log is drawn as a panel in front of you.</div>
       gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fs));
       gl.linkProgram(program);
 
-      // A panel centered at eye level in each eye's view (NDC space, -1..1, (0,0) = dead center).
-      const x = -0.7, y = -0.3, w = 1.4, h = 0.6;
+      // Panel geometry in METERS, centered on the viewer's forward axis. It's positioned
+      // HUD_DISTANCE_M in front of the head each frame and projected through each eye's real
+      // view/projection matrices (see drawHud), so both eyes fuse it into one readable panel.
+      const x = -0.5, y = -0.275, w = 1.0, h = 0.55;
       const verts = new Float32Array([
         x,     y,     0, 1,   x + w, y,     1, 1,   x,     y + h, 0, 0,
         x,     y + h, 0, 0,   x + w, y,     1, 1,   x + w, y + h, 1, 0
@@ -94,7 +96,21 @@ Once in VR, this same log is drawn as a panel in front of you.</div>
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, hud.canvas2d);
     }
 
-    function drawHud(views, glLayer) {
+    // Column-major 4x4 multiply (WebXR matrices are column-major Float32Arrays).
+    function mat4Mul(a, b) {
+      const out = new Float32Array(16);
+      for (let c = 0; c < 4; c++) {
+        for (let r = 0; r < 4; r++) {
+          out[c * 4 + r] =
+            a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
+        }
+      }
+      return out;
+    }
+
+    const HUD_DISTANCE_M = 1.5; // how far in front of your face the panel floats
+
+    function drawHud(viewerPose, glLayer) {
       updateHudTexture(logEl.textContent);
 
       gl.enable(gl.BLEND);
@@ -110,10 +126,21 @@ Once in VR, this same log is drawn as a panel in front of you.</div>
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, hud.texture);
       gl.uniform1i(gl.getUniformLocation(hud.program, "uTex"), 0);
+      const uMvp = gl.getUniformLocation(hud.program, "uMvp");
 
-      for (const view of views) {
+      // Head-locked panel floating HUD_DISTANCE_M in front of the viewer:
+      // model = head pose * translate(0, 0, -distance).
+      const T = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -HUD_DISTANCE_M, 1]);
+      const model = mat4Mul(viewerPose.transform.matrix, T);
+
+      // Project through each eye's REAL view + projection matrices. These come from the headset
+      // and already encode the wearer's IPD and the asymmetric per-eye frustums — that's what
+      // makes the two eyes' images fuse into one panel. (Drawing the same NDC rect in both eyes,
+      // the old way, ignores those frustums and produces an unfusable double image.)
+      for (const view of viewerPose.views) {
         const vp = glLayer.getViewport(view);
         gl.viewport(vp.x, vp.y, vp.width, vp.height);
+        gl.uniformMatrix4fv(uMvp, false, mat4Mul(view.projectionMatrix, mat4Mul(view.transform.inverse.matrix, model)));
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
       gl.disable(gl.BLEND);
@@ -183,7 +210,7 @@ Once in VR, this same log is drawn as a panel in front of you.</div>
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
       const viewerPose = frame.getViewerPose(refSpace);
-      if (viewerPose && hud) drawHud(viewerPose.views, glLayer);
+      if (viewerPose && hud) drawHud(viewerPose, glLayer);
 
       let lt = 0, rt = 0, sent = 0;
       for (const src of session.inputSources) {
