@@ -139,6 +139,13 @@ let ControllerHandDriver = (() => {
             this.heightOffsetCm = 0;
             this.stickOffset = vec3.zero();
             this.lastStickTime = -1;
+            // The hand's AUTHORED world pose, captured at lens start before any controller data touches
+            // it, plus the gaze heading it was authored against. Every reset maps back to THIS pose
+            // (re-headed to where you currently face) instead of the hand's current rotation - otherwise
+            // a controller held tilted at lens start bakes that tilt into every later reset, and the only
+            // way out is restarting the lens.
+            this.authoredRestRot = quat.quatIdentity();
+            this.authoredHeading = 0;
             this.active = true;
             // Only the FRESHEST unapplied packet is kept — see onmessage below for why.
             this.pendingPacket = null;
@@ -196,6 +203,13 @@ let ControllerHandDriver = (() => {
             this.heightOffsetCm = 0;
             this.stickOffset = vec3.zero();
             this.lastStickTime = -1;
+            // The hand's AUTHORED world pose, captured at lens start before any controller data touches
+            // it, plus the gaze heading it was authored against. Every reset maps back to THIS pose
+            // (re-headed to where you currently face) instead of the hand's current rotation - otherwise
+            // a controller held tilted at lens start bakes that tilt into every later reset, and the only
+            // way out is restarting the lens.
+            this.authoredRestRot = quat.quatIdentity();
+            this.authoredHeading = 0;
             this.active = true;
             // Only the FRESHEST unapplied packet is kept — see onmessage below for why.
             this.pendingPacket = null;
@@ -208,6 +222,8 @@ let ControllerHandDriver = (() => {
         onAwake() {
             this.handTransform = this.handRoot.getTransform();
             this.cameraTransform = this.camera.getTransform();
+            this.authoredRestRot = this.handTransform.getWorldRotation();
+            this.authoredHeading = this.headingOf(this.cameraTransform.getWorldRotation().multiplyVec3(new vec3(0, 0, -1)));
             this.indexRest = this.captureRest(this.indexJoints);
             this.thumbRest = this.captureRest(this.thumbJoints);
             this.fistRest = this.captureRest(this.fistJoints);
@@ -374,8 +390,13 @@ let ControllerHandDriver = (() => {
                 .add(camFwd.uniformScale(o.z));
             const scaledRef = questPos.uniformScale(100 * this.posScale);
             this.alignPos = anchor.sub(this.alignYaw.multiplyVec3(scaledRef));
-            // Orientation offset so the hand starts at its authored (current) world rest pose.
-            const restRot = this.handTransform.getWorldRotation();
+            // Orientation offset: snap the hand back to its AUTHORED rest pose (flat, fingers forward),
+            // re-headed to the direction you currently face. Reading the hand's *current* rotation here
+            // (the old behavior) meant a tilted controller at lens start poisoned every later reset.
+            // Hold the controller flat and pointing forward when you click reset and the controller's
+            // tilt-to-hand mapping comes out clean every time - no lens restart needed.
+            const headingDelta = this.headingOf(camFwd) - this.authoredHeading;
+            const restRot = quat.angleAxis(headingDelta, vec3.up()).multiply(this.authoredRestRot);
             this.modelOffset = this.alignYaw.multiply(questRot).invert().multiply(restRot);
             print(`${TAG} ${this.handedness} calibrated  yaw=${(phi / DEG2RAD).toFixed(1)}deg`);
         }

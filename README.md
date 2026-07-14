@@ -132,6 +132,13 @@ the same time, the hand model's forward is set to match whichever direction the 
 pointing. From that single handshake on, every movement of the controller is applied 1:1 to the
 hand — even though the two devices never share a coordinate system beyond that moment.
 
+One detail worth knowing: the mapping between the controller's tilt and the hand's tilt is
+captured at the moment you click reset. Whatever orientation the controller has right then is
+adopted as the hand's neutral pose — flat, fingers forward. That's exactly why the calibration
+step has you rest the controller flat on your thigh, pointing forward, before clicking the
+joystick: click reset while the controller is tilted or pointing sideways, and the hand will
+sit at a matching weird angle until you reset again properly.
+
 Everything else — pinch-to-select UI, poke-to-press buttons, and in-air drawing — is built on
 top of this same live hand data, the same way Spectacles' own native hand tracking would drive
 those interactions, just powered by a controller instead of your bare hands.
@@ -149,6 +156,9 @@ those interactions, just powered by a controller instead of your bare hands.
 - **Hand position feels off after a while** — the two devices' tracking can drift apart over a
   long session. Click the joystick again to re-anchor, then fine-tune with the joystick and
   A/B buttons if needed.
+- **Hand looks tilted or points a weird direction** — the controller was tilted when the Lens
+  started or when you last clicked reset. Rest the controller flat on your thigh, pointing
+  forward, and click the joystick again — no need to restart the Lens.
 
 ---
 
