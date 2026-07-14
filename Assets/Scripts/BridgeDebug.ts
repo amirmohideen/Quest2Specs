@@ -26,9 +26,17 @@ export class BridgeDebug extends BaseScriptComponent {
   @allowUndefined
   leftDriver!: ControllerHandDriver
 
+  private nextRefresh = 0
+
   onAwake(): void {
     const update = this.createEvent("UpdateEvent")
-    update.bind(() => this.refresh())
+    update.bind(() => {
+      // Throttled: setting Text.text rebuilds the glyph mesh, and doing that EVERY frame is
+      // real per-frame work on device. 10Hz is plenty readable for a status readout.
+      if (getTime() < this.nextRefresh) return
+      this.nextRefresh = getTime() + 0.1
+      this.refresh()
+    })
   }
 
   private line(d: ControllerHandDriver | undefined, label: string): string {

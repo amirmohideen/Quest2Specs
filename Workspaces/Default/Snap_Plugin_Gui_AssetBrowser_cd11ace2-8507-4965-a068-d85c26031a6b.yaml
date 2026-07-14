@@ -1,7 +1,7 @@
 CollapsedEntities:
   type: stringset
   value:
-    size: 807
+    size: 808
     values:
       - Behavior.lsc
       - ControllerHandModelAssets
@@ -482,6 +482,7 @@ CollapsedEntities:
       - SpectaclesInteractionKit.lspkg/VersionNumber.ts
       - SpectaclesInteractionKit.lspkg/package.native
       - SpectaclesInteractionKit.lspkg/tsconfig.json
+      - SpectaclesInteractionKitExamples.lspkg
       - SpectaclesInteractionKitExamples.lspkg/README.md
       - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop
       - SpectaclesInteractionKitExamples.lspkg/RocketWorkshop/Materials
