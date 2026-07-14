@@ -56,8 +56,10 @@ you'd rather not depend on a hosted server.
 5. Launch the **Quest2Specs** Lens.
 6. Pick up your Quest controllers.
 7. Calibrate each hand:
-   - Point a controller in the direction you're looking, then **click the joystick** (press
-     down on the thumbstick) to anchor that hand. Do this for both controllers.
+   - Hold the controller so it **touches your Spectacles** (grip right at your glasses),
+     pointing forward, then **click the joystick** (press down on the thumbstick). The virtual
+     hand lands exactly on the controller and follows its real position 1:1 from then on. Do
+     this for both controllers.
    - **Move the joystick** to slide that hand forward/back and left/right.
    - **Primary button** (A / X) lowers the hand, **Secondary button** (B / Y) raises it.
    - **Trigger** pinches (also used to select UI and to draw, depending on mode).
@@ -143,7 +145,8 @@ those interactions, just powered by a controller instead of your bare hands.
 - **Screen looks blank/teal in VR** — that's expected; the WebXR page doesn't render a scene,
   it only streams controller data. A status panel is shown at eye level once you're in VR.
 - **Hand position feels off after a while** — the two devices' tracking can drift apart over a
-  long session. Point the controller forward and click the joystick again to re-anchor.
+  long session. Touch the controller to your Spectacles again and click the joystick to
+  re-anchor.
 
 ---
 
