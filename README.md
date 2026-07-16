@@ -94,7 +94,12 @@ There are two ways to run the bridge server that relays data between your Quest 
 
 This is the Settings panel found inside the Quest2Specs lens.
 
-- **3.1**
+- **Controller Hands 🙌**: Toggles the visibility of the virtual hands driven by your Quest controllers.
+- **Debug Panel 🤖**: Shows or hides the developer debug screen (useful for checking connection status).
+- **Specs Hands 👓**: Toggles the visibility of the native Spectacles hand tracking models.
+- **Draw ✍️**: Enables or disables the 3D drawing mode. When enabled, pull the trigger to draw in the air.
+- **Clear Drawing**: Deletes all current 3D drawings from the scene.
+- **Instructions 🤝**: Opens or closes the built-in instructions/help panel.
 
 </details>
 
