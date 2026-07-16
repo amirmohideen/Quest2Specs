@@ -95,20 +95,20 @@ There are two ways to run the bridge server that relays data between your Quest 
 <details open>
 <summary><b>💻 Method 2: Self-hosted (For Developers)</b></summary>
 <br>
-Useful for development or if you'd rather not depend on a hosted server. The free tunnel URL changes every time you start it.
+Useful for development or if you'd rather not depend on a hosted server. The free cloudflare tunnel URL changes every time you start it.
 
-1. **On your Mac**, open a terminal and start the relay:
+1. **On your Mac**, open a terminal window and start the relay:
    ```bash
-   cd /path/to/SpecsQuest/QuestBridge/relay
+   cd /[path to the repo]/Quest2Specs/QuestBridge/relay
    npm start
    ```
 2. In a **second terminal window**, open a tunnel to it:
    ```bash
    cloudflared tunnel --url http://localhost:8080
    ```
-3. Copy the `https://xxxx.trycloudflare.com` URL it prints. Save it somewhere you can open on the Quest later.
-4. **In Lens Studio**, paste that same URL into **both** `ControllerHandDriver` components' `url` field - but swap `https://` for `wss://` at the start (the Lens needs the WebSocket address). Save and push the project to your Spectacles.
-5. **On the Quest**, open the **original `https://`** URL and tap **"Enter VR & stream both controllers."**
+3. Search for the `https://xxxx.trycloudflare.com` URL it prints and copy it. Save it somewhere (like a Google Keep notes) so you can open on the Quest later.
+4. **In Lens Studio**, paste that same URL into **both** `ControllerHandDriver.ts` components' `url` field - but swap `https://` for `wss://` at the start (the Lens needs the WebSocket address). So in the script url field it will look like 'wss://xxxx.trycloudflare.com'. Save and push the project to your Spectacles.
+5. **On the Quest**, open the **original `https://xxxx.trycloudflare.com`** URL and tap **"Enter VR & stream both controllers."**
 6. Take the headset off, put on your Spectacles, launch the Lens, and calibrate your controllers exactly as in Method 1.
 </details>
 
