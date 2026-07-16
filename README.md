@@ -8,7 +8,7 @@
 <p align="center">
   <a href="#features">✨ Features</a> •
   <a href="#supported-hardware">🥽 Supported Hardware</a> •
-  <a href="#setup">🚀 Setup</a> •
+  <a href="#setup">🚀 Setup & Instructions</a> •
   <a href="#how-it-works">⚙️ How it works</a> •
   <a href="#troubleshooting">🛠️ Troubleshooting</a>
 </p>
@@ -51,7 +51,7 @@
 ---
 
 <a id="setup"></a>
-## 🚀 Setup
+## 🚀 Setup & Instructions
 
 There are two ways to run the bridge server that relays data between your Quest and your Spectacles. 
 
