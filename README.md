@@ -1,8 +1,8 @@
 <h1 align="center">🥽 Quest2Specs</h1>
 
 <p align="center">
-  Use your <b>Meta Quest controllers</b> as hand input for <b>Snap Spectacles</b>.<br>
-  Quest2Specs reads your Quest controller's position, rotation, and button presses, and streams that data to a virtual hand in your Spectacles Lens - so you get full hand tracking, pinch, and grab, regardless of lighting.
+  Use your <b>Meta Quest controllers</b> as controller hand inputs for <b>Snap Spectacles!</b><br>
+  Quest2Specs reads your Quest controller's position, rotation, and button presses, and streams that data to a virtual hand in your Spectacles Lens - so you get full hand tracking, pinch, and grab, regardless of lighting conditions.
 </p>
 
 <p align="center">
@@ -62,7 +62,6 @@ A permanent, always-on server. Nothing to run yourself! This URL never changes, 
 <br>
 
 <video src="https://github.com/user-attachments/assets/e65661ae-cd18-4a50-9892-ea0578e144f3" width="300" controls></video>
-
 
 1. **Quest Settings:**
    - **For Quest 3S:** Go to **Settings -> General -> Power -> Display Off** -> Set it to 4 hours or a longer option so that the Quest doesn't power off during the session.
