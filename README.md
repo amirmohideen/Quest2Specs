@@ -61,8 +61,6 @@ There are two ways to run the bridge server that relays data between your Quest 
 A permanent, always-on server. Nothing to run yourself! This URL never changes, so this is the whole setup every time you use it.
 <br>
 
-<video src="https://github.com/user-attachments/assets/e65661ae-cd18-4a50-9892-ea0578e144f3" width="200" autoplay loop muted></video>
-
 <video src="https://github.com/user-attachments/assets/e65661ae-cd18-4a50-9892-ea0578e144f3" width="300" controls></video>
 
 
