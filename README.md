@@ -59,6 +59,12 @@ There are two ways to run the bridge server that relays data between your Quest 
 <summary><b>🌐 Method 1: Hosted (Easiest)</b></summary>
 <br>
 A permanent, always-on server. Nothing to run yourself! This URL never changes, so this is the whole setup every time you use it.
+<br>
+
+<video src="https://github.com/user-attachments/assets/e65661ae-cd18-4a50-9892-ea0578e144f3" width="200" autoplay loop muted></video>
+
+<video src="https://github.com/user-attachments/assets/e65661ae-cd18-4a50-9892-ea0578e144f3" width="300" controls></video>
+
 
 1. **Quest Settings:**
    - **For Quest 3S:** Go to **Settings -> General -> Power -> Display Off** -> Set it to 4 hours or a longer option so that the Quest doesn't power off during the session.
