@@ -143,6 +143,8 @@ flowchart LR
   subgraph col2 [ ]
     direction TB
     Browser["🌐 Quest Browser<br>(WebXR)"]
+    HiddenSpace[" "]
+    Browser ~~~ HiddenSpace
   end
   
   subgraph col3 [ ]
@@ -151,12 +153,13 @@ flowchart LR
   end
   
   Quest3 -->|"Runs"| Browser
+  Quest3 -.->|"Pos/Rot Data"| Browser
   Browser -->|"WebSockets"| Server
-  Controllers -.->|"Pos/Rot Data"| Browser
   
-  style col1 fill:transparent,stroke:transparent
-  style col2 fill:transparent,stroke:transparent
-  style col3 fill:transparent,stroke:transparent
+  style col1 fill:transparent,stroke:transparent,stroke-width:0px
+  style col2 fill:transparent,stroke:transparent,stroke-width:0px
+  style col3 fill:transparent,stroke:transparent,stroke-width:0px
+  style HiddenSpace fill:transparent,stroke:transparent,color:transparent,stroke-width:0px
 ```
 
 <details open>
