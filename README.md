@@ -26,11 +26,11 @@
 | Feature | Description |
 | :--- | :--- |
 | 👐 **6DoF controller hand tracking** | The virtual hand follows your real controller's position, rotation and button input actions 1:1. |
+| 🌒 **Works in the dark** | IR sensors in controllers are tracked by Quest, so Spectacles's hand models works in the dark. |
 | 🤏 **Pinch, grab & poke** | Trigger pinches (index + thumb), grip closes a full fist, and you can poke UI directly. |
 | 🎯 **Point-and-select UI** | A ray + cursor lets you select SIK/UIKit interactables at a distance. |
 | 🎨 **3D drawing** | Draw in-air, world-locked strokes with the trigger (adjustable thickness/color/auto-delete). |
 | 🤲 **Independent hands** | Two hand models, independently calibrated and adjustable with controllers. |
-| 🌒 **Works in the dark** | IR sensors in controllers are tracked by Quest, so Spectacles's hand models works in the dark. |
 
 ---
 
