@@ -60,7 +60,7 @@ There are two ways to run the bridge server that relays data between your Quest 
 <summary><b>🌐 Method 1: Hosted (Easiest)</b></summary>
 <br>
 
-<video src="https://github.com/user-attachments/assets/e65661ae-cd18-4a50-9892-ea0578e144f3" width="300" controls></video>
+<video src="https://github.com/user-attachments/assets/58d55fc0-2d14-4934-97b8-1ab5d2cd0868" width="300" controls></video>
 
 1. **Quest Settings:**
    - **For Quest 3S:** Go to **Settings -> General -> Power -> Display Off** -> Set it to 4 hours or a longer option so that the Quest doesn't power off during the session.
@@ -133,33 +133,34 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
 
 <video src="https://github.com/user-attachments/assets/1af46e25-a788-45d8-8057-8567ef959fab" width="300" controls></video>
 
+
 ```mermaid
 flowchart LR
   subgraph col1 [ ]
     direction TB
-    Quest3["🥽 Quest 3 Headset"] <-->|"Tracked via IR + IMU"| Controllers["🎮 Quest Controllers"]
+    Quest3["🥽 Quest Headset"] <-->|"Tracked via IR + IMU"| Controllers["🎮 Quest Controllers"]
   end
   
   subgraph col2 [ ]
     direction TB
     Browser["🌐 Quest Browser<br>(WebXR)"]
-    HiddenSpace[" "]
-    Browser ~~~ HiddenSpace
   end
   
   subgraph col3 [ ]
     direction TB
     Server["☁️ Relay Server<br>(Hosted or Local)"] -->|"Forwards packets"| Lens["👓 Spectacles Lens<br>Quest2Specs"]
   end
-  
+
+
   Quest3 -->|"Runs"| Browser
   Quest3 -.->|"Pos/Rot Data"| Browser
   Browser -->|"WebSockets"| Server
-  
-  style col1 fill:transparent,stroke:transparent,stroke-width:0px
-  style col2 fill:transparent,stroke:transparent,stroke-width:0px
-  style col3 fill:transparent,stroke:transparent,stroke-width:0px
+
   style HiddenSpace fill:transparent,stroke:transparent,color:transparent,stroke-width:0px
+
+  style col1 fill:transparent
+  style col2 fill:transparent
+  style col3 fill:transparent
 ```
 
 <details open>
