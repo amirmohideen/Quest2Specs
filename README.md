@@ -46,8 +46,6 @@
 | **Quest Pro** | Headset | ⚠️ Need to test |
 | **Quest 2** | Headset | ⚠️ Need to test |
 
-> **📝 Note:** Both devices must be connected to the internet (a local WiFi network works fine for both). Self-hosting requires [Node.js](https://nodejs.org) and `cloudflared` on a Mac/PC.
-
 ---
 
 <a id="setup"></a>
