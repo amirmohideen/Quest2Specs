@@ -4168,7 +4168,7 @@
      4. Move Joystick to move hand model
      5. Use primary/secondary buttons to change height of hand model
      6. Use 'Trigger' button to pinch
-     7. Use 'Grab' button to make a fist
+     7. Use 'Grab' button to make a fist  Full instructions at: https://github.com/amirmohideen/Quest2Specs
   Editable: false
   ShowEditingPreview: true
   TouchHandler: !<reference> 00000000-0000-0000-0000-000000000000
