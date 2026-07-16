@@ -137,7 +137,7 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
 flowchart LR
   subgraph col1 [ ]
     direction TB
-    Quest3["🥽 Quest 3 Headset"] -->|"Tracked via IR + IMU"| Controllers["🎮 Quest Controllers"]
+    Quest3["🥽 Quest 3 Headset"] <-->|"Tracked via IR + IMU"| Controllers["🎮 Quest Controllers"]
   end
   
   subgraph col2 [ ]
@@ -152,7 +152,7 @@ flowchart LR
   
   Quest3 -->|"Runs"| Browser
   Browser -->|"WebSockets"| Server
-  Controllers -.->|"Pos/Rot Data"| Server
+  Controllers -.->|"Pos/Rot Data"| Browser
   
   style col1 fill:transparent,stroke:transparent
   style col2 fill:transparent,stroke:transparent
