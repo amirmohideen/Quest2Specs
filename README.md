@@ -135,9 +135,28 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
 
 ```mermaid
 flowchart LR
-  Quest["🎮 Quest 3 controller<br>(tracked via IR + IMU)"] -->|"Reads pos/rot, buttons<br>WebXR ~70-90Hz"| Browser["🌐 Quest Browser"]
-  Browser -->|"WebSockets"| Server["☁️ Relay Server<br>(Hosted or Local)"]
-  Server -->|"Forwards packets"| Lens["👓 Spectacles Lens<br>Quest2Specs"]
+  subgraph col1 [ ]
+    direction TB
+    Quest3["🥽 Quest 3 Headset"] -->|"Tracked via IR + IMU"| Controllers["🎮 Quest Controllers"]
+  end
+  
+  subgraph col2 [ ]
+    direction TB
+    Browser["🌐 Quest Browser<br>(WebXR)"]
+  end
+  
+  subgraph col3 [ ]
+    direction TB
+    Server["☁️ Relay Server<br>(Hosted or Local)"] -->|"Forwards packets"| Lens["👓 Spectacles Lens<br>Quest2Specs"]
+  end
+  
+  Quest3 -->|"Runs"| Browser
+  Browser -->|"WebSockets"| Server
+  Controllers -.->|"Pos/Rot Data"| Server
+  
+  style col1 fill:transparent,stroke:transparent
+  style col2 fill:transparent,stroke:transparent
+  style col3 fill:transparent,stroke:transparent
 ```
 
 <details open>
