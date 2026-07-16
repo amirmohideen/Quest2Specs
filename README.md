@@ -81,7 +81,8 @@ There are two ways to run the bridge server that relays data between your Quest 
      | **Grip** (side squeeze button) | Makes a full fist |
 
    - **3.3** If necessary, here is how you recalibrate your controller hand models: <br>
-     Grab your controllers and rest them on your thighs, pointing forward. Look at your controllers, then click the joystick (press down on the thumbstick) to reset that hand. (Do this for both hands).
+     - Grab your controllers and rest them on your thighs, pointing forward. 
+     - Look at your controllers, then click the joystick (press down on the thumbstick) to reset that hand (Do this for both hands).
 
    - **3.4** If needed, fine-tune:
 
