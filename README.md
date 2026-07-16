@@ -88,6 +88,14 @@ There are two ways to run the bridge server that relays data between your Quest 
      | **Primary button (A / X)** | Lower hand |
      | **Secondary button (B / Y)** | Raise hand |
 
+4. **Quest2Specs Lens:**
+
+<img width="261" height="378" alt="Settings Panel" src="https://github.com/user-attachments/assets/b17a00e6-b765-4fcd-bc0e-7031d3dd0d09" />
+
+This is the Settings panel found inside the Quest2Specs lens.
+
+- **3.1**
+
 </details>
 
 <details open>
