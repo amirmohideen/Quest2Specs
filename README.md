@@ -131,6 +131,8 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
 <a id="how-it-works"></a>
 ## ⚙️ How it works
 
+<video src="https://github.com/user-attachments/assets/1af46e25-a788-45d8-8057-8567ef959fab" width="300" controls></video>
+
 ```mermaid
 flowchart LR
   Quest["🎮 Quest 3 controller<br>(tracked via IR + IMU)"] -->|"Reads pos/rot, buttons<br>WebXR ~70-90Hz"| Browser["🌐 Quest Browser"]
