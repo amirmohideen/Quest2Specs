@@ -6,11 +6,11 @@
 </p>
 
 <p align="center">
-  <a href="#-features">✨ Features</a> •
-  <a href="#-supported-hardware">🥽 Supported Hardware</a> •
-  <a href="#-setup--installation">🚀 Setup</a> •
-  <a href="#-how-it-works">⚙️ How it works</a> •
-  <a href="#-troubleshooting--structure">🛠️ Troubleshooting</a>
+  <a href="#features">✨ Features</a> •
+  <a href="#supported-hardware">🥽 Supported Hardware</a> •
+  <a href="#setup">🚀 Setup</a> •
+  <a href="#how-it-works">⚙️ How it works</a> •
+  <a href="#troubleshooting">🛠️ Troubleshooting</a>
 </p>
 
 <p align="center">
@@ -20,6 +20,7 @@
 
 ---
 
+<a id="features"></a>
 ## ✨ Features
 
 | Feature | Description |
@@ -33,6 +34,7 @@
 
 ---
 
+<a id="supported-hardware"></a>
 ## 🥽 Supported hardware
 
 | Device | Type | Status |
@@ -48,6 +50,7 @@
 
 ---
 
+<a id="setup"></a>
 ## 🚀 Setup & Installation
 
 There are two ways to run the bridge server that relays data between your Quest and your Spectacles. 
@@ -92,6 +95,7 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
 
 ---
 
+<a id="how-it-works"></a>
 ## ⚙️ How it works
 
 ```mermaid
@@ -126,6 +130,7 @@ The Quest and the Spectacles each track space independently. The two worlds get 
 
 ---
 
+<a id="troubleshooting"></a>
 ## 🛠️ Troubleshooting & Structure
 
 <details open>
