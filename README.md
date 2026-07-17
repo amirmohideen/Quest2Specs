@@ -41,14 +41,14 @@
 <a id="supported-devices"></a>
 ## 🥽 Supported Devices
 
-| Device | Type | Status |
-| :--- | :--- | :--- |
-| **Quest 3** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) |
-| **Quest 3S** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) |
-| **Spectacles (2024)** | Glasses | ✅ Supported |
-| **Specs (2026)** | Glasses | ⚠️ Need to test |
-| **Quest Pro** | Headset | ⚠️ Need to test |
-| **Quest 2** | Headset | ⚠️ Need to test |
+| Device | Type | Status | Lighting |
+| :--- | :--- | :--- | :--- |
+| **Quest 3** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) | ☀️🌙 Day & night |
+| **Quest 3S** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) | ☀️🌙 Day & night |
+| **Spectacles (2024)** | Glasses | ✅ Supported | — |
+| **Specs (2026)** | Glasses | ⚠️ Need to test | — |
+| **Quest Pro** | Headset | ⚠️ Need to test | — |
+| **Quest 2** | Headset | ⚠️ Works, with a caveat | ☀️ Daylight only — no IR illuminator, so the headset can't self-track in the dark |
 
 ---
 
