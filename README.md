@@ -14,11 +14,9 @@
   <a href="#structure">📁 Project Structure</a>
 </p>
 
-<!-- <p align="center">
-  <img src="icon.png" alt="Quest2Specs icon" width="150" />
-</p> -->
-
-<br>
+<p align="center">
+  <img src="icon.png" alt="Quest2Specs icon" width="100" />
+</p>
 
 <video src="https://github.com/user-attachments/assets/7889fa2a-ebb4-415a-b6b0-78cb3ef59662" width="300" controls></video>
 
