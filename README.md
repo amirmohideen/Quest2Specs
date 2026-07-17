@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="#features">✨ Features</a> •
-  <a href="#supported-hardware">🥽 Supported Devices</a> •
+  <a href="#supported-devices">🥽 Devices</a> •
   <a href="#setup">🚀 Setup & Guide</a> •
   <a href="#how-it-works">⚙️ How it works</a> •
   <a href="#troubleshooting">🛠️ Troubleshoot</a> •
@@ -38,8 +38,8 @@
 
 ---
 
-<a id="supported-hardware"></a>
-## 🥽 Supported hardware
+<a id="supported-devices"></a>
+## 🥽 Supported Devices
 
 | Device | Type | Status |
 | :--- | :--- | :--- |
@@ -53,7 +53,7 @@
 ---
 
 <a id="setup"></a>
-## 🚀 Setup & Instructions
+## 🚀 Setup & Guide
 
 There are two ways to run the bridge server that relays data between your Quest and your Spectacles. 
 
