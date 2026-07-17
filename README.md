@@ -182,8 +182,15 @@ flowchart LR
   
 **1. Quest tracks the controllers:** <br>
 
-Quest 3 controllers are tracked using **infrared cameras** combined with the controllers' built-in **IMU motion sensors**. <br>
+Quest controllers are tracked using **infrared cameras** combined with the controllers' built-in **IMU motion sensors**. <br>
 Because of this, they continue tracking reliably even in **very dark environments**.
+
+But there's a catch, and it's about the **headset**, not the controllers. To place a controller in the room, the headset first has to know where *it* is and it figures that out by looking at your surroundings with its cameras. In the dark, that only works if the headset can light the room in infrared: <br>
+
+- 🟢 **Quest 3 & 3S** have **IR illuminators** that flood the room with invisible infrared light, so the headset keeps tracking itself in complete darkness and controller tracking rides on top of that. This is why they work in both bright and dark environments.
+- 🔴 **Quest 2** has **no IR illuminator**, so its cameras need real, visible light to track the room. In the dark the headset loses its own position, and once it can't track itself it can't place the controllers either so the whole pipeline stops. Quest 2 therefore only works in bright environments.
+
+> 💡 Counterintuitively, the *controllers* aren't the limiting factor here. Quest 2's controllers even have self-lit IR rings. It's purely the headset's ability to see the room in the dark that makes the difference.
 ##
 
 **2. WebXR streams the tracking data:** <br>
