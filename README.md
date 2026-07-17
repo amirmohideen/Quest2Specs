@@ -30,7 +30,7 @@
 | Feature | Description |
 | :--- | :--- |
 | 👐 **6DoF controller hand tracking** | The virtual hand follows your real controller's position, rotation and button input actions 1:1. |
-| 🌒 **Works in the dark** | IR sensors in controllers are tracked by Quest, so Spectacles's hand models works in the dark. |
+| 🌒 **Works in the dark** | The Quest tracks its controllers with infrared even in the dark, giving you reliable hand input in low light where camera-based hand tracking is at its most challenging. |
 | 🤏 **Pinch, grab & poke** | Trigger pinches (index + thumb), grip closes a full fist, and you can poke UI directly. |
 | 🎯 **Point-and-select UI** | A ray + cursor lets you select SIK/UIKit interactables at a distance. |
 | 🎨 **3D drawing** | Draw in-air, world-locked strokes with the trigger (adjustable thickness/color/auto-delete). |
@@ -65,7 +65,7 @@ There are two ways to run the bridge server that relays data between your Quest 
 
 1. **Quest Settings:**
    - **For Quest 3S:** Go to **Settings -> General -> Power -> Display Off** -> Set it to 4 hours or a longer option so that the Quest doesn't power off during the session.
-   - **For Quest 3:** In addition to the display setting change, Quest 3 has a proximity sensor that you may have to cover with a small sticky note so that the Quest stays on.
+   - **For Quest 3:** In addition to the display setting change, cover the proximity sensor with a small sticky note so the Quest stays on once it's off your head. (Both headsets have this sensor, but in testing the 3S stayed awake with just the display setting.)
 
 2. **Start relay server:**
    - **2.1** On the Quest, open the Quest Browser and go to https://quest2specs.onrender.com.
@@ -125,7 +125,7 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
    cloudflared tunnel --url http://localhost:8080
    ```
 3. Search for the `https://xxxx.trycloudflare.com` URL it prints and copy it. Save it somewhere (like a Google Keep notes) so you can open on the Quest later.
-4. **In Lens Studio**, paste that same URL into **both** `ControllerHandDriver.ts` components' `url` field - but swap `https://` for `wss://` at the start (the Lens needs the WebSocket address). So in the script url field it will look like 'wss://xxxx.trycloudflare.com'. Save and push the project to your Spectacles.
+4. **In Lens Studio**, paste that same URL into **both** `ControllerHandDriver` components' `url` field - but swap `https://` for `wss://` at the start (the Lens needs the WebSocket address). So in the url field it will look like 'wss://xxxx.trycloudflare.com'. Save and push the project to your Spectacles.
 5. **On the Quest**, open the **original `https://xxxx.trycloudflare.com`** URL and tap **"Enter VR & stream both controllers."**
 
 <img width="1629" height="478" alt="Quest2Specs Method 2" src="https://github.com/user-attachments/assets/42b78b6e-b47d-4ddf-b0f4-103e63cc2008" />
@@ -199,6 +199,7 @@ A **WebXR** page running inside the Quest browser reads the following every rend
 - 📍 Position
 - 🔄 Rotation
 - 🎮 Button states
+
 It then sends this data as a small network packet to a relay server.
 ##
 
