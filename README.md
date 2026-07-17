@@ -124,6 +124,9 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
 3. Search for the `https://xxxx.trycloudflare.com` URL it prints and copy it. Save it somewhere (like a Google Keep notes) so you can open on the Quest later.
 4. **In Lens Studio**, paste that same URL into **both** `ControllerHandDriver.ts` components' `url` field - but swap `https://` for `wss://` at the start (the Lens needs the WebSocket address). So in the script url field it will look like 'wss://xxxx.trycloudflare.com'. Save and push the project to your Spectacles.
 5. **On the Quest**, open the **original `https://xxxx.trycloudflare.com`** URL and tap **"Enter VR & stream both controllers."**
+
+<img width="1629" height="478" alt="Quest2Specs Method 2" src="https://github.com/user-attachments/assets/42b78b6e-b47d-4ddf-b0f4-103e63cc2008" />
+
 6. Take the headset off, put on your Spectacles, launch the Lens, and calibrate your controllers exactly as in Method 1.
 </details>
 
