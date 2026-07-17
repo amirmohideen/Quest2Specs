@@ -313,5 +313,5 @@ Quest2Specs/
 ##
 
 <p align="center">
-  <i>This project is open source - contributions and forks welcome.</i> 🤝
+  <i>This project is open source - contributions, forks and stars welcome.</i> 🤝
 </p>
