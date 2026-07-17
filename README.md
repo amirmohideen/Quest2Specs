@@ -301,6 +301,17 @@ Quest2Specs/
 | 🖥️ `relay/server.js` | A tiny Node.js server. Serves the WebXR page and forwards every packet from the Quest to the connected Spectacles. Deploy it (Render) or run it locally (Cloudflare tunnel). |
 
 
+<a id="credits"></a>
+## 🛠️ Acknowledgement
+
+| Author | Description |
+| :--- | :--- |
+| 🤔? | Stole footage from his video for my trailer |
+| 🤔? | Tested this project on SPECS |
+| 🤔? | Tested this project on Quest Pro |
+
+##
+
 <p align="center">
   <i>This project is open source - contributions and forks welcome.</i> 🤝
 </p>
