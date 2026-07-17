@@ -18,7 +18,7 @@
   <img src="icon.png" alt="Quest2Specs icon" width="100" />
 </p>
 
-<video src="https://github.com/user-attachments/assets/7889fa2a-ebb4-415a-b6b0-78cb3ef59662" width="300" controls></video>
+<video src="https://github.com/user-attachments/assets/f26cc455-d56f-41a3-b2d0-94b63d139a8a" width="300" controls></video>
 
 ---
 
@@ -306,7 +306,7 @@ Quest2Specs/
 
 | Author | Description |
 | :--- | :--- |
-| 🤔? | Stole footage from his video for my trailer |
+| 🤔? | I stole footage from his video for my trailer |
 | 🤔? | Tested this project on SPECS |
 | 🤔? | Tested this project on Quest Pro |
 
