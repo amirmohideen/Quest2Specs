@@ -75,7 +75,7 @@ There are two ways to run the bridge server that relays data between your Quest 
    - **3.1** Put on your Spectacles and launch this Quest2Specs project Lens in the draft section that you pushed from your computer to your Specs, or [launch the Lens from this link](https://www.spectacles.com/lens/3e934befff444f5dad0ff119e31f27bc).
    - **3.2** Pick up your Quest controllers. Here are the basic controls:
 
-     | Input | Action |
+     | Controller | Hand Action |
      | :--- | :--- |
      | **Trigger** | Pinches (used to select UI and to draw) |
      | **Grip** (side squeeze button) | Makes a full fist |
@@ -86,7 +86,7 @@ There are two ways to run the bridge server that relays data between your Quest 
 
    - **3.4** If needed, fine-tune:
 
-     | Input | Action |
+     | Controller | Hand Action |
      | :--- | :--- |
      | **Move Joystick** | Slide the hand forward/back and left/right |
      | **Primary button (A / X)** | Lower hand |
@@ -134,6 +134,10 @@ Useful for development or if you'd rather not depend on a hosted server. The fre
 
 <video src="https://github.com/user-attachments/assets/1af46e25-a788-45d8-8057-8567ef959fab" width="300" controls></video>
 
+##
+<details open>
+<summary><b>📐 System Architecture</b></summary>
+<br>
 
 ```mermaid
 flowchart LR
@@ -164,28 +168,65 @@ flowchart LR
   style col3 fill:transparent
 ```
 
+##
+
 <details open>
-<summary><b>📖 Read the technical deep-dive</b></summary>
+<summary><b>📖 Technical Deep Dive</b></summary>
 <br>
+  
+**1. Quest tracks the controllers:** <br>
 
-**1. Quest tracks controllers:** <br>
-Quest 3 controllers are tracked using infrared light combined with the controller's own motion sensors. Hence, Quest is able to track controllers even in very dark environments.
+Quest 3 controllers are tracked using **infrared cameras** combined with the controllers' built-in **IMU motion sensors**. <br>
+Because of this, they continue tracking reliably even in **very dark environments**.
+##
 
-**2. WebXR page sends tracking data to relay server:** <br>
-A page hosted in WebXR (a browser API for VR/AR data) reads each controller's position, rotation, and button states in every rendered frame, and sends that as a small message over the internet to a relay server.
+**2. WebXR streams the tracking data:** <br>
 
-**3. Relay server forwards it to Spectacles:** <br>
-Spectacles can't talk to the Quest directly, so a small relay server (Method 1: hosted on Render, Method 2: self hosted using cloudflare) sits in between and simply forwards every message it receives from the Quest to the Spectacles.
+A **WebXR** page running inside the Quest browser reads the following every rendered frame:
+- 📍 Position
+- 🔄 Rotation
+- 🎮 Button states
+It then sends this data as a small network packet to a relay server.
+##
 
-**4. Specs Lens moves virtual hand to match:** <br>
-A script running in the Spectacles Lens (ControllerHandDriver.ts) receives that stream and drives a 3D hand rig. The trigger curls the index finger and thumb into a pinch, and the grip curls the rest of the fingers into a fist.
+**3. The relay server forwards data to Spectacles:** <br>
 
-**5. The tricky part - lining up two separate "worlds":** <br>
-The Quest and the Spectacles each track space independently. The two worlds get lined up at the moment you click the joystick, using a fixed offset: the Lens takes the direction you're currently looking, applies an offset, and places the hand model at the resulting spot. The hand model's forward is set to match whichever direction the controller is pointing.
+Since **Spectacles cannot communicate directly with Quest**, a lightweight relay server sits in between.
+Two deployment options are supported:
+- ☁️ **Method 1:** Hosted on Render
+- 🖥️ **Method 2:** Self-hosted via Cloudflare
+The server simply forwards every packet from Quest to Spectacles.
+##
+
+**4. Spectacles animates the virtual hand:** <br>
+
+Inside the Lens, `ControllerHandDriver.ts` receives the incoming data and drives a 3D hand rig.
+Controller inputs map to hand poses:
+
+| Controller Input | Hand Action |
+|------------|----------------|
+| Trigger | Index finger + thumb pinch |
+| Grip | Closed fist |
+| Joystick | Slide hand forward/back and left/right |
+| Primary button (A / X) | Lower hand |
+| Secondary button (B / Y) | Raise hand |
+
+##
+
+**5. Calibration aligns both tracking spaces:** <br>
+
+Quest and Spectacles each maintain their **own independent world coordinate system**.
+Pressing the joystick performs a one-time calibration:
+
+1. Capture the direction you're looking.
+2. Apply a fixed positional offset from Spectacles.
+3. Spawn the virtual hand there based on offset.
+4. Match the hand's forward direction and orientation to the controller.
 
 > 💡 **Calibration Tip:** The mapping between the controller's tilt and the hand's tilt is captured at the moment you click reset. That's why the calibration step has you rest the controller flat on your thigh, pointing forward!
 
 </details>
+
 
 ---
 
