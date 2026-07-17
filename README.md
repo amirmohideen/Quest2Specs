@@ -7,10 +7,10 @@
 
 <p align="center">
   <a href="#features">✨ Features</a> •
-  <a href="#supported-hardware">🥽 Supported Hardware</a> •
-  <a href="#setup">🚀 Setup & Instructions</a> •
+  <a href="#supported-hardware">🥽 Supported Devices</a> •
+  <a href="#setup">🚀 Setup & Guide</a> •
   <a href="#how-it-works">⚙️ How it works</a> •
-  <a href="#troubleshooting">🛠️ Troubleshooting</a> •
+  <a href="#troubleshooting">🛠️ Troubleshoot</a> •
   <a href="#structure">📁 Project Structure</a>
 </p>
 
