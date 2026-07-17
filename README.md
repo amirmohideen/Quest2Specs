@@ -57,7 +57,7 @@
 There are two ways to run the bridge server that relays data between your Quest and your Spectacles. 
 
 <details open>
-<summary><b>🌐 Method 1: Hosted (Easiest)</b></summary>
+<summary><b>🌐 Method 1: Render-Hosted (Easiest)</b></summary>
 <br>
 
 <video src="https://github.com/user-attachments/assets/58d55fc0-2d14-4934-97b8-1ab5d2cd0868" width="300" controls></video>
@@ -107,7 +107,9 @@ This is the Settings panel found inside the Quest2Specs lens.
 
 </details>
 
-<details open>
+##
+
+<details close>
 <summary><b>💻 Method 2: Self-hosted (For Developers)</b></summary>
 <br>
 Useful for development or if you'd rather not depend on a hosted server. The free cloudflare tunnel URL changes every time you start it.
