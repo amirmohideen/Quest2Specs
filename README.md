@@ -43,12 +43,12 @@
 
 | Device | Type | Status | Lighting Environment |
 | :--- | :--- | :--- | :--- |
-| **Quest 3** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) | ☀️🌙 Bright & dark |
-| **Quest 3S** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) | ☀️🌙 Bright & dark |
+| **Quest 3** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) | ☀️🌙 Bright & Dark |
+| **Quest 3S** | Headset | ✅ Supported (tested on OS Version 2.5 released on June 22, 2026) | ☀️🌙 Bright & Dark |
 | **Spectacles (2024)** | Glasses | ✅ Supported | — |
 | **Specs (2026)** | Glasses | ⚠️ Need to test | — |
 | **Quest Pro** | Headset | ⚠️ Need to test | — |
-| **Quest 2** | Headset | ⚠️ Works, with a caveat | ☀️ Bright only — no IR illuminator, so the headset can't self-track in the dark |
+| **Quest 2** | Headset | 🛂 Works, with a caveat | ☀️ Bright only (Despite controllers having lit IR rings, Quest 2 has no IR illuminator so in the dark, headset loses positional self-tracking) |
 
 ---
 
