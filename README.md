@@ -10,7 +10,8 @@
   <a href="#supported-hardware">🥽 Supported Hardware</a> •
   <a href="#setup">🚀 Setup & Instructions</a> •
   <a href="#how-it-works">⚙️ How it works</a> •
-  <a href="#troubleshooting">🛠️ Troubleshooting</a>
+  <a href="#troubleshooting">🛠️ Troubleshooting</a> •
+  <a href="#structure">📁 Project Structure</a>
 </p>
 
 <!-- <p align="center">
@@ -236,11 +237,7 @@ Pressing the joystick performs a one-time calibration:
 ---
 
 <a id="troubleshooting"></a>
-## 🛠️ Troubleshooting & Structure
-
-<details open>
-<summary><b>🔧 Troubleshooting Guide</b></summary>
-<br>
+## 🛠️ Troubleshooting Guide
 
 | Symptom | Things to try |
 | :--- | :--- |
@@ -251,19 +248,52 @@ Pressing the joystick performs a one-time calibration:
 | 🧭 **Drifting position over time** | Devices can drift over a long session. Click the joystick again to re-anchor, then fine-tune with the joystick/buttons. |
 | 📐 **Tilted / weird hand angle** | The controller was tilted or in a weird orientation when reset. Grab your controllers, rest your arm flat on your thigh, pointing forward, and click joystick again to reset. |
 
-</details>
+---
 
-<details open>
-<summary><b>📁 Project Structure</b></summary>
-<br>
+<a id="structure"></a>
+## 📁 Project Structure
 
-| Path | Description |
+The repo has two halves: a **Lens Studio project** (everything the Spectacles run) and the
+**QuestBridge** folder (the webpage + server that get controller data off the Quest).
+
+```
+Quest2Specs/
+├── Quest2Specs.esproj          # Lens Studio project file (open this in Lens Studio)
+├── Assets/
+│   ├── Scene.scene             # the Lens scene (hand rigs, UI, cameras)
+│   ├── Scripts/                # all custom TypeScript logic (see table below)
+│   ├── Prefabs/                # reusable scene objects
+│   ├── ControllerHandModelAssets/   # the 3D hand model + materials
+│   └── Internet Module.internetModule   # asset that lets the Lens open a wss connection
+├── Packages/                   # imported Lens Studio packages (not written by us)
+│   ├── SpectaclesInteractionKit.lspkg   # Snap's interaction framework (Interactables, cursors)
+│   └── SpectaclesUIKit.lspkg            # Snap's UI widgets (buttons, switches, panels)
+└── QuestBridge/
+    ├── webxr/index.html        # the WebXR page you open in the Quest Browser
+    ├── relay/server.js         # the Node.js relay server (host it, or run locally)
+    └── README.md               # bridge-specific setup notes
+```
+
+**`Assets/Scripts/` — the custom logic**
+
+| Script | What it does |
 | :--- | :--- |
-| 📂 `Assets/Scripts/` | Lens Studio scripts (hand driver, interactors, UI toggles, drawing) |
-| 🌐 `QuestBridge/webxr/` | The WebXR page you open in the Quest Browser |
-| 🖥️ `QuestBridge/relay/` | The relay server (Node.js) - deploy this or run it locally |
+| 🖐️ `ControllerHandDriver.ts` | The core. One per hand. Opens the `wss` connection, receives controller packets, aligns the Quest and Spectacles coordinate spaces at reset, then drives the hand rig's position/rotation, pinch, fist, and the joystick/button offset controls. |
+| 🎯 `ControllerInteractor.ts` | Lets a hand select UI. A custom SIK interactor giving each hand a ray + cursor for point-and-select, plus fingertip **poke** to press buttons directly. |
+| ✏️ `DrawController.ts` | 3D drawing. Lays down world-locked ribbon strokes from a brush tip while the trigger is held, with pressure-based thickness, color, and auto-delete. |
+| 🔀 `HandModeToggle.ts` | Switches between native Spectacles hand tracking and the controller-driven hands. |
+| ✋ `PalmFacingVisibility.ts` | Shows/hides objects (e.g. a palm menu) based on whether your palm faces you — like the system hand menu. |
+| 🐞 `BridgeDebug.ts` | On-lens status readout: per hand, is the socket open, is data flowing, and live trigger/grip values. |
+| 🔘 `DebugPanelToggle.ts` | Toggles a debug panel's visibility when its button is pinched. |
+| 🎚️ `ToggleSetActive.ts` | Generic helper — wire a UI switch to it to enable/disable any object. |
 
-</details>
+**`QuestBridge/` — the data pipeline**
+
+| File | What it does |
+| :--- | :--- |
+| 🌐 `webxr/index.html` | Runs in the Quest Browser. Reads each controller's pose + buttons via WebXR ~70–90×/sec and streams them out; also draws the in-VR status panel. |
+| 🖥️ `relay/server.js` | A tiny Node.js server. Serves the WebXR page and forwards every packet from the Quest to the connected Spectacles. Deploy it (Render) or run it locally (Cloudflare tunnel). |
+
 
 <p align="center">
   <i>This project is open source - contributions and forks welcome.</i> 🤝
