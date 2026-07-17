@@ -240,7 +240,7 @@ Pressing the joystick performs a one-time calibration:
 | Symptom | Things to try |
 | :--- | :--- |
 | 🐌 **Laggy movement** | Make sure your controllers are in the Quest's field of view, especially in the dark. |
-| 🐌 **Extreme delay or mismatched movement** | Probably a WiFi or Internet connection issue. Make sure both the Quest and your Spectacles and/or your Mac/relay are on the same connection and are on a strong connection. Testing with your Mobile Hotspot is another suggestion. |
+| ⌛️ **Extreme delay or mismatched movement** | Probably a WiFi or Internet connection issue. Make sure both the Quest and your Spectacles and/or your Mac/relay are on the same connection and are on a strong connection. Testing with your Mobile Hotspot is another suggestion. |
 | 👻 **Random pinches / out of sync** | Check that only **one** Quest device is streaming to the relay at a time. Old tabs in a PC or a second headset will mix data. |
 | 🟦 **Blank teal screen in VR** | Expected behavior! The WebXR page doesn't render a scene, it only streams data. A status panel is shown at eye level. |
 | 🧭 **Drifting position over time** | Devices can drift over a long session. Click the joystick again to re-anchor, then fine-tune with the joystick/buttons. |
