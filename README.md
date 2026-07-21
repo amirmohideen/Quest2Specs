@@ -306,9 +306,10 @@ Quest2Specs/
 
 | Author | Description |
 | :--- | :--- |
-| 🤔? | I stole footage from his video for my trailer |
+| Alessio Grancini | I stole footage from his video for my trailer 😅 |
 | 🤔? | Tested this project on SPECS |
 | 🤔? | Tested this project on Quest Pro |
+| Tejas Shroff | Winner of Trivia Question: Found out the person holding spectacles in beginning was Alessio |
 
 ##
 
